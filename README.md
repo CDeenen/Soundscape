@@ -20,7 +20,7 @@ early demonstration of this in <a href="https://youtu.be/I8maolIlqxM">this video
 You can also find this documentation in the help menu in Foundry in the module settings.
 
 # Mixer
-<img src="modules/Soundscape/img/Mixer.png" align="right" HSPACE="5" width="300">
+<img src="https://github.com/CDeenen/Soundscape/blob/master/img/Mixer.png" align="right" HSPACE="5" width="300">
 The mixer is the main screen of Soundscape. It can be accessed from the sidebar, under the 'Audio Playlists' tab (the one with the music note). You will find a button labeled Soundscape.<br>
 <br>
 The center of the mixer is divided into 9 columns, where the right-most column controls the master volume, and the other columns control a channel. Each channel can play back a single audio track, so in total you can have 8 audio tracks playing.<br>
@@ -58,6 +58,7 @@ Pressing a 'Start/Stop Channel' button when the sound is still loading will not 
 <BR CLEAR="right" />
 
 ## Sound Configuration
+<img src="https://github.com/CDeenen/Soundscape/blob/master/img/SoundConfig.png" align="right" HSPACE="5" width="250">
 In the sound configuration menu, you can configure the sound for each channel. You have the following options:
 <ul>
     <li><b>Name</b>: The name of the channel. This will be displayed at the bottom of the mixer</li>
@@ -73,7 +74,10 @@ In the sound configuration menu, you can configure the sound for each channel. Y
 </ul>
 When you have selected a sound, the configuration will load that sound. It might take a few seconds, you'll know that it's done when the play button in the preview section is no longer disabled. At that point you can use the preview function.
 
+<BR CLEAR="right" />
+
 ## Effects Configuration
+<img src="https://github.com/CDeenen/Soundscape/blob/master/img/EffectsConfig.png" align="right" HSPACE="5" width="400">
 You can enter the effects configuration by pressing one of the 'Fx' buttons. This will open a configuration screen that has 3 parts: A spectrum analyzer, equalizer, and other effects section.<br>
 
 ### <b>Spectrum Analyzer</b>
@@ -99,8 +103,10 @@ You can set the playback rate of the sound, which will either slow down or speed
 Lastly there is the delay effect. The delay takes a copy of the sound, and plays it back together with the original sound, but with a slight delay. You can set the delay time with the 'Delay' slider, 
 and the volume of the delayed sound with the 'Delay Volume' slider.
 
+<BR CLEAR="right" />
+
 # Soundboard
-<img src="modules/Soundscape/img/Soundboard.png" align="right" HSPACE="5" width="300">
+<img src="https://github.com/CDeenen/Soundscape/blob/master/img/Soundboard.png" align="right" HSPACE="5" width="300">
 The soundboard allows you to play single sounds. This is best used for short sound effects, such as thunder or melee hit sounds. You can access the soundboard by pressing the right-most button in the mixer, with the 
 music note icon. This will expand the mixer, adding the soundboard to the right. Each soundscape has its own soundboard.<br>
 <br>
@@ -111,6 +117,7 @@ You can stop all currently playing sounds by pressing the 'Stop All' button.
 <BR CLEAR="right" />
 
 ## Soundboard Configuration
+<img src="https://github.com/CDeenen/Soundscape/blob/master/img/SoundboardConfig.png" align="right" HSPACE="5" width="250">
 You can access the soundboard configuration by clicking on the name field of the soundboard buttons. If you do so, a new window opens.<br>
 In this window you can set the following:
 <ul>
@@ -128,7 +135,10 @@ in the textbox append the folder name with the common part of the name of the so
 For example, if you have the sounds 'Thunder.wav', 'Thunder2.wav' and 'Thunder3.wav' in the folder 'Assets', you could fill in the following: 'Assets/Thunder*', 
 which will play one of the three sounds randomly when you press the button.
 
+<BR CLEAR="right" />
+
 # Soundscape Configuration
+<img src="https://github.com/CDeenen/Soundscape/blob/master/img/SoundscapeConfig.png" align="right" HSPACE="5" width="350">
 The soundscape configuration screen can be accessed by pressing the cog button on the top-right of the mixer.<br>
 In this screen, you can manage your soundscapes. You will find a list of all the stored soundscapes. Each soundscape has multiple buttons:
 <ul>
@@ -153,6 +163,7 @@ Only the metadata of the sounds is exported/imported. This means that when you i
 For example, if you export a soundscape that uses sounds from a specific playlist, when you import the soundscape you need to have the exact same playlist and sounds set up in Foundry. 
 For files picked with the file picker, the relative location must be the same. So if you have a file at location 'Data/Assets/Thunder.mp3', when you import the soundscape, you must have a 
 file named 'Thunder.mp3' in the folder Data/Assets.
+<BR CLEAR="right" />
 
 ## Feedback
 If you have any suggestions or bugs to report, feel free to create an issue, contact me on Discord (Cris#6864), or send me an email: cdeenen@outlook.com.
