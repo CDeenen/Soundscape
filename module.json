@@ -1,5 +1,5 @@
 {
-    "name": "Soundscape",
+    "name": "soundscape",
     "title": "Soundscape",
     "description": "Soundscape is a module that allows you to easily mix multiple audio tracks into a soundscape that can be customized on the fly.",
     "version": "0.4.0",

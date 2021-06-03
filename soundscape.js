@@ -3,7 +3,7 @@ import {MixerApp} from "./src/mixerApp.js";
 import {registerSettings} from "./src/settings.js";
 import {startWebsocket} from "./src/websocket.js";
 
-export const moduleName = "Soundscape";
+export const moduleName = "soundscape";
 export let mixer;
 export let audioCtx;
 let mixerApp;
