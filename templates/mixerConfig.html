@@ -1,0 +1,109 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+
+
+    <style>
+        .columnNumber {
+            width:5%;
+            text-align: left;
+        }
+      .columnLabel {
+            width: 30%;
+            text-align: left;
+        }
+        .columnButton {
+            width:15%;
+            margin: auto;
+            text-align: center;
+        }
+        .columnCheckbox {
+            width:10%;
+        }
+        .btn {
+            width:75%;
+            margin: auto;
+        }
+        .btnLabel {
+            min-width: 57%;
+            max-width: 57%;
+        }
+        .lowButtons {
+
+            height: 40px;
+            line-height: 1;
+        }
+    </style>
+
+    <div >
+        <div id='soundscapeContents'>
+            <table style="width:100%; min-width:400px">
+                <tr>
+                    <th style='text-align: left;'>{{localize "Soundscape.Nr"}}</th>
+                    <th style='text-align: left;'>{{localize "Soundscape.Name"}}</th>
+                    <th class='columnButton'>{{localize "Soundscape.Load"}}</th>
+                    <th class='columnButton'>{{localize "Soundscape.MoveDown"}}</th>
+                    <th class='columnButton'>{{localize "Soundscape.MoveUp"}}</th>
+                    <th class='columnButton'>{{localize "Soundscape.CopySB"}}</th>
+                    <th class='columnCheckbox'>{{localize "Soundscape.Select"}}</th>
+                </tr>
+                {{#each soundscapes as |s|}}
+                <tr>
+                    <td class='columnNumber'>{{s.number}}</td>
+                    <td class='columnLabel'>
+                        <input type="text" id="name-{{s.iteration}}" name="name" value={{s.name}}>
+                    </td>
+                    <td class='columnButton'>
+                        <button type="button" class='btn' id='load-{{s.iteration}}' name='load'>
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </td>
+                    <td class='columnButton'>
+                        <button type="button" class='btn' id='moveDown-{{s.iteration}}' name='moveDown'>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </td>
+                    <td class='columnButton'>
+                        <button type="button" class='btn' id='moveUp-{{s.iteration}}' name='moveUp'>
+                            <i class="fas fa-chevron-up"></i>
+                        </button>
+                    </td>
+                    <td class='columnButton'>
+                        <button type="button" class='btn' id='sbToSel-{{s.iteration}}' name='sbToSel'>
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </td>
+                    <td class='columnCheckbox'>
+                        <input type="checkbox" id='select-{{s.iteration}}'' name="select">
+                    </td>
+                </tr>
+                {{/each}}
+            </table>
+            <div style='width:100%; display:flex'>
+                <button type="button" class='lowButtons' id='selectAll' name='selectAll'>
+                    {{localize "Soundscape.SelectAll"}}
+                </button>
+                <button type="button" class='lowButtons' id='deselectAll' name='deselectAll'>
+                    {{localize "Soundscape.DeselectAll"}}
+                </button>
+                <button type="button" class='lowButtons' id='new' name='new'>
+                    {{localize "Soundscape.AddSoundscape"}}
+                </button>
+            </div>
+            <div style='width:100%; display:flex'>
+                <button type="button" class='lowButtons' id='copySelected' name='copySelected'>
+                    {{localize "Soundscape.DuplicateSelected"}}
+                </button>
+                <button type="button" class='lowButtons' id='deleteSelected' name='deleteSelected'>
+                    {{localize "Soundscape.DeleteSelected"}}
+                </button>
+                <button type="button" class='lowButtons' id='exportSelected' name='exportSelected'>
+                    {{localize "Soundscape.ExportSelected"}}
+                </button>
+                <button type="button" class='lowButtons' id='importSelected' name='importSelected'>
+                    {{localize "Soundscape.Import"}}
+                </button>
+            </div>
+        </div>
+        
+     
+    </div>
+</form>

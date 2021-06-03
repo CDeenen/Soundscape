@@ -1,0 +1,95 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+
+    <style>
+        .form-fields {
+            display:flex;
+        }
+    </style>
+    <div style="max-width:300px;min-width:300px">
+
+        <div>
+            <h2>{{localize "Soundscape.Sound"}} {{channelNumber}}</h2>
+        </div>
+
+            
+       
+            <div>
+                
+                {{localize "Soundscape.Name"}}: 
+                <input type="text" name="name" id="name" value="{{name}}">
+            </div>
+            <div>
+                {{localize "Soundscape.Playlist"}}: 
+                <select name="playlistId" class="playlist-select" default="" style="width:100%;" id="playlists">
+                    {{#select selectedPlaylist}}
+                        {{#each playlists}}
+                        <option value="{{this.id}}">{{this.name}}</option>
+                        {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+            <div>
+                {{localize "Soundscape.Sound"}}: 
+                <div class="form-fields" id="ss" style="display:{{styleSS}}">
+                    <select name="soundId" class="sound-select" default="" style="width:100%;" id="sounds">
+                        {{#select selectedSound}}
+                            {{#each sounds}}
+                            <option value="{{this.id}}">{{this.name}}</option>
+                            {{/each}}
+                        {{/select}}
+                    </select>
+                </div>
+                
+
+                <div class="form-fields" id="fp" style="display:{{styleFP}}">
+                    <button type="button" class="file-picker" data-type="audio" data-target="src" title="Browse Files" tabindex="-1">
+                        <i class="fas fa-file-import fa-fw"></i>
+                    </button>
+                    <input class="image" type="text" name="src" name2="soundSrc" id="srcPath" placeholder="path/audio.mp3" value={{srcPath}}>
+                </div>
+
+                <hr>
+                {{localize "Soundscape.Timing"}}
+                <table style="width:100%;border-collapse:collapse">
+                    <tr>
+                        <th>{{localize "Soundscape.Start"}}</th>
+                        <th>{{localize "Soundscape.Stop"}}</th>
+                        <th>{{localize "Soundscape.Duration"}}</th>
+                    </tr>
+                    <tr>
+                        <th style="width:30%"><input type="text" name="start" id="start" value="{{start}}"></th>
+                        <th style="width:30%"><input type="text" name="stop" id="stop" value="{{stop}}"></th>
+                        <th style="width:30%"><input type="text" name="duration" id="duration" value="" disabled></th>
+                    </tr>
+                </table>
+                {{localize "Soundscape.Fade"}}
+                <table style="width:100%;border-collapse:collapse">
+                    <tr>
+                        <th>{{localize "Soundscape.FadeIn"}}</th>
+                        <th>{{localize "Soundscape.FadeOut"}}</th>
+                    </tr>
+                    <tr>
+                        <th style="width:30%"><input type="text" name="fadeIn" id="fadeIn" value="{{fadeIn}}"></th>
+                        <th style="width:30%"><input type="text" name="fadeOut" id="fadeOut" value="{{fadeOut}}"></th>
+                    </tr>
+                </table>
+                <label>{{localize "Soundscape.Repeat"}}</label>
+                <input id="repeat" type="checkbox" name="repeat" data-dtype="Boolean" {{repeat}}>
+        
+
+                <hr>
+                <div style="width:100%">{{localize "Soundscape.Preview"}}</div>
+                <div style="display:flex">
+                    <input type="text" name="current" id="current" value="00:00:00.000" disabled style="width:150px">
+                    <input type="range" name="volumeSlider" id="volumeSlider" min="0" max="100" value="50">
+                    <button type="button" name="preview" id="preview" style="width:30px;height:30px;font-size:12px;padding-top:0px;" disabled><i class="fas fa-play"></i></button>
+                </div>  
+            </div>   
+
+            <button type="submit" name="submit">
+                <i class="fas fa-save"></i> {{localize "Soundscape.SaveConfig"}}
+            </button>
+    </div>
+    
+   
+</form>

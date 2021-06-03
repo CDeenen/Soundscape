@@ -1,0 +1,261 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+
+
+    <style>
+        .slider-wrapper input {
+            width: 200px;
+            height: 1px;
+            margin: 0;
+            transform-origin: 100px 100px;
+            transform: rotate(-90deg);
+        }
+
+        .sliderBox {
+            margin-left:15px;
+            height: 220px;
+        }
+
+        .boxed {
+            border: 1px solid black ;
+            border-radius: 3px ; 
+            width:45px;
+            max-width:45px;
+            margin:0px;
+            padding:5px;
+            vertical-align: top;
+        }
+
+        button[type=button][class=configButton]
+        {
+            width: 100%;
+            height: 30px;
+            font-size: 16px;
+            padding-top: 0px;
+            margin-left: 0px;
+            margin-bottom: 3px;
+            text-align: center;
+        }
+
+        button[type=button][class=FXButton]
+        {
+            width: 100%;
+            height: 25px;
+        }
+
+        button[type=button][class=channelButton]
+        {
+            width: 25px;
+            height: 25px;
+            padding: 0;
+            position: relative;
+            left: 3px;
+        }
+
+        .fxButtonLabel {
+            font-size: 16px;
+            padding: 0;
+            text-align: center;
+            position: relative;
+            bottom: 4px;
+            left: 1px;
+        }
+
+        .channelButtonLabel {
+            font-size: 16px;
+            padding: 0;
+            text-align: center;
+            position: relative;
+            bottom: 3px;
+            left: 1px;
+        }
+
+        .channelPlayIcon {
+            padding: 0;
+            position: relative;
+            bottom: 2px;
+            left: 3px;
+        }
+
+        .boxNumber {
+            text-align: center;
+            width: 100%;
+            height: 30px;
+        }
+
+        .masterBox {
+            border: 1px solid black ;
+            border-radius: 3px ; 
+            width:45px;
+            max-width:45px;
+            margin:2px;
+            padding:5px;
+            display: inline-block;
+        }
+
+        .nameBox {
+            width:100px;
+            margin:2px;
+            transform-origin: 50px 50px;
+            transform: rotate(-90deg);
+            height:100px;
+        }
+
+        .sbButton {
+            min-width: 75px;
+            min-height: 75px;
+            max-width: 75px;
+            max-height: 75px;
+            border: 2px solid black ;
+            border-radius: 10px;
+            margin:3px 3px 0px;
+            align-items: center;
+            padding: 0;
+        }
+
+        .btnRow {
+            max-height: 100px;
+            min-height: 100px;
+        }
+
+        .sbButtonLabel {
+            min-width:70px;
+            max-width:70px;
+            min-height:15px;
+            max-height: 15px;
+            margin: 0px 5px 0px;
+            padding: 0;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid black ;
+            border-radius: 3px ; 
+        }
+
+        .column {
+            float: left;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+
+
+    </style>
+
+    <div class="row" id="SoundScape_mainRow" style="width:{{mainRowWidth}};">
+        <div class="column" id="SoundScape_mainColumn" style="height:100%; width:{{mainColumnWidth}}">
+
+            <div class="form-group" style="max-width:405px">
+                <button type="button" name="prevSoundscape" style="max-width:10%;height:30px">
+                    <i class="fas fa-arrow-left" style="font-size: 25px;"></i>
+                </button>
+                <button type="button" name="nextSoundscape" style="max-width:10%;height:30px">
+                    <i class="fas fa-arrow-right" style="font-size: 25px;"></i>
+                </button>
+                <div style="display:flex;max-width:59%;font-size: 25px;margin-top:0px">
+                    {{soundScapeNumber}}:
+                    <input type="text" name="soundscapeName" value="{{name}}" style="min-width:20% max-width:40%;height:28px;text-align:center;margin-top:2px">
+                </div>
+                <button type="button" name="mixerConfig" style="max-width:10%;height:30px">
+                    <i class="fas fa-cog" style="font-size: 25px;"></i>
+                </button>
+                <button type="button" name="soundboardEnable" style="max-width:10%;height:30px">
+                    <i class="fas fa-music" style="font-size: 25px;"></i>
+                </button>
+            </div>
+            
+            <div class="form-group" style="width:100%">
+                
+                {{#each channels}}
+                    <div class="boxed">
+                        <button type="button" class="configButton" name="config" id="config-{{this.channelIteration}}"><i class="fas fa-cog" id="config-{{this.channelIteration}}"></i></button>
+                        <hr>
+                        <input type="range" name="panSlider" id="panSlider-{{this.channelIteration}}" orient="vertical" min="-25" max="25" steps="1" value="{{this.pan}}" list="panSteplist">
+                        <datalist id="panSteplist">
+                            <option>0</option>
+                        </datalist>
+                        <button type="button" class="FXButton" name="fx" id="fx-{{this.channelIteration}}"><div class="fxButtonLabel">{{localize "Soundscape.FxBtn"}}</div></button>
+                        <button type="button" class="channelButton" name="mute" id="mute-{{this.channelIteration}}" style="background-color:{{this.muteColor}}"><div class="channelButtonLabel">{{localize "Soundscape.MuteBtn"}}</div></button>
+                        <button type="button" class="channelButton" name="solo" id="solo-{{this.channelIteration}}" style="background-color:{{this.soloColor}}"><div class="channelButtonLabel">{{localize "Soundscape.SoloBtn"}}</div></button>
+                        <button type="button" class="channelButton" name="link" id="link-{{this.channelIteration}}" style="background-color:{{this.linkColor}}"><div class="channelButtonLabel">{{localize "Soundscape.LinkBtn"}}</div></button>
+                        <div class="sliderBox">
+                            <div class="slider-wrapper">
+                                <input type="range" name="volumeSlider" id="volumeSlider-{{this.channelIteration}}" orient="vertical" min="0" max="125" value="{{this.volume}}">
+                                <datalist id="steplist">
+                                    <option>100</option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="number" name="volumeNumber" id="volumeNumber-{{this.channelIteration}}" style="font-size:12px; text-align:center; max-width:95%" min="0" max="125" value="{{this.volume}}">
+                        </div>
+                        <hr>
+                        
+                        <div class="nameBox">
+                            <input type="text" name="name" id="name-{{this.channelIteration}}" value="{{this.settings.name}}">
+                        </div>
+                        <div class="boxNumber" style="font-size:20px;">
+                            {{this.channelNumber}}
+                        </div>
+                        <button type="button" class="channelButton" name="playSound" id="playSound-{{this.channelIteration}}" {{this.disabled}}><i class="{{this.playButton}} channelPlayIcon"></i></button> 
+                    </div>
+                {{/each}}
+                <div class="masterBox">
+                    <button type="button" class=configButton style="visibility: hidden;"><i></i></button>
+                    <hr  style="visibility: hidden;">
+                    <input type="range" style="visibility: hidden;">
+                    <button type="button" class="FXButton" style="visibility: hidden;"><i></i>FX</button>
+                    <button type="button" class="channelButton" name="mute" id="mute-master" style="background-color:{{master.muteColor}}"><div class="channelButtonLabel">{{localize "Soundscape.MuteBtn"}}</div></button>
+                    <button type="button" class="channelButton" style="visibility: hidden;"><i></i></button>
+                    <button type="button" class="channelButton" style="visibility: hidden;"><i></i></button>
+                    <div class="sliderBox">
+                        <div class="slider-wrapper">
+                            <input type="range" name="volumeSlider" id="volumeSlider-master" orient="vertical" min="0" max="125" value="{{master.volume}}">
+                        </div>
+                    </div>
+                    <div>
+                        <input type="number" name="volumeNumber" id="volumeNumber-master" style="font-size:12px; text-align:center" min="0" max="125" value="{{master.volume}}">
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="nameBox">
+                        {{localize "Soundscape.Master"}}
+                    </div>
+                    <div class="boxNumber" style="font-size:10px;"></div>
+                    <button type="button" class="channelButton"  style="visibility: hidden;"></button> 
+                </div>
+        
+            </div>
+
+            <button type="button" class="playMix" name="play" id="playMix"><i class="{{playingIcon}}"></i></button>   
+        </div>
+        <div class="column" id="SoundScape_columnSpacer" style="width:2%;display:{{soundboardDisplay}}">
+            <h2 style="visibility: hidden;"></h2>
+        </div>
+        <div class="column" id="SoundScape_soundboardColumn" style="width:49%;display:{{soundboardDisplay}}">
+                <h2 style="margin-top:10px">{{localize "Soundscape.Soundboard"}}</h2>
+                {{#each soundboard}}
+                <div class="form-group btnRow" style="width:100%">
+                    {{#each row}}
+                    <div>
+                        <input type="image" class="sbButton" name="sbButton" id="sbButton-{{this.iteration}}" src={{this.imageSrc}}>  
+                        <p class="sbButtonLabel" name="sbButtonLabel" id="sbButtonLabel-{{this.iteration}}">{{this.name}}</p>
+                    </div>
+                    
+                    {{/each}}
+                
+                </div>
+                {{/each}}
+                <hr>
+                <div class="form-group">
+                    <label>{{localize "Soundscape.Volume"}}</label>
+                    <input type="range" name="sbVolume" id="sbVolume" orient="vertical" min="0" max="100" steps="1" value={{sbGain}}>
+                    <button type="button" name="stopSB" id="stopSB" style="max-width:25%; margin-left:5px"><i class="fas fa-stop"></i>{{localize "Soundscape.StopAll"}}</button>
+                </div>
+        </div>
+    </div>
+</form>

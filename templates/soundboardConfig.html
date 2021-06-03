@@ -1,0 +1,94 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+    <style>
+        .formGroupNumber {
+            min-width: 15%;
+            max-width: 15%;
+        }
+        .formGroupSlider {
+            min-width: 45%;
+            max-width: 45%;
+        }
+        .formGroupLabel {
+            min-width: 40%;
+            max-width: 40%;
+        }
+        .formGroup {
+            display:flex;
+        }
+
+    </style>
+
+<div style="min-width:300px;max-width:300px">
+    <div style="text-align:center;">                    
+        {{localize "Soundscape.Sound"}} {{soundNr}}
+    </div>
+    <div style="text-align:center;">                    
+        {{localize "Soundscape.Name"}}
+    </div>
+    <input type="text" name="namebox" value="{{settings.name}}" id="name" style="width:100%;" >
+
+    <div style="text-align:center;">                    
+        {{localize "Soundscape.Playlist"}}
+    </div>
+    <div>
+        <select name="playlist" class="playlist-select" default="" style="width:100%;" id="playlists">
+            {{#select settings.selectedPlaylist}}
+                {{#each playlists}}
+                <option value="{{this.id}}">{{this.name}}</option>
+                {{/each}}
+            {{/select}}
+        </select>
+    </div>
+
+    <div style="text-align:center;">                    
+        {{localize "Soundscape.Sound"}}
+    </div>
+    <div class="form-fields" id="ss" style="display:{{styleSS}}">
+        <select name="sounds" class="sounds-select" default="" style="width:100%;" id="soundSelect">
+            {{#select settings.sound}}
+                <option value="">{{localize "Soundscape.None"}}</option>
+                {{#each sounds}}
+                    <option value="{{this.id}}">{{this.name}}</option>
+                {{/each}}
+            {{/select}}
+        </select>
+    </div>
+    <div class="form-fields" id="fp" style="display:{{styleFP}}">
+        <button type="button" class="file-picker" data-type="audio" data-target="src" title="Browse Files" tabindex="-1">
+            <i class="fas fa-file-import fa-fw"></i>
+        </button>
+        <input class="image" type="text" name="src" name2="soundSrc" id="srcPath" placeholder="path/audio.mp3" value={{settings.soundSrc}}>
+    </div>
+    <div style="text-align:center;">                    
+        {{localize "Soundscape.Icon"}}
+    </div>
+    <div class="form-fields" style="display:flex">
+        <button type="button" class="file-picker" data-type="image" data-target="img" title="Browse Files" tabindex="-1">
+            <i class="fas fa-file-import fa-fw"></i>
+        </button>
+        <input class="image" type="text" name="img" name2="imgSrc"  id="imgPath" placeholder="path/image.png" value={{settings.imageSrc}}>
+    </div>
+
+    <div class="formGroup">
+        <label class='formGroupLabel'>{{localize "Soundscape.Volume"}}</label>
+        <input type="range" min="0" max="100" value={{settings.volume}} class="slider formGroupSlider" name="volume" id="volume">
+        <input type="number" class="formGroupNumber" name="volumeNumber" id="volumeNumber" style="font-size:12px; text-align:center" min="0" max="125" value="{{settings.volume}}">
+    </div>
+
+    <div class="formGroup">
+        <label class='formGroupLabel'>{{localize "Soundscape.PlaybackSpeed"}}</label>
+        <input type="range" min="0.5" max="2" step="0.05" value={{settings.playbackSpeed}} class="slider formGroupSlider" name="speed" id="speed">
+        <input type="number" class="formGroupNumber" name="speedNumber" id="speedNumber" style="font-size:12px; text-align:center" min="0.5" max="2" step="0.05" value="{{settings.playbackSpeed}}">
+    </div>
+
+    <div class="formGroup">
+        <label class='formGroupLabel'>{{localize "Soundscape.RandomizeSpeed"}}</label>
+        <input type="range" min="0" max="2" step="0.05" value={{settings.playbackRandom}} class="slider formGroupSlider" name="randSpeed" id="randSpeed">
+        <input type="number" class="formGroupNumber" name="randSpeedNumber" id="randSpeedNumber" style="font-size:12px; text-align:center" min="0" max="2" step="0.05" value="{{settings.playbackRandom}}">
+    </div>
+
+    <button type="submit" name="submit">
+        <i class="fas fa-save"></i> {{localize "Soundscape.SaveConfig"}}
+    </button>
+</div>
+</form>
