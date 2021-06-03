@@ -2,12 +2,13 @@
 <b>This module only works in Foundry 0.8. It will not be made backwards compatible with Foundry 0.7, since it relies on a lot of the new audio features of 0.8</b><br>
 <b>Please note that this module is still in its infancy. There are still multiple bugs, and you should consider it being in beta.</b><br>
 <br>
-Soundscape is a Foundry VTT module that allows the user to create soundscapes by giving easy control over the relative volumes of multiple audio tracks. 
-There are multiple effects available to further customize the soundscape.<br>
-Besides that, there is a built-in soundboard for short sound effects, such as weapon or spell sounds.<br>
+Soundscape is a Foundry VTT module that gives users an easy way to mix down multiple audio tracks into a single highly configurable soundscape. The individual volumes of the sounds can be changed on the fly, 
+and multiple effects can be applied to the sounds in order to create the perfect soundscape. Besides that, there is a built-in soundboard that can be 
+used for short sound effects, such as weapon or spell attack sounds.<br>
 <br>
-Multiple soundscapes can be set up, and navigated through. There is also the option to import and export you soundscapes, either for backup, or for sharing them with your friends (no 
-actual audio files are imported/exported, only the metadata).<br>
+Multiple soundscapes, each with their own sounds and soundboard, can be set up, 
+and navigated through. There is also the option to import and export the soundscapes, either for backup, or for sharing them with your friends. (no 
+actual audio files are imported/exported, only the metadata).
 <br>
 Future plans are to allow <a href="https://github.com/cdeenen/materialdeck">Material Deck</a> and <a href="https://github.com/cdeenen/materialkeys">Material Keys</a> to control Soundscape through
 an <a href="https://www.elgato.com/en/stream-deck">Elgato Stream Deck</a> or <a href="https://novationmusic.com/en/launch/launchpad-mini">Novation Launchpad Mini</a>, respectively.<br>       
