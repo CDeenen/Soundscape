@@ -15,7 +15,7 @@
         "path": "lang/en.json"
       }
     ],
-    "url": "",
-    "manifest": "",
-    "download": ""
+    "url": "https://github.com/CDeenen/Soundscape",
+    "manifest": "https://raw.githubusercontent.com/CDeenen/Soundscape/master/module.json",
+    "download": "https://github.com/CDeenen/Soundscape/archive/master.zip"
   }
