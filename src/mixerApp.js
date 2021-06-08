@@ -10,12 +10,22 @@ export class MixerApp extends FormApplication {
         this.mixer;
         this.fxConfig;
         this.soundboardPlaying = [];
+        this.sbEn = false;
     }
 
     async setMixer(mixer) {
         if (this.mixer != undefined) return;
         this.mixer = mixer;
         await this.mixer.refresh(0);
+
+        let soundboardEnabled = await game.settings.get('soundscape','sbEnabled')
+        console.log('sbEn',soundboardEnabled,document)
+
+        if (soundboardEnabled) {
+            $("#SoundScape_soundboardColumn").css({'display':''})
+            $("#SoundScape_soundboardColumn").css({marginLeft: "15px"});	
+            $("#soundscape_mixer").css({width:'870px'})  
+        }
     }
 
     rerender() {
@@ -82,8 +92,7 @@ export class MixerApp extends FormApplication {
             soundboard.push({row});
         }
         const soundboardEnabled = game.settings.get(moduleName,'sbEnabled')
-        const mainColumnWidth = soundboardEnabled ? '49%' : '100%';
-        const mainRowWidth = soundboardEnabled ? '836px' : '410px';
+        const mainWidth = soundboardEnabled ? '870px' : '435px';
         const soundboardDisplay = soundboardEnabled ? '' : 'none';
         
 
@@ -97,10 +106,9 @@ export class MixerApp extends FormApplication {
             soundScapeIteration: this.mixer.currentSoundscape,
             loadedSounds: this.mixer.loadedSounds,
             soundboard,
-            mainColumnWidth,
-            mainRowWidth,
+            mainWidth,
             soundboardDisplay,
-            sbGain: game.settings.get(moduleName,'soundscapes')[this.mixer.currentSoundscape].soundboardGain
+            sbGain: game.settings.get(moduleName,'soundscapes')[this.mixer.currentSoundscape].soundboardGain,
         } 
     }
   
@@ -210,45 +218,15 @@ export class MixerApp extends FormApplication {
             this.soundboardPlaying[len].source.connect(this.mixer.master.effects.soundboardGain.node).connect(this.mixer.master.effects.interfaceGain.node).connect(game.audio.context.destination);
             this.soundboardPlaying[len].audio.play({volume:settings.volume/100});
         })
-
-        soundboardEnable.on("click", async (event)=>{
-            let soundboardEnabled = !game.settings.get(moduleName,'sbEnabled')
-            await game.settings.set(moduleName,'sbEnabled',soundboardEnabled)
-            if (soundboardEnabled) {
-                $('#SoundScape_mainColumn')[0].style.width='49%'
-                $('#SoundScape_mainRow')[0].style.width='836px'
-                $('#SoundScape_soundboardColumn')[0].style.display=''
-                $('#SoundScape_columnSpacer')[0].style.display=''
-                $('#soundscape_mixer')[0].style.width='auto'
-            }
-            else {
-                $('#SoundScape_mainColumn')[0].style.width='100%'
-                $('#SoundScape_mainRow')[0].style.width='410px'
-                $('#SoundScape_soundboardColumn')[0].style.display='none'
-                $('#SoundScape_columnSpacer')[0].style.display='none' 
-                $('#soundscape_mixer')[0].style.width='auto'
-            }
-            await this.render(true);
-        })
-        /*
-        newSoundscape.on("click",async (event)=>{
-            const SSsettings = this.mixer.newSoundscape();
-            let settings = game.settings.get(moduleName,'soundscapes');
-            settings.push(SSsettings);
-            this.mixer.currentSoundscape = settings.length-1;
-            await game.settings.set(moduleName,'soundscapes',settings);
-            this.mixer.refresh();
-        })
-        */
         nextSoundscape.on("click", (event)=>{
-            this.mixer.stop();
+            this.mixer.stop(undefined,true);
             const nrOfScapes = game.settings.get(moduleName,'soundscapes').length;
             this.mixer.currentSoundscape++;
             if (this.mixer.currentSoundscape >= nrOfScapes-1) this.mixer.currentSoundscape = nrOfScapes-1;
             this.mixer.refresh();
         })
         prevSoundscape.on("click", (event)=>{
-            this.mixer.stop();
+            this.mixer.stop(undefined,true);
             this.mixer.currentSoundscape--;
             if (this.mixer.currentSoundscape < 0) this.mixer.currentSoundscape = 0;
             this.mixer.refresh();

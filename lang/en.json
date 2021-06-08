@@ -68,5 +68,7 @@
     "Soundscape.Enable": "Enable",
     "Soundscape.DelayVolume": "Delay Volume",
     "Soundscape.Help": "Help",
-    "Soundscape.HelpName": "Soundscape Help"
+    "Soundscape.HelpName": "Soundscape Help",
+    "Soundscape.Folder": "Folder",
+    "Soundscape.Randomize": "Randomize"
 }

@@ -43,9 +43,10 @@ export class SoundConfig extends FormApplication {
      * Provide data to the template
      */
     getData() {
-        let soundData = this.channel.settings.soundData;
-        let playlists = [{name:'none',id:'none'},{name:game.i18n.localize("Soundscape.FilePicker"),id:'FP'}];
-        let sounds = [{name:'none',id:game.i18n.localize("Soundscape.None")}];
+        let soundData = game.settings.get(moduleName,'soundscapes')[this.currentSoundscape].channels[this.channelNumber].soundData;
+        console.log('soundData',soundData)
+        let playlists = [{name:'none',id:'none'}];
+        let sounds = [{name:game.i18n.localize("Soundscape.None"),id:'none'}];
         this.playlistId = soundData.playlistId;
         this.soundId = soundData.soundId;
         for (let p of game.playlists) {
@@ -67,20 +68,27 @@ export class SoundConfig extends FormApplication {
                 }
             }
         }
+
+        if (soundData.soundSelect == undefined) soundData.soundSelect = "playlist_single";
+        if (soundData.randomize == undefined) soundData.randomize = false;
+        /*
         else if (soundData.playlistId == 'FP') {
             const src = soundData.source;
             const parent = this;
             setTimeout(function(){parent.preloadSound(src)},500);
         }
+        */
 
         //Determine whether the sound selector or file picker should be displayed
         let styleSS = "";
         let styleFP ="none";
+        /*
         if (soundData.playlistId == 'FP') {
             styleSS = 'none';
             styleFP = ''
         }
-
+        */
+        console.log('soundSelect',soundData.soundSelect)
         return {
             channelNumber: this.channel.settings.channel + 1,
             name: this.channel.settings.name,
@@ -96,7 +104,9 @@ export class SoundConfig extends FormApplication {
             crossfade: soundData.fade.crossfade ? 'checked' : '',
             styleSS,
             styleFP,
-            srcPath: soundData.source
+            srcPath: soundData.source,
+            soundSelect: soundData.soundSelect,
+            randomize: soundData.randomize ? 'checked' : ''
         } 
     }
   
@@ -106,6 +116,7 @@ export class SoundConfig extends FormApplication {
      * @param {*} formData 
      */
     async _updateObject(event, formData) {
+        console.log('formData',formData)
         if (this.previewSound?.playing) {
             this.previewSound.soundNode.stop();
             clearInterval(this.previewTimer);
@@ -131,6 +142,8 @@ export class SoundConfig extends FormApplication {
         channel.name = formData.name;
         channel.soundData = {
             source: src,
+            soundSelect: formData.soundSelect,
+            randomize: formData.randomize,
             playlistId: formData.playlistId,
             soundId: formData.soundId,
             startTime: this.mixerHelpers.getSeconds(formData.start),
@@ -141,8 +154,8 @@ export class SoundConfig extends FormApplication {
                 crossfade: formData.crossfade
             }
         }
-        
         await game.settings.set(moduleName,'soundscapes',settings);
+        this.mixerApp.mixer.stop();
         await this.mixerApp.mixer.refresh();
         let parent = this;
         setTimeout(function(){
@@ -179,22 +192,7 @@ export class SoundConfig extends FormApplication {
             //let sounds = [];
             if (event.target.value==undefined) this.playlistId = 'none';
             else if (event.target.value == 'none') this.playlistId = 'none';
-            else if (event.target.value == 'FP') {
-                this.playlistId = 'FP';
-
-                //Show the file picker
-                document.querySelector(`#fp`).style='';
-                
-                //Hide the sound selector
-                document.querySelector(`#ss`).style='display:none';
-            }
             else {
-                //Hide the file picker
-                document.querySelector(`#fp`).style='display:none';
-                    
-                //Show the sound selector
-                document.querySelector(`#ss`).style='';
-
                 this.playlistId = event.target.value;
                 let soundSelect = document.getElementById(`sounds`);
                 soundSelect.options.length=0;
@@ -259,11 +257,11 @@ export class SoundConfig extends FormApplication {
                         return;
                     }
                     const current = (parent.previewSound.soundNode.context.currentTime - parent.previewSound.soundNode.startTime) % parent.previewSound.soundNode.duration
-                    if (current >= parent.mixerHelpers.getSeconds(document.getElementById(`stop`).value)) 
+                    const stopTime = parent.mixerHelpers.getSeconds(document.getElementById(`stop`).value) > 0 ? parent.mixerHelpers.getSeconds(document.getElementById(`stop`).value) : parent.previewSound.soundNode.duration;
+                    if (current >= stopTime) 
                         parent.stopPreview()
                     document.getElementById(`current`).value=parent.mixerHelpers.getTimeStamp(current);
 
-                    const stopTime = parent.mixerHelpers.getSeconds(document.getElementById(`stop`).value);
                     const fadeOut = parent.mixerHelpers.getSeconds(document.getElementById(`fadeOut`).value);
  
                     if (fadeOut != 0 && current >= stopTime - fadeOut) {
@@ -342,9 +340,6 @@ export class SoundConfig extends FormApplication {
 
         document.getElementById(`duration`).value=this.mixerHelpers.getTimeStamp(this.previewSound.soundNode.duration);
         document.getElementById(`preview`).disabled = false;
-        if (this.mixerHelpers.getSeconds(document.getElementById(`stop`).value) == 0)
-            document.getElementById(`stop`).value=this.mixerHelpers.getTimeStamp(this.previewSound.soundNode.duration);
-
     }
 
     stopPreview(force = false) {

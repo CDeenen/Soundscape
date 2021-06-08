@@ -51,7 +51,7 @@ export const registerSettings = function() {
     });
     */
    //Create the Help button
-   game.settings.registerMenu('general', 'helpMenu',{
+   game.settings.registerMenu(moduleName, 'helpMenu',{
     name: "Soundscape.HelpName",
     label: "Soundscape.Help",
     type: helpMenu,

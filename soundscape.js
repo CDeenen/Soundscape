@@ -146,12 +146,12 @@ Hooks.once('init', async()=>{
             },2000)
         }
         else {
-            /*
+            
             mixerApp = new MixerApp();
             await mixerApp.setMixer(mixer);
             mixerApp.render(true);
             mixer.setApp(mixerApp);
-            */
+            
         }
      }, 500);
     

@@ -26,7 +26,19 @@ export class Channel {
        this.startTime = 0;
 
        this.loaded = false;
+       this.previousSound;
+       this.soundArray = [];
+       this.currentlyPlayingNr = 0;
+
+       let parent = this;
+       setTimeout(function(){
+        parent.setMute(parent.settings.mute);
+        parent.setSolo(parent.settings.solo);
+       },100)
+       
+
        if (master == false) {
+            
             this.effects = {
                 gain: new Gain(this.settings.volume/100),
                 pan: new Pan(this.settings.pan),
@@ -37,7 +49,7 @@ export class Channel {
             }
             this.soundNode = undefined
             this.loaded = false;
-            this.preloadSound(config.soundData.source);
+            this.preloadSound();
        }
        else {
             this.effects = {
@@ -48,7 +60,86 @@ export class Channel {
        }
     }
 
-    async preloadSound(source) {
+    randomizeArray(array) {
+        for (let i = array.length - 1; i >= 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+          }
+          return array;
+    }
+      
+    async preloadSound(source,next=false,autoplay=false) {
+        if (this.settings.channel == 0) console.log('ch',this,this.settings.soundData)
+        
+        const soundData = this.settings.soundData;
+        if (soundData.soundSelect == undefined) soundData.soundSelect == 'playlist_single';
+        if (source == undefined && next==false) {
+            if (soundData.soundSelect == 'playlist_single') {
+                const playlist = game.playlists.get(soundData.playlistId);
+                if (playlist == undefined) return;
+                const sound = playlist.sounds.get(soundData.soundId);
+                if (sound == undefined) return;
+                source = sound.data.path;
+                console.log('pl',playlist,sound)
+            }
+            else if (soundData.soundSelect == 'playlist_multi') {
+                const playlist = game.playlists.get(soundData.playlistId);
+                if (playlist == undefined) return;
+                console.log('pl',playlist)
+                
+                let sounds = [];
+                //Add all sounds in playlist to array
+                for (let sound of playlist.sounds) {
+                    sounds.push({id:sound.id, src:sound.data.path})
+                }
+                //Randomize array
+                if (soundData.randomize) this.soundArray = this.randomizeArray(sounds)
+                else this.soundArray = sounds;
+                
+                
+                source = sounds[0].src;
+                this.currentlyPlayingNr = 0;
+            }
+            else if (soundData.soundSelect == 'filepicker_single') {
+                source = soundData.source;
+                const ret = await FilePicker.browse("data", source, {wildcard:true});
+                const files = ret.files;
+                let sounds = [];
+                //Add all sounds in playlist to array
+                for (let file of files) {
+                    sounds.push({id:undefined, src:file})
+                }
+                this.soundArray = this.randomizeArray(sounds);
+                source = sounds[0].src;
+                this.currentlyPlayingNr = 0;
+            }
+        }
+        else if (next) {
+            if (soundData.soundSelect != 'playlist_single') {
+                this.currentlyPlayingNr++;
+                if (this.currentlyPlayingNr > this.soundArray.length-1) this.currentlyPlayingNr = 0; 
+                if (this.soundArray[this.currentlyPlayingNr] == undefined) return;
+                console.log(this.soundArray)
+                source = this.soundArray[this.currentlyPlayingNr].src;
+                if (this.master == false && $('#soundscape_mixer')[0] != undefined) {
+                    document.getElementById(`playSound-${this.settings.channel}`).disabled = 'disabled';
+                }
+            }
+            else return;
+        }
+        else {
+
+        }
+        if (source == undefined) return;
+        
+        console.log('source',source)
+
+
+
+
+
         this.loaded = false;
         this.mixer.loadedSounds[this.settings.channel] = false;
         if (source == undefined || source == "") {
@@ -83,18 +174,24 @@ export class Channel {
         
 
         this.soundNode.on('stop',()=>{
+            console.log(soundData)
             this.fadeOutStarted = false;
             if (this.forceStop == false && this.settings.repeat) {
-                const startTime = this.settings.soundData.startTime;
+                const startTime = soundData.startTime;
                 const offset = (startTime == false || startTime == undefined) ? 0 : startTime;
                 this.effects.gain.node.gain.setValueAtTime(0, game.audio.context.currentTime);
-                this.soundNode.play({volume:1,offset:offset});
-                
+                this.soundNode.play({volume:1,offset:offset}); 
+            }
+            else if (this.forceStop == false && soundData.soundSelect == 'playlist_multi') {
+                console.log('testPreload')
+                this.preloadSound(undefined,true,true);
             }
             else {
                 clearInterval(this.timer);
                 this.timer = undefined;
                 this.forceStop = false;
+                document.getElementById(`playSound-${this.settings.channel}`).innerHTML = `<i class="fas fa-play"></i>`;
+                this.preloadSound(undefined,true);
             }
 
         })
@@ -108,7 +205,8 @@ export class Channel {
             this.startTime = this.soundNode.context.currentTime - offset;
             if (fadeIn != 0) {
                 this.effects.gain.node.gain.setValueAtTime(0, game.audio.context.currentTime);
-                this.effects.gain.node.gain.linearRampToValueAtTime(this.effects.gain.gain,game.audio.context.currentTime+fadeIn);
+                this.effects.gain.node.gain.setTargetAtTime(this.effects.gain.gain,game.audio.context.currentTime,fadeIn/4)
+                //this.effects.gain.node.gain.linearRampToValueAtTime(this.effects.gain.gain,game.audio.context.currentTime+fadeIn);
             }
             else {
                 this.effects.gain.node.gain.setValueAtTime(this.effects.gain.gain, game.audio.context.currentTime);
@@ -118,6 +216,7 @@ export class Channel {
         if (this.master == false && $('#soundscape_mixer')[0] != undefined) {
             document.getElementById(`playSound-${this.settings.channel}`).disabled = '';
         }
+        if (autoplay) this.play();
             
     }
 
@@ -244,7 +343,7 @@ export class Channel {
             let parent = this;
             this.timer = setInterval(function(){
                 const current = (parent.soundNode.context.currentTime - parent.startTime) ;
-                const stopTime = parent.settings.soundData.stopTime;
+                const stopTime = parent.settings.soundData.stopTime > 0 ? parent.settings.soundData.stopTime : parent.soundNode.duration;
                 if (current >= stopTime) 
                     parent.soundNode.stop()
 
@@ -254,7 +353,8 @@ export class Channel {
                         parent.fadeOutStarted = false;
                     else if (parent.fadeOutStarted == false) {
                         parent.fadeOutStarted = true;
-                        parent.effects.gain.node.gain.linearRampToValueAtTime(0,game.audio.context.currentTime+fadeOut);
+                        parent.effects.gain.node.gain.setTargetAtTime(0,game.audio.context.currentTime,fadeOut/4)
+                        //parent.effects.gain.node.gain.linearRampToValueAtTime(0,game.audio.context.currentTime+fadeOut);
                     }
                     
                 }
@@ -271,6 +371,7 @@ export class Channel {
         clearInterval(this.timer);
         this.timer = undefined;
         this.fadeOutStarted = false;
+        this.preloadSound(undefined,true);
     }
 
     setEffects() {

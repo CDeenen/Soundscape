@@ -1,5 +1,33 @@
 <form autocomplete="off" onsubmit="event.preventDefault()">
+    <script>
+        $(document).ready(async function() {
+            let soundboardEnabled = await game.settings.get('soundscape','sbEnabled')
 
+            if (soundboardEnabled) {
+                $("#SoundScape_soundboardColumn").css({'display':''})
+                $("#SoundScape_soundboardColumn").css({marginLeft: "15px"});	
+                $("#soundscape_mixer").css({width:'870px'})  
+            }
+
+            $("#soundboardEnable").on('click', function() {
+                var curwidth = $("#SoundScape_soundboardColumn").offset();
+                if(soundboardEnabled)
+                {
+                    $("#SoundScape_soundboardColumn").animate({marginLeft: '-50%'}, 300 );
+                    $("#soundscape_mixer").animate({width:'430px'},300)
+                    setTimeout(function(){
+                        $("#SoundScape_soundboardColumn").css({'display':'none'})
+                    },300);
+                }else{
+                    $("#SoundScape_soundboardColumn").css({'display':''})
+                    $("#SoundScape_soundboardColumn").animate({marginLeft: "15px"}, 300 );	
+                    $("#soundscape_mixer").animate({width:'870px'},300)   
+                }
+                soundboardEnabled = !soundboardEnabled;
+                game.settings.set('soundscape','sbEnabled',soundboardEnabled)
+            })
+        });
+    </script>
 
     <style>
         .slider-wrapper input {
@@ -145,8 +173,8 @@
 
     </style>
 
-    <div class="row" id="SoundScape_mainRow" style="width:{{mainRowWidth}};">
-        <div class="column" id="SoundScape_mainColumn" style="height:100%; width:{{mainColumnWidth}}">
+    <div class="row" id="SoundScape_mainRow" style="width:100%;">
+        <div class="column" id="SoundScape_mainColumn" style="min-width:405px; height:100%; position:relative; z-index:2; background: url(../ui/parchment.jpg)">
 
             <div class="form-group" style="max-width:405px">
                 <button type="button" name="prevSoundscape" style="max-width:10%;height:30px">
@@ -162,7 +190,7 @@
                 <button type="button" name="mixerConfig" style="max-width:10%;height:30px">
                     <i class="fas fa-cog" style="font-size: 25px;"></i>
                 </button>
-                <button type="button" name="soundboardEnable" style="max-width:10%;height:30px">
+                <button type="button" name="soundboardEnable" id="soundboardEnable" style="max-width:10%;height:30px">
                     <i class="fas fa-music" style="font-size: 25px;"></i>
                 </button>
             </div>
@@ -233,10 +261,7 @@
 
             <button type="button" class="playMix" name="play" id="playMix"><i class="{{playingIcon}}"></i></button>   
         </div>
-        <div class="column" id="SoundScape_columnSpacer" style="width:2%;display:{{soundboardDisplay}}">
-            <h2 style="visibility: hidden;"></h2>
-        </div>
-        <div class="column" id="SoundScape_soundboardColumn" style="width:49%;display:{{soundboardDisplay}}">
+        <div class="column collapse" id="SoundScape_soundboardColumn" style="width:50%;position:relative;z-index:1;height:100%;display:none;margin-left:-50%">
                 <h2 style="margin-top:10px">{{localize "Soundscape.Soundboard"}}</h2>
                 {{#each soundboard}}
                 <div class="form-group btnRow" style="width:100%">

@@ -48,7 +48,7 @@ export class Mixer {
             };
             game.socket.emit(`module.Soundscape`, payload);
         }
-        //console.log('Starting mix',this.channels,this)
+        this.configureSolo();
         this.playing = true;
         if (channel == undefined)
             for (let channel of this.channels) {
@@ -58,7 +58,7 @@ export class Mixer {
             this.channels[channel].play();
     }
 
-    stop(channel = undefined) {
+    stop(channel = undefined, fadeOut = false) {
         if (game.user.isGM) {
             const payload = {
               "msgType": "stop",
@@ -66,24 +66,30 @@ export class Mixer {
             };
             game.socket.emit(`module.Soundscape`, payload);
         }
-        //console.log('Stopping mix');
+        if (channel == undefined && fadeOut) this.master.effects.gain.node.gain.setTargetAtTime(0,game.audio.context.currentTime,0.25);
+        let parent = this;
         if (channel == undefined) {
-            this.playing = false;
-            for (let channel of this.channels) 
-                channel.stop();
+            parent.playing = false;
+            for (let channel of parent.channels) {
+                if (fadeOut)
+                    setTimeout(function(){
+                        channel.stop();
+                    },1000)
+                else 
+                    channel.stop();
+            }
+                
         }
         else {
-            this.channels[channel].stop();
-            this.playing = false;
-            for (let channel of this.channels) {
+            parent.channels[channel].stop();
+            parent.playing = false;
+            for (let channel of parent.channels) {
                 if (channel.soundNode != undefined && channel.soundNode.playing) {
-                    this.playing = true;
+                    parent.playing = true;
                     return;
                 }
             }
         }
-        
-        
     }
 
     configureSolo(){
@@ -233,6 +239,7 @@ export class Mixer {
                 link: false,
                 repeat: false,
                 soundData: {
+                    soundSelect: "playlist_single",
                     playlistId: "none",
                     soundId: "none",
                     source: "",
@@ -242,7 +249,8 @@ export class Mixer {
                         fadeIn: 0,
                         fadeOut: 0,
                         crossfade: false
-                    }
+                    },
+                    randomize: false
                 },
                 effects: {
                     panner: {
