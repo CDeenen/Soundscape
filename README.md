@@ -156,7 +156,6 @@ In this menu you can configure the sound for each soundboard button. You have th
     <li><b>Sound (filepicker)</b>: (If 'Sound Selection' is set to 'Filepicker: Single Sound') Shows the path to the selected sound. Press the button on the right to open the filepicker</li>
     <li><b>Folder</b>: (Visible if 'Sound Selection' is set to 'Filepicker: Folder') Shows the path to the selected folder. Press the button on the right to open the filepicker</li>
     <li><b>Shuffle</b>: (Visible if 'Sound Selection' is NOT set to 'Playlist: Single Sound') Enabling this will shuffle the sounds in the playlist, folder, or wildcard list</li>
-    
     <li><b>Volume</b>: Sets the volume of the sound</li>
     <li><b>Playback Speed</b>: Set the playback speed of the sound. Please note that the pitch also changes. A value of 1 means normal playback speed, a value of 2 means double playback speed</li>
     <li><b>Randomize Speed</b>: If you set a value higher than 0 here, a random value will be picked between -value and +value, which is added to the playback speed. 
