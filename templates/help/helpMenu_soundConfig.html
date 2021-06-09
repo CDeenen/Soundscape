@@ -1,0 +1,39 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+    <div style="width:500px">
+        <h1>Sound Configuration</h1>
+        In this menu you can configure the sound for each channel. You have the following options, some of which are not always visible (depending on what is set at 'Sound Selection'):
+        <ul>
+            <li><b>Name</b>: The name of the channel. This will be displayed at the bottom of the mixer</li>
+            <li><b>Sound Selection</b>: Configures how you want to select the sound:
+                <ul>
+                    <li><b>Playlist: Single Sound</b>: Select a single sound from a playlist</li>
+                    <li><b>Playlist: Complete Playlist</b>: Select a complete playlist. Will play all sounds in the playlist consecutively</li>
+                    <li><b>Filepicker: Single Sound</b>: Select a single sound using the file picker, wildcard names are allowd to select multiple sounds</li>
+                    <li><b>Filepicker: Folder</b>: Select a folder. Will play all sounds in the folder consecutively</li>
+                </ul>
+            </li>
+            <li><b>Playlist</b>: (Visible if 'Sound Selection' is set to one of the playlist options) The playlist from which to select a sound</li>
+            <li><b>Sound (playlist)</b>: (If 'Sound Selection' is set to 'Playlist: Single Sound') Selects the sound to play from the selected playlist</li>
+            <li><b>Sound (filepicker)</b>: (If 'Sound Selection' is set to 'Filepicker: Single Sound') Shows the path to the selected sound. Press the button on the right to open the filepicker</li>
+            <li><b>Folder</b>: (Visible if 'Sound Selection' is set to 'Filepicker: Folder') Shows the path to the selected folder. Press the button on the right to open the filepicker</li>
+            <li><b>Shuffle</b>: (Visible if 'Sound Selection' is NOT set to 'Playlist: Single Sound') Enabling this will shuffle the sounds in the playlist, folder, or wildcard list</li>
+            <li><b>Repeat</b>: Sets whether the sound or selection of sounds should repeat after it is finished playing
+                <ul>
+                    <li><b>Don't Repeat</b>: Don't repeat the sounds</li>
+                    <li><b>Repeat Single</b>: Repeat a single sound</li>
+                    <li><b>Repeat All</b>: Will play all sounds in the playlist, folder or wildcard list, and will repeat that</li>
+                </ul>
+            </li>
+            <li><b>Start</b>: The time at which you want to start playback in HH:MM:SS:mm (where 'mm' is millisecons)</li>
+            <li><b>Stop</b>: The time at which you want to stop playback in HH:MM:SS:mm (where 'mm' is millisecons)</li>
+            <li><b>Duration</b>: The duration of the sound (not editable)</li>
+            <li><b>Fade In</b>: The fade in duraction in HH:MM:SS:mm (where 'mm' is millisecons)</li>
+            <li><b>Fade Out</b>: The fade out duraction in HH:MM:SS:mm (where 'mm' is millisecons)</li>
+        </ul>
+        <h2>Wildcard Names</h2>
+        When selecting single sounds using the filepicker, you can use wildcard names so it will randomly play a sound from a selection. To do this, navigate to the folder that contains the sounds, 
+        in the textbox append the filename with the common part of the name of the sounds you want to play, followed by an asterisk.
+        For example, if you have the sounds 'Thunder.wav', 'Thunder2.wav' and 'Thunder3.wav' in the folder 'Assets', you could fill in the following: 'Assets/Thunder*', 
+        which will play one of the three sounds randomly when you press the button.
+    </div>
+</form>

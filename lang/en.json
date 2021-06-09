@@ -3,7 +3,6 @@
     "Soundscape.ExportConfig.Content1": "Exporting soundscapes. Please set a file name, and press 'Export'.",
     "Soundscape.ExportConfig.Content2": "Note that this only exports the metadata, not the audio files. You will need to make sure that the audio files are in the same relative location when you import them.",
 
-    
     "Soundscape.ImportConfig.Content1": "Importing soundscapes. Please select a file and press 'Import'.",
     "Soundscape.ImportConfig.Content2": "Note that this only imports the metadata, not the audio files. You will need to make sure that the audio files are in the same relative location as when you imported them.",
 
@@ -24,10 +23,11 @@
     "Soundscape.DuplicateSelected": "Duplicate Selected",
     "Soundscape.DeleteSelected": "Delete Selected",
     "Soundscape.ExportSelected": "Export Selected",
-    "Soundscape.MixerConfig": "Soundscape Configuration",
+    "Soundscape.SoundscapeConfig": "Soundscape Configuration",
     "Soundscape.Soundboard": "Soundboard",
     "Soundscape.SoundboardConfig": "Soundboard Configuration",
     "Soundscape.Sound": "Sound",
+    "Soundscape.SoundboardSound": "Soundboard Sound",
     "Soundscape.Playlist": "Playlist",
     "Soundscape.Icon": "Icon",
     "Soundscape.Volume": "Volume",
@@ -45,7 +45,7 @@
     "Soundscape.Repeat": "Repeat",
     "Soundscape.Preview": "Preview",
     "Soundscape.None": "None",
-    "Soundscape.FilePicker": "File Picker",
+    "Soundscape.FilePicker": "Filepicker",
     "Soundscape.Mixer": "Mixer",
     "Soundscape.SoundConfig": "Sound Configuration",
     "Soundscape.MuteBtn": "M",
@@ -58,6 +58,7 @@
     "Soundscape.LowPassFilter": "Low Pass Filter",
     "Soundscape.PeakingFilter": "Peaking Filter",
     "Soundscape.Effects": "Effects",
+    "Soundscape.OtherEffects": "Other Effects",
     "Soundscape.FrequencyHz": "Frequency (Hz)",
     "Soundscape.QFactor": "Q-Factor",
     "Soundscape.Gain": "Gain",
@@ -70,5 +71,13 @@
     "Soundscape.Help": "Help",
     "Soundscape.HelpName": "Soundscape Help",
     "Soundscape.Folder": "Folder",
-    "Soundscape.Randomize": "Randomize"
+    "Soundscape.Shuffle": "Shuffle",
+    "Soundscape.SoundSelection": "Sound Selection",
+    "Soundscape.PlaylistSingle": "Playlist: Single Sound",
+    "Soundscape.PlaylistComplete": "Playlist: Complete Playlist",
+    "Soundscape.FilepickerSingle": "Filepicker: Single Sound",
+    "Soundscape.FilepickerFolder": "Filepicker: Folder",
+    "Soundscape.NoRepeat": "Don't Repeat",
+    "Soundscape.RepeatSingle": "Repeat Single",
+    "Soundscape.RepeatAll": "Repeat All"
 }

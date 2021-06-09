@@ -1,4 +1,59 @@
 <form autocomplete="off" onsubmit="event.preventDefault()">
+    <script>
+        $(document).ready(async function() {
+            setSoundSelect('{{settings.soundSelect}}');
+
+            $("#soundSelect").on('change', function(){
+                setSoundSelect(this.value);
+            })
+
+            if (document.getElementById('soundscape_soundboardConfigHelp') == null) {
+                let help = document.createElement("a");
+                help.id = 'soundscape_soundboardConfigHelp';
+                help.innerHTML = 
+                `
+                    <i class="fas fa-question"></i>
+                    {{localize "Soundscape.Help"}}
+                `
+                document.getElementById('soundscape_soundboardConfig').getElementsByClassName('window-title')[0].after(help);
+            }
+        });
+
+        function setSoundSelect(selection) {
+            if (selection == 'playlist_single') {
+                $("#playlistWrapper").css({'display':''})
+                $("#playlistSoundWrapper").css({'display':''})
+                $("#filepickerSoundWrapper").css({'display':'none'})
+                $("#filepickerFolderWrapper").css({'display':'none'})
+                $("#randomizeWrapper").css({'display':'none'})
+            }
+            else if (selection == 'playlist_multi') {
+                $("#playlistWrapper").css({'display':''})
+                $("#playlistSoundWrapper").css({'display':'none'})
+                $("#filepickerSoundWrapper").css({'display':'none'})
+                $("#filepickerFolderWrapper").css({'display':'none'})
+                $("#randomizeWrapper").css({'display':''})
+            }
+            else if (selection == 'filepicker_single') {
+                $("#playlistWrapper").css({'display':'none'})
+                $("#playlistSoundWrapper").css({'display':'none'})
+                $("#filepickerSoundWrapper").css({'display':''})
+                $("#filepickerFolderWrapper").css({'display':'none'})
+                $("#randomizeWrapper").css({'display':''})
+            }
+            else if (selection == 'filepicker_folder') {
+                $("#playlistWrapper").css({'display':'none'})
+                $("#playlistSoundWrapper").css({'display':'none'})
+                $("#filepickerSoundWrapper").css({'display':'none'})
+                $("#filepickerFolderWrapper").css({'display':''})
+                $("#randomizeWrapper").css({'display':''})
+            }
+            $("#soundscape_soundboardConfig").css({'height':'auto'})
+            $('#soundSelect')[0].value=selection;
+            
+        }
+    </script>
+
     <style>
         .formGroupNumber {
             min-width: 15%;
@@ -15,24 +70,52 @@
         .formGroup {
             display:flex;
         }
+        .formField {
+            display: flex;
+            min-width: 100%;
+            margin-top: 5px;
+        }
+        .formlabel {
+            min-width: 50%;
+        }
+        .formValue {
+            width: 60%
+        }
+        .filePickerField {
+            width: 60%;
+            display: flex;
+        }
+        select { display: block; min-width: 60%; }
+        label { display: block; min-width: 40%; }
 
     </style>
 
-<div style="min-width:300px;max-width:300px">
-    <div style="text-align:center;">                    
-        {{localize "Soundscape.Sound"}} {{soundNr}}
+<div style="min-width:400px;max-width:400px">
+    <div style="text-align:center;">
+        <h2>{{localize "Soundscape.SoundboardSound"}} {{soundNr}}</h2>
     </div>
-    <div style="text-align:center;">                    
-        {{localize "Soundscape.Name"}}
-    </div>
-    <input type="text" name="namebox" value="{{settings.name}}" id="name" style="width:100%;" >
 
-    <div style="text-align:center;">                    
-        {{localize "Soundscape.Playlist"}}
+    <div class="formField">
+        <label>{{localize "Soundscape.Name"}}: </label>
+        <div class="formValue">
+            <input type="text"  name="name" value="{{settings.name}}">
+        </div>
     </div>
-    <div>
-        <select name="playlist" class="playlist-select" default="" style="width:100%;" id="playlists">
-            {{#select settings.selectedPlaylist}}
+
+    <div class="formField">
+        <label>{{localize "Soundscape.SoundSelection"}}: </label>
+        <select name="soundSelect" id="soundSelect" default="">
+            <option value="playlist_single" >{{localize "Soundscape.PlaylistSingle"}}</option>
+            <option value="playlist_multi">{{localize "Soundscape.PlaylistComplete"}}</option>
+            <option value="filepicker_single">{{localize "Soundscape.FilepickerSingle"}}</option>
+            <option value="filepicker_folder">{{localize "Soundscape.FilepickerFolder"}}</option>
+        </select>
+    </div>
+
+    <div class="formField" id='playlistWrapper'>
+        <label>{{localize "Soundscape.Playlist"}}: </label>
+        <select name="playlistId" default="">
+            {{#select selectedPlaylist}}
                 {{#each playlists}}
                 <option value="{{this.id}}">{{this.name}}</option>
                 {{/each}}
@@ -40,49 +123,69 @@
         </select>
     </div>
 
-    <div style="text-align:center;">                    
-        {{localize "Soundscape.Sound"}}
-    </div>
-    <div class="form-fields" id="ss" style="display:{{styleSS}}">
-        <select name="sounds" class="sounds-select" default="" style="width:100%;" id="soundSelect">
-            {{#select settings.sound}}
-                <option value="">{{localize "Soundscape.None"}}</option>
+    <div class="formField" id='playlistSoundWrapper'>
+        <label>{{localize "Soundscape.Sound"}}: </label>
+        <select name="soundId" default="">
+            {{#select selectedSound}}
                 {{#each sounds}}
-                    <option value="{{this.id}}">{{this.name}}</option>
+                <option value="{{this.id}}">{{this.name}}</option>
                 {{/each}}
             {{/select}}
         </select>
     </div>
-    <div class="form-fields" id="fp" style="display:{{styleFP}}">
-        <button type="button" class="file-picker" data-type="audio" data-target="src" title="Browse Files" tabindex="-1">
-            <i class="fas fa-file-import fa-fw"></i>
-        </button>
-        <input class="image" type="text" name="src" name2="soundSrc" id="srcPath" placeholder="path/audio.mp3" value={{settings.soundSrc}}>
-    </div>
-    <div style="text-align:center;">                    
-        {{localize "Soundscape.Icon"}}
-    </div>
-    <div class="form-fields" style="display:flex">
-        <button type="button" class="file-picker" data-type="image" data-target="img" title="Browse Files" tabindex="-1">
-            <i class="fas fa-file-import fa-fw"></i>
-        </button>
-        <input class="image" type="text" name="img" name2="imgSrc"  id="imgPath" placeholder="path/image.png" value={{settings.imageSrc}}>
+
+    <div class="formField" id='filepickerSoundWrapper'>
+        <label>{{localize "Soundscape.Sound"}}: </label>
+        <div class="filePickerField">
+            <button type="button" class="file-picker" data-type="audio" data-target="src" title="Browse Files" tabindex="-1">
+                <i class="fas fa-file-import fa-fw"></i>
+            </button>
+            <input class="image" type="text" name="src" name2="soundSrc" id="srcPath" placeholder="path/audio.mp3" value={{settings.source}}>
+        </div>
     </div>
 
-    <div class="formGroup">
-        <label class='formGroupLabel'>{{localize "Soundscape.Volume"}}</label>
+    <div class="formField" id='filepickerFolderWrapper'>
+        <label>{{localize "Soundscape.Folder"}}:</label> 
+        <div class="filePickerField">
+            <button type="button" class="file-picker" data-type="folder" data-target="folderSrc" title="Browse Files" tabindex="-1">
+                <i class="fas fa-file-import fa-fw"></i>
+            </button>
+            <input class="image" type="text" name="folderSrc" name2="folderSrc" id="srcFolderPath" placeholder="path/folder" value={{settings.source}}>
+        </div>
+    </div>
+
+    <div class="formField" id='randomizeWrapper'>
+        <label>{{localize "Soundscape.Shuffle"}}: </label>
+        <input type="checkbox" name="randomize" data-dtype="Boolean" {{randomize}}>
+    </div>
+
+    <hr>
+    <div class="formField">
+        <label>{{localize "Soundscape.Icon"}}:</label> 
+        <div class="filePickerField">
+            <button type="button" class="file-picker" data-type="image" data-target="img" title="Browse Files" tabindex="-1">
+                <i class="fas fa-file-import fa-fw"></i>
+            </button>
+            <input class="image" type="text" name="img" name2="imgSrc"  id="imgPath" placeholder="path/image.png" value={{settings.imageSrc}}>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="formField">
+        <label>{{localize "Soundscape.Volume"}}</label>
         <input type="range" min="0" max="100" value={{settings.volume}} class="slider formGroupSlider" name="volume" id="volume">
         <input type="number" class="formGroupNumber" name="volumeNumber" id="volumeNumber" style="font-size:12px; text-align:center" min="0" max="125" value="{{settings.volume}}">
     </div>
 
-    <div class="formGroup">
-        <label class='formGroupLabel'>{{localize "Soundscape.PlaybackSpeed"}}</label>
+    <div class="formField">
+        <label>{{localize "Soundscape.PlaybackSpeed"}}</label>
         <input type="range" min="0.5" max="2" step="0.05" value={{settings.playbackSpeed}} class="slider formGroupSlider" name="speed" id="speed">
         <input type="number" class="formGroupNumber" name="speedNumber" id="speedNumber" style="font-size:12px; text-align:center" min="0.5" max="2" step="0.05" value="{{settings.playbackSpeed}}">
     </div>
 
-    <div class="formGroup">
-        <label class='formGroupLabel'>{{localize "Soundscape.RandomizeSpeed"}}</label>
+    <div class="formField">
+        <label>{{localize "Soundscape.RandomizeSpeed"}}</label>
         <input type="range" min="0" max="2" step="0.05" value={{settings.playbackRandom}} class="slider formGroupSlider" name="randSpeed" id="randSpeed">
         <input type="number" class="formGroupNumber" name="randSpeedNumber" id="randSpeedNumber" style="font-size:12px; text-align:center" min="0" max="2" step="0.05" value="{{settings.playbackRandom}}">
     </div>

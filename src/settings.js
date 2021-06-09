@@ -50,53 +50,6 @@ export const registerSettings = function() {
         onChange: x => window.location.reload()
     });
     */
-   //Create the Help button
-   game.settings.registerMenu(moduleName, 'helpMenu',{
-    name: "Soundscape.HelpName",
-    label: "Soundscape.Help",
-    type: helpMenu,
-    restricted: false
-});
+
 };
 
-class helpMenu extends FormApplication {
-    constructor(data, options) {
-        super(data, options);
-    }
-  
-    /**
-     * Default Options for this FormApplication
-     */
-    static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
-            id: "helpMenu",
-            title: "Soundscape: Help",
-            template: "./modules/Soundscape/templates/helpMenu.html",
-            width: "500px"
-        });
-    }
-  
-    /**
-     * Provide data to the template
-     */
-    getData() {
-      
-        return {
-           
-        } 
-    }
-  
-    /**
-     * Update on form submit
-     * @param {*} event 
-     * @param {*} formData 
-     */
-    async _updateObject(event, formData) {
-  
-    }
-  
-    activateListeners(html) {
-        super.activateListeners(html);
-        
-    }
-  }

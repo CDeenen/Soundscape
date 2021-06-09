@@ -2,6 +2,7 @@ import {moduleName} from "../../soundscape.js";
 import {currentSoundscape} from "../mixer.js";
 import {Delay} from "./delay.js"
 import {FFT} from "./fft.js"
+import {helpMenuFx} from "../helpMenu.js";
 
 export class channelFX {
     constructor(data, options) {
@@ -149,86 +150,94 @@ export class FXConfig extends FormApplication {
   
     activateListeners(html) {
         super.activateListeners(html);
-            const enable = html.find("input[name=Enable]");
-            const Freq = html.find("input[name=Freq]");
-            const FreqNr = html.find("input[name=FreqNr]");
-            const Q = html.find("input[name=Q]");
-            const QNr = html.find("input[name=QNr]");
-            const gain = html.find("input[name=Gain]");
-            const gainNr = html.find("input[name=GainNr]");
 
-            enable.on('change',(event)=>{
-                const filterId = event.target.id.replace('Enable-','');
-                const enable = event.target.checked;
-                this.channel.effects.eq.setEnable(filterId,enable);
-
-                let settings = game.settings.get(moduleName,'soundscapes');
-                settings[this.mixer.currentSoundscape].channels[this.channelNr].effects.equalizer[filterId].enable = enable;
-                game.settings.set(moduleName,'soundscapes',settings);
+        setTimeout(function() {
+            document.getElementById('soundscape_fxHelp').addEventListener("click", (event) => {
+                let dialog = new helpMenuFx();
+                dialog.render(true);
             })
+        },100)
 
-            Freq.on('input change',(event)=>{
-                let value = event.target.value;
-                value = 20*Math.pow(10,value/30)
-                const filterId = event.target.id.replace('Freq-','');
-                html.find("input[id=FreqNr-"+filterId+"]")[0].value=Math.round(value);
-                this.channel.effects.eq.setFrequency(filterId,value);
+        const enable = html.find("input[name=Enable]");
+        const Freq = html.find("input[name=Freq]");
+        const FreqNr = html.find("input[name=FreqNr]");
+        const Q = html.find("input[name=Q]");
+        const QNr = html.find("input[name=QNr]");
+        const gain = html.find("input[name=Gain]");
+        const gainNr = html.find("input[name=GainNr]");
 
-                let settings = game.settings.get(moduleName,'soundscapes');
-                settings[this.mixer.currentSoundscape].channels[this.channelNr].effects.equalizer[filterId].frequency = value;
-                game.settings.set(moduleName,'soundscapes',settings);
-            })
-            FreqNr.on('change',(event)=>{
-                const value = event.target.value;
-                const filterId = event.target.id.replace('FreqNr-','');
-                html.find("input[id=Freq-"+filterId+"]")[0].value=Math.log10(value/20)*30;
-                this.channel.effects.eq.setFrequency(filterId,value);
+        enable.on('change',(event)=>{
+            const filterId = event.target.id.replace('Enable-','');
+            const enable = event.target.checked;
+            this.channel.effects.eq.setEnable(filterId,enable);
 
-                let settings = game.settings.get(moduleName,'soundscapes');
-                settings[this.mixer.currentSoundscape].channels[this.channelNr].effects.equalizer[filterId].frequency = value;
-                game.settings.set(moduleName,'soundscapes',settings);
-            })
-            Q.on('input change',(event)=>{
-                let qualityFactor = event.target.value;
-                qualityFactor = 0.1*Math.pow(10,qualityFactor/50)
-                const filterId = event.target.id.replace('Q-','');
-                html.find("input[id=QNr-"+filterId+"]")[0].value=Math.round(100*qualityFactor)/100;
-                this.channel.effects.eq.setQ(filterId,qualityFactor);
+            let settings = game.settings.get(moduleName,'soundscapes');
+            settings[this.mixer.currentSoundscape].channels[this.channelNr].effects.equalizer[filterId].enable = enable;
+            game.settings.set(moduleName,'soundscapes',settings);
+        })
 
-                let settings = game.settings.get(moduleName,'soundscapes');
-                settings[this.mixer.currentSoundscape].channels[this.channelNr].effects.equalizer[filterId].q = qualityFactor;
-                game.settings.set(moduleName,'soundscapes',settings);
-            })
-            QNr.on('change',(event)=>{
-                const qualityFactor = event.target.value;
-                const filterId = event.target.id.replace('QNr-','');
-                html.find("input[id=Q-"+filterId+"]")[0].value=Math.log10(qualityFactor/0.1)*50;
-                this.channel.effects.eq.setQ(filterId,qualityFactor);
+        Freq.on('input change',(event)=>{
+            let value = event.target.value;
+            value = 20*Math.pow(10,value/30)
+            const filterId = event.target.id.replace('Freq-','');
+            html.find("input[id=FreqNr-"+filterId+"]")[0].value=Math.round(value);
+            this.channel.effects.eq.setFrequency(filterId,value);
 
-                let settings = game.settings.get(moduleName,'soundscapes');
-                settings[this.mixer.currentSoundscape].channels[this.channelNr].effects.equalizer[filterId].q = qualityFactor;
-                game.settings.set(moduleName,'soundscapes',settings);
-            })
-            gain.on('input change',(event)=>{
-                const gain = event.target.value;
-                const filterId = event.target.id.replace('Gain-','');
-                html.find("input[id=GainNr-"+filterId+"]")[0].value=gain;
-                this.channel.effects.eq.setGain(filterId,gain);
+            let settings = game.settings.get(moduleName,'soundscapes');
+            settings[this.mixer.currentSoundscape].channels[this.channelNr].effects.equalizer[filterId].frequency = value;
+            game.settings.set(moduleName,'soundscapes',settings);
+        })
+        FreqNr.on('change',(event)=>{
+            const value = event.target.value;
+            const filterId = event.target.id.replace('FreqNr-','');
+            html.find("input[id=Freq-"+filterId+"]")[0].value=Math.log10(value/20)*30;
+            this.channel.effects.eq.setFrequency(filterId,value);
 
-                let settings = game.settings.get(moduleName,'soundscapes');
-                settings[this.mixer.currentSoundscape].channels[this.channelNr].effects.equalizer[filterId].gain = gain;
-                game.settings.set(moduleName,'soundscapes',settings);
-            })
-            gainNr.on('change',(event)=>{
-                const gain = event.target.value;
-                const filterId = event.target.id.replace('GainNr-','');
-                html.find("input[id=Gain-"+filterId+"]")[0].value=gain;
-                this.channel.effects.eq.setGain(filterId,gain);
+            let settings = game.settings.get(moduleName,'soundscapes');
+            settings[this.mixer.currentSoundscape].channels[this.channelNr].effects.equalizer[filterId].frequency = value;
+            game.settings.set(moduleName,'soundscapes',settings);
+        })
+        Q.on('input change',(event)=>{
+            let qualityFactor = event.target.value;
+            qualityFactor = 0.1*Math.pow(10,qualityFactor/50)
+            const filterId = event.target.id.replace('Q-','');
+            html.find("input[id=QNr-"+filterId+"]")[0].value=Math.round(100*qualityFactor)/100;
+            this.channel.effects.eq.setQ(filterId,qualityFactor);
 
-                let settings = game.settings.get(moduleName,'soundscapes');
-                settings[this.mixer.currentSoundscape].channels[this.channelNr].effects.equalizer[filterId].gain = gain;
-                game.settings.set(moduleName,'soundscapes',settings);
-            })
+            let settings = game.settings.get(moduleName,'soundscapes');
+            settings[this.mixer.currentSoundscape].channels[this.channelNr].effects.equalizer[filterId].q = qualityFactor;
+            game.settings.set(moduleName,'soundscapes',settings);
+        })
+        QNr.on('change',(event)=>{
+            const qualityFactor = event.target.value;
+            const filterId = event.target.id.replace('QNr-','');
+            html.find("input[id=Q-"+filterId+"]")[0].value=Math.log10(qualityFactor/0.1)*50;
+            this.channel.effects.eq.setQ(filterId,qualityFactor);
+
+            let settings = game.settings.get(moduleName,'soundscapes');
+            settings[this.mixer.currentSoundscape].channels[this.channelNr].effects.equalizer[filterId].q = qualityFactor;
+            game.settings.set(moduleName,'soundscapes',settings);
+        })
+        gain.on('input change',(event)=>{
+            const gain = event.target.value;
+            const filterId = event.target.id.replace('Gain-','');
+            html.find("input[id=GainNr-"+filterId+"]")[0].value=gain;
+            this.channel.effects.eq.setGain(filterId,gain);
+
+            let settings = game.settings.get(moduleName,'soundscapes');
+            settings[this.mixer.currentSoundscape].channels[this.channelNr].effects.equalizer[filterId].gain = gain;
+            game.settings.set(moduleName,'soundscapes',settings);
+        })
+        gainNr.on('change',(event)=>{
+            const gain = event.target.value;
+            const filterId = event.target.id.replace('GainNr-','');
+            html.find("input[id=Gain-"+filterId+"]")[0].value=gain;
+            this.channel.effects.eq.setGain(filterId,gain);
+
+            let settings = game.settings.get(moduleName,'soundscapes');
+            settings[this.mixer.currentSoundscape].channels[this.channelNr].effects.equalizer[filterId].gain = gain;
+            game.settings.set(moduleName,'soundscapes',settings);
+        })
       
 
         const playbackRate = html.find("input[name=playbackRate]");

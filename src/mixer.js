@@ -1,5 +1,6 @@
 import {moduleName} from "../soundscape.js";
 import {Channel} from "./channel.js"
+import { Soundboard } from "./soundboard.js";
 
 export let currentSoundscape;
 
@@ -67,10 +68,10 @@ export class Mixer {
             game.socket.emit(`module.Soundscape`, payload);
         }
         if (channel == undefined && fadeOut) this.master.effects.gain.node.gain.setTargetAtTime(0,game.audio.context.currentTime,0.25);
-        let parent = this;
+        
         if (channel == undefined) {
-            parent.playing = false;
-            for (let channel of parent.channels) {
+            this.playing = false;
+            for (let channel of this.channels) {
                 if (fadeOut)
                     setTimeout(function(){
                         channel.stop();
@@ -81,11 +82,11 @@ export class Mixer {
                 
         }
         else {
-            parent.channels[channel].stop();
-            parent.playing = false;
-            for (let channel of parent.channels) {
+            this.channels[channel].stop();
+            this.playing = false;
+            for (let channel of this.channels) {
                 if (channel.soundNode != undefined && channel.soundNode.playing) {
-                    parent.playing = true;
+                    this.playing = true;
                     return;
                 }
             }
@@ -149,8 +150,6 @@ export class Mixer {
                 if (channel.settings.channel != channel) {
                     $('#volumeSlider-'+channel.settings.channel)[0].value=linkVolume;
                     $('#volumeNumber-'+channel.settings.channel)[0].value=linkVolume;
-                    //html.find("input[id=volumeSlider-"+(channel.settings.channel)+"]")[0].value=linkVolume;
-                    //html.find("input[id=volumeNumber-"+(channel.settings.channel)+"]")[0].value=linkVolume;
                 }
             }
         }
@@ -173,7 +172,9 @@ export class Mixer {
 
         this.name = settings.name;
         this.master = await new Channel(settings.master,this,true)
+        this.soundboard = await new Soundboard(settings.soundboard,settings.soundboardGain,this)
         this.channels = [];
+        this.soundboard.refresh();
         
         for (let i=0; i<this.mixerSize; i++) {
             this.channels.push(new Channel(settings.channels[i],this));
@@ -240,8 +241,8 @@ export class Mixer {
                 repeat: false,
                 soundData: {
                     soundSelect: "playlist_single",
-                    playlistId: "none",
-                    soundId: "none",
+                    playlistName: "",
+                    soundName: "",
                     source: "",
                     startTime:0,
                     stopTime:0,

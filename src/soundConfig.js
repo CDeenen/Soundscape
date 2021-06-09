@@ -1,22 +1,16 @@
 import {moduleName} from "../soundscape.js";
-import {MixerHelpers} from "./helpers/mixerHelpers.js";
-//import {currentSoundscape} from "./mixer.js";
+import {getTimeStamp, getSeconds} from "./helpers/helpers.js";
+import {helpMenuSoundConfig} from "./helpMenu.js";
 
 export class SoundConfig extends FormApplication {
     
     constructor(data, options) {
         super(data, options);
-        this.channel;
-        this.mixerApp;
-        this.playlistId;
-        this.soundId;
-        this.volume = 0.5;
-        this.mixerHelpers = new MixerHelpers();
-        this.forceStop = false;
-        this.repeat;
+        this.playlistName;
+        this.soundName;
+        this.mixer;
         this.channelNumber;
         this.currentSoundscape;
-        this.fadeOutStarted = false;
     }
   
     /**
@@ -26,15 +20,12 @@ export class SoundConfig extends FormApplication {
         return mergeObject(super.defaultOptions, {
             id: "soundscape_soundConfig",
             title: "Soundscape: "+game.i18n.localize("Soundscape.SoundConfig"),
-            template: "./modules/Soundscape/templates/soundConfig.html",
-            width: "1000px"
+            template: "./modules/Soundscape/templates/soundConfig.html"
         });
     }
 
     setData(channel,mixerApp,currentSoundscape) {
-        this.channel = channel;
-        this.mixerApp = mixerApp;
-        this.repeat = channel.settings.repeat;
+        this.mixer = channel.mixer;
         this.channelNumber = channel.settings.channel;
         this.currentSoundscape = currentSoundscape;
     }
@@ -43,69 +34,42 @@ export class SoundConfig extends FormApplication {
      * Provide data to the template
      */
     getData() {
-        let soundData = game.settings.get(moduleName,'soundscapes')[this.currentSoundscape].channels[this.channelNumber].soundData;
-        console.log('soundData',soundData)
-        let playlists = [{name:'none',id:'none'}];
+        //Get the settings
+        let settings = game.settings.get(moduleName,'soundscapes')[this.currentSoundscape].channels[this.channelNumber];
+        let soundData = settings.soundData;
+        
+        this.playlistName = soundData.playlistName;
+        this.soundName = soundData.soundName;
+
+        let playlists = [{name:game.i18n.localize("Soundscape.None"),id:'none'}];
         let sounds = [{name:game.i18n.localize("Soundscape.None"),id:'none'}];
-        this.playlistId = soundData.playlistId;
-        this.soundId = soundData.soundId;
+
         for (let p of game.playlists) {
             playlists.push({name:p.name,id:p.id});
-            if (p.id == soundData.playlistId)
-                for (let s of p.sounds.contents) {
+            if (p.name == soundData.playlistName)
+                for (let s of p.sounds.contents) 
                     sounds.push({name:s.name,id:s.id});
-                }
         }
 
-        if (soundData.playlistId != undefined && soundData.playlistId != "none" && soundData.soundId != undefined && soundData.soundId != "none") {
-            const pl = game.playlists.get(soundData.playlistId);
-            if (pl != undefined) {
-                const sound = pl.sounds.contents.find(s => s.id == soundData.soundId)
-                if (sound != undefined) {
-                    const src = sound.data.path;
-                    const parent = this;
-                    setTimeout(function(){parent.preloadSound(src)},500);
-                }
-            }
-        }
-
-        if (soundData.soundSelect == undefined) soundData.soundSelect = "playlist_single";
-        if (soundData.randomize == undefined) soundData.randomize = false;
-        /*
-        else if (soundData.playlistId == 'FP') {
-            const src = soundData.source;
-            const parent = this;
-            setTimeout(function(){parent.preloadSound(src)},500);
-        }
-        */
-
-        //Determine whether the sound selector or file picker should be displayed
-        let styleSS = "";
-        let styleFP ="none";
-        /*
-        if (soundData.playlistId == 'FP') {
-            styleSS = 'none';
-            styleFP = ''
-        }
-        */
-        console.log('soundSelect',soundData.soundSelect)
+        let pl, snd;
+        if (soundData.playlistName != undefined && soundData.playlistName != "")                pl = game.playlists.getName(soundData.playlistName);
+        if (soundData.soundName != undefined && soundData.soundName != "" && pl != undefined)   snd = pl.sounds.getName(soundData.soundName);
+        const playlistId = pl != undefined ? pl.id : '';
+        const soundId = snd != undefined ? snd.id : '';
+        
         return {
-            channelNumber: this.channel.settings.channel + 1,
-            name: this.channel.settings.name,
-            playlists:playlists,
-            sounds:sounds,
-            selectedSound: soundData.soundId,
-            selectedPlaylist: soundData.playlistId,
-            start:this.mixerHelpers.getTimeStamp(soundData.startTime),
-            stop:this.mixerHelpers.getTimeStamp(soundData.stopTime),
-            repeat: this.channel.settings.repeat ? 'checked' : '',
-            fadeIn: this.mixerHelpers.getTimeStamp(soundData.fade.fadeIn),
-            fadeOut: this.mixerHelpers.getTimeStamp(soundData.fade.fadeOut),
+            settings,
+            channelNumber: settings.channel + 1,
+            playlists,
+            sounds,
+            selectedSound: soundId,
+            selectedPlaylist: playlistId,
+
+            start: getTimeStamp(soundData.startTime),
+            stop: getTimeStamp(soundData.stopTime),
+            fadeIn: getTimeStamp(soundData.fade.fadeIn),
+            fadeOut: getTimeStamp(soundData.fade.fadeOut),
             crossfade: soundData.fade.crossfade ? 'checked' : '',
-            styleSS,
-            styleFP,
-            srcPath: soundData.source,
-            soundSelect: soundData.soundSelect,
             randomize: soundData.randomize ? 'checked' : ''
         } 
     }
@@ -116,52 +80,56 @@ export class SoundConfig extends FormApplication {
      * @param {*} formData 
      */
     async _updateObject(event, formData) {
-        console.log('formData',formData)
-        if (this.previewSound?.playing) {
-            this.previewSound.soundNode.stop();
-            clearInterval(this.previewTimer);
-            this.previewTimer = undefined;
-        }
-        
         let settings = game.settings.get(moduleName,'soundscapes');
         let channel = settings[this.currentSoundscape].channels[this.channelNumber];
 
-        
-        let src = "";
-        if (formData.playlistId != 'none' && formData.playlistId != 'FP') {
-            const pl = game.playlists.get(formData.playlistId)
-            if (pl != undefined) {
-                const sound = pl.sounds.contents.find(s => s.id == formData.soundId)
-                if (sound != undefined)
-                    src = sound.data.path;
+        let source = '';
+        let playlistName = '';
+        let soundName = '';
+        if (formData.soundSelect == 'filepicker_single') {
+            source = formData.src;
+        }
+        else if (formData.soundSelect == 'filepicker_folder') {
+            source = formData.folderSrc;
+        }
+        else if (formData.soundSelect == 'playlist_single') {
+            const playlist = game.playlists.get(formData.playlistId);
+            if (playlist != undefined) {
+                playlistName = playlist.name;
+                const sound = playlist.sounds.get(formData.soundId);
+                if (sound != undefined) soundName = sound.name;
             }
         }
-        else src = formData.src;
+        else if (formData.soundSelect == 'playlist_multi') {
+            const playlist = game.playlists.get(formData.playlistId);
+            if (playlist != undefined) playlistName = playlist.name;
+        }
 
         channel.repeat = formData.repeat;
         channel.name = formData.name;
         channel.soundData = {
-            source: src,
+            source,
             soundSelect: formData.soundSelect,
             randomize: formData.randomize,
-            playlistId: formData.playlistId,
-            soundId: formData.soundId,
-            startTime: this.mixerHelpers.getSeconds(formData.start),
-            stopTime: this.mixerHelpers.getSeconds(formData.stop),
+            playlistName,
+            soundName,
+            startTime: getSeconds(formData.start),
+            stopTime: getSeconds(formData.stop),
             fade: {
-                fadeIn: this.mixerHelpers.getSeconds(formData.fadeIn),
-                fadeOut: this.mixerHelpers.getSeconds(formData.fadeOut),
+                fadeIn: getSeconds(formData.fadeIn),
+                fadeOut: getSeconds(formData.fadeOut),
                 crossfade: formData.crossfade
             }
         }
+        console.log(channel.soundData)
         await game.settings.set(moduleName,'soundscapes',settings);
-        this.mixerApp.mixer.stop();
-        await this.mixerApp.mixer.refresh();
+        this.mixer.stop();
+        await this.mixer.refresh();
         let parent = this;
         setTimeout(function(){
-            for (let i=0; i<parent.mixerApp.mixer.channels.length; i++) {
-                if (parent.mixerApp.mixer.channels[i].soundNode == undefined) continue;
-                const loaded = parent.mixerApp.mixer.channels[i].loaded;
+            for (let i=0; i<parent.mixer.channels.length; i++) {
+                if (parent.mixer.channels[i].soundNode == undefined) continue;
+                const loaded = parent.mixer.channels[i].loaded;
                 document.getElementById(`playSound-${i}`).disabled = loaded ? '' : 'disabled';
             }
          }, 10);
@@ -171,38 +139,34 @@ export class SoundConfig extends FormApplication {
     activateListeners(html) {
         super.activateListeners(html);
 
+        setTimeout(function() {
+            document.getElementById('soundscape_soundConfigHelp').addEventListener("click", (event) => {
+                let dialog = new helpMenuSoundConfig();
+                dialog.render(true);
+            })
+        },100)
+
         const playlist = html.find("select[name=playlistId]");
         const sound = html.find("select[name=soundId]");
-        const preview = html.find("button[name=preview]")
-        const volumeSlider = html.find("input[name=volumeSlider]");
-        const repeat = html.find("input[name=repeat]")
         const filePicker = html.find("input[name=src]");
 
-        repeat.on('change',(event)=>{
-            this.repeat = event.target.checked;
-        })
         playlist.on('change',(event)=>{
-            document.getElementById(`duration`).value="";
-            document.getElementById(`preview`).disabled = true;
-            if (this.previewSound != undefined) {
-                this.previewSound.soundNode.stop();
-                this.previewSound = undefined;
-            }
-
-            //let sounds = [];
-            if (event.target.value==undefined) this.playlistId = 'none';
-            else if (event.target.value == 'none') this.playlistId = 'none';
+            html.find("input[name=duration]")[0].value="";
+            let playlistId = 'none';
+            
+            if (event.target.value==undefined || event.target.value == 'none') this.playlistName = '';
             else {
-                this.playlistId = event.target.value;
-                let soundSelect = document.getElementById(`sounds`);
+                playlistId = event.target.value;
+                this.playlistName = game.playlists.get(playlistId).name;
+                let soundSelect = html.find("select[name=soundId]")[0];
                 soundSelect.options.length=0;
                 let optionNone = document.createElement('option');
                 optionNone.value = "";
                 optionNone.innerHTML = game.i18n.localize("Soundscape.None");
                 soundSelect.appendChild(optionNone);
 
-                if (this.playlistId != "none") {
-                    const pl = game.playlists.get(this.playlistId)
+                if (playlistId != "none") {
+                    const pl = game.playlists.get(playlistId)
                     if (pl == undefined) return;
                     for (let sound of pl.sounds.contents) {
                         let newOption = document.createElement('option');
@@ -212,140 +176,27 @@ export class SoundConfig extends FormApplication {
                     } 
                 }
             }
-            
         })
 
         filePicker.on('change',(event)=>{
             const src = event.currentTarget.value;
-            this.preloadSound(src);
+            this.preloadSound(src,html);
         })
 
         sound.on('change',(event)=>{
-            document.getElementById(`duration`).value="";
-            document.getElementById(`preview`).disabled = true;
-            if (this.previewSound != undefined) {
-                this.previewSound.soundNode.stop();
-                this.previewSound = undefined;
-            }
-            const sound = game.playlists.get(this.playlistId).sounds.contents.find(s => s.id == event.target.value)
+            html.find("input[name=duration]")[0].value="";
+            const playlist = game.playlists.getName(this.playlistName);
+            if (playlist == undefined) return;
+            const sound = playlist.sounds.get(event.target.value);
+            if (sound == undefined) return;
             const src = sound.data.path;
-            
-            this.preloadSound(src);
+            this.preloadSound(src,html);
         })
-        volumeSlider.on("input change",(event)=>{
-            this.updatePreviewVolume(event.target.value/100);
-        })
-        preview.on('click',(event)=>{
-            
-            if (this.previewSound.soundNode.playing) {
-                html.find("button[name=preview]")[0].innerHTML = `<i class="fas fa-play"></i>`;
-                this.stopPreview(true);
-                clearInterval(this.previewTimer);
-                this.previewTimer = undefined;
-            }
-            else {
-                html.find("button[name=preview]")[0].innerHTML = `<i class="fas fa-stop"></i>`
-
-                this.playPreview();
-                this.forceStop = false;
-                let parent = this;
-                this.previewTimer = setInterval(function(){
-                    if (parent.rendered == false) {
-                        parent.stopPreview(true);
-                        clearInterval(parent.previewTimer);
-                        parent.previewTimer = undefined;
-                        return;
-                    }
-                    const current = (parent.previewSound.soundNode.context.currentTime - parent.previewSound.soundNode.startTime) % parent.previewSound.soundNode.duration
-                    const stopTime = parent.mixerHelpers.getSeconds(document.getElementById(`stop`).value) > 0 ? parent.mixerHelpers.getSeconds(document.getElementById(`stop`).value) : parent.previewSound.soundNode.duration;
-                    if (current >= stopTime) 
-                        parent.stopPreview()
-                    document.getElementById(`current`).value=parent.mixerHelpers.getTimeStamp(current);
-
-                    const fadeOut = parent.mixerHelpers.getSeconds(document.getElementById(`fadeOut`).value);
- 
-                    if (fadeOut != 0 && current >= stopTime - fadeOut) {
-                        if (current >= stopTime)
-                            parent.fadeOutStarted = false;
-                        else if (parent.fadeOutStarted == false) {
-                            parent.fadeOutStarted = true;
-                            parent.previewSound.gainNode.gain.linearRampToValueAtTime(0,game.audio.context.currentTime+fadeOut);
-                        }
-                        
-                    }
-                    else
-                        parent.fadeOutStarted = false;
-                    
-                },100)
-            }
-        })
-    }
-
-    updatePreviewVolume(volume){
-        this.volume = volume;
-        //this.previewSound.sound.volume = volume;
-        this.previewSound.outputGainNode.gain.value = volume;
-    }
-
-    playPreview() {
-        const startTime = this.mixerHelpers.getSeconds(document.getElementById(`start`).value);
-        const  offset = (startTime == false || startTime == undefined) ? 0 : startTime;
-        this.previewSound.soundNode.play({volume:1,offset:offset});
     }
 
     async preloadSound(src,html) {
-        this.previewSound = {
-            soundNode: new Sound(src),
-            gainNode: game.audio.context.createGain(),
-            outputGainNode: game.audio.context.createGain()
-        }
-
-        if(this.previewSound.soundNode.loaded == false) await this.previewSound.soundNode.load();
-
-        
-        this.previewSound.soundNode.on('stop',()=>{
-            this.fadeOutStarted = false;
-            if (this.forceStop == false && this.repeat) {
-                let startTime = this.mixerHelpers.getSeconds(document.getElementById(`start`).value);
-                const  offset = (startTime == false || startTime == undefined) ? 0 : startTime;
-                this.previewSound.gainNode.gain.setValueAtTime(0, game.audio.context.currentTime);
-                this.previewSound.soundNode.play({volume:1,offset:offset});
-                
-            }
-            else {
-                clearInterval(this.previewTimer);
-                this.previewTimer = undefined;
-                document.getElementById(`preview`).innerHTML = `<i class="fas fa-play"></i>`;
-            }
-
-        })
-        this.previewSound.soundNode.on('start',()=>{
-            this.fadeOutStarted = false;
-            const startTime = this.mixerHelpers.getSeconds(document.getElementById(`start`).value);
-            const offset = (startTime == false || startTime == undefined) ? 0 : startTime;
-            const fadeIn = this.mixerHelpers.getSeconds(document.getElementById(`fadeIn`).value);
-
-            this.previewSound.soundNode.node.disconnect();
-            this.previewSound.soundNode.node.connect(this.previewSound.gainNode).connect(this.previewSound.outputGainNode).connect(this.previewSound.soundNode.context.destination);
-
-            if (fadeIn != 0) {
-                this.previewSound.gainNode.gain.setValueAtTime(0, game.audio.context.currentTime);
-                this.previewSound.gainNode.gain.linearRampToValueAtTime(this.volume,game.audio.context.currentTime+fadeIn+offset);
-            }
-            else {
-                this.previewSound.gainNode.gain.setValueAtTime(this.volume, game.audio.context.currentTime);
-            }
-            
-        })
-
-        document.getElementById(`duration`).value=this.mixerHelpers.getTimeStamp(this.previewSound.soundNode.duration);
-        document.getElementById(`preview`).disabled = false;
-    }
-
-    stopPreview(force = false) {
-        if (force) {
-            this.forceStop = true;
-        }
-        this.previewSound.soundNode.stop();
+        this.previewSound = new Sound(src)
+        if (this.previewSound.loaded == false) await this.previewSound.load();
+        html.find("input[name=duration]")[0].value=getTimeStamp(this.previewSound.duration);
     }
   }

@@ -1,4 +1,19 @@
 <form autocomplete="off" onsubmit="event.preventDefault()">
+    <script>
+        $(document).ready(async function() {
+            if (document.getElementById('soundscape_fxHelp') == null) {
+                let help = document.createElement("a");
+                help.id = 'soundscape_fxHelp';
+                help.innerHTML = 
+                `
+                    <i class="fas fa-question"></i>
+                    {{localize "Soundscape.Help"}}
+                `
+                document.getElementById('soundscape_fxConfig').getElementsByClassName('window-title')[0].after(help);
+            }
+        });
+    </script>
+    
     <style>
         .item {
             width: 100%;
@@ -151,7 +166,7 @@
 
         </div>
 
-        <h2>{{localize "Soundscape.Effects"}}</h2>
+        <h2>{{localize "Soundscape.OtherEffects"}}</h2>
         <div class="row" style="width:100%">
 
             <div class="column" style="width:50%">

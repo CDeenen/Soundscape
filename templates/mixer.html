@@ -14,7 +14,7 @@
                 if(soundboardEnabled)
                 {
                     $("#SoundScape_soundboardColumn").animate({marginLeft: '-50%'}, 300 );
-                    $("#soundscape_mixer").animate({width:'430px'},300)
+                    $("#soundscape_mixer").animate({width:'435px'},300)
                     setTimeout(function(){
                         $("#SoundScape_soundboardColumn").css({'display':'none'})
                     },300);
@@ -26,6 +26,18 @@
                 soundboardEnabled = !soundboardEnabled;
                 game.settings.set('soundscape','sbEnabled',soundboardEnabled)
             })
+
+            if (document.getElementById('soundscape_mixerHelp') == null) {
+                let help = document.createElement("a");
+                help.id = 'soundscape_mixerHelp';
+                help.innerHTML = 
+                `
+                    <i class="fas fa-question"></i>
+                    {{localize "Soundscape.Help"}}
+                `
+                document.getElementById('soundscape_mixer').getElementsByClassName('window-title')[0].after(help);
+            }
+            
         });
     </script>
 
@@ -140,6 +152,10 @@
             padding: 0;
         }
 
+        .sbButtonOver {
+            border: 2px red;
+        }
+
         .btnRow {
             max-height: 100px;
             min-height: 100px;
@@ -169,6 +185,16 @@
             clear: both;
         }
 
+        .sbDelete {
+            border: 1px solid black ;
+            border-radius: 3px ; 
+            width:30px;
+            height:30px;
+            margin-top:8px;
+            padding:5px;
+            vertical-align: top;
+        }
+
 
 
     </style>
@@ -187,7 +213,7 @@
                     {{soundScapeNumber}}:
                     <input type="text" name="soundscapeName" value="{{name}}" style="min-width:20% max-width:40%;height:28px;text-align:center;margin-top:2px">
                 </div>
-                <button type="button" name="mixerConfig" style="max-width:10%;height:30px">
+                <button type="button" name="soundscapeConfig" style="max-width:10%;height:30px">
                     <i class="fas fa-cog" style="font-size: 25px;"></i>
                 </button>
                 <button type="button" name="soundboardEnable" id="soundboardEnable" style="max-width:10%;height:30px">
@@ -262,15 +288,20 @@
             <button type="button" class="playMix" name="play" id="playMix"><i class="{{playingIcon}}"></i></button>   
         </div>
         <div class="column collapse" id="SoundScape_soundboardColumn" style="width:50%;position:relative;z-index:1;height:100%;display:none;margin-left:-50%">
-                <h2 style="margin-top:10px">{{localize "Soundscape.Soundboard"}}</h2>
+            <div style="display:flex"> 
+                <h2 style="margin-top:10px; width:90%">{{localize "Soundscape.Soundboard"}}</h2>
+                <div class="sbDelete" name="sbDelBtn">
+                    <i class="fas fa-trash" style="font-size: 20px;"></i> 
+                </div>
+                
+            </div>   
                 {{#each soundboard}}
                 <div class="form-group btnRow" style="width:100%">
                     {{#each row}}
                     <div>
-                        <input type="image" class="sbButton" name="sbButton" id="sbButton-{{this.iteration}}" src={{this.imageSrc}}>  
+                        <input type="image" class="sbButton" name="sbButton" id="sbButton-{{this.iteration}}" src={{this.imageSrc}} draggable='true'>  
                         <p class="sbButtonLabel" name="sbButtonLabel" id="sbButtonLabel-{{this.iteration}}">{{this.name}}</p>
                     </div>
-                    
                     {{/each}}
                 
                 </div>

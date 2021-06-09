@@ -1,0 +1,47 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+    <div style="width:500px">
+        <h1>Mixer</h1>
+        At the top there are the following buttons and fields, from left to right:
+        <ul>
+            <li><b>Previous Soundscape</b>: Pressing this button will load the previous soundscape</li>
+            <li><b>Next Soundscape</b>: Pressing this button will load the next soundscape</li>
+            <li><b>Soundscape Name</b>: The name of this soundscape. This can be edited by typing in a new name</li>
+            <li><b>Soundscape Configuration</b>: Opens the soundscape configuration, see below</li>
+            <li><b>Open/Close Soundboard</b>: Pressing this will expand the mixer to include a soundboard. More on that below</li>
+        </ul>
+        The center of the mixer is divided into 9 columns, where the right-most column controls the master volume, and the other columns control a channel. Each channel can play back a single audio track, so in total you can have 8 audio tracks playing.<br>
+        For each of these channels, there are various buttons and sliders. From the top to the bottom:
+        <ul>
+            <li><b>Sound Configuration</b>: Pressing this button opens the sound configuration, where you can select the audio file and set timing options.</li>
+            <li><b>Pan</b>: A horizontal slider that can be used to pan the sound to the right or the left. There is a center 'indent', so you can easily find the center. For fine-tuning, the scroll wheel can be used.</li>
+            <li><b>Fx</b>: Pressing this buttons opens the effects configuration, where you can configure an equalizer, the playback speed, and a delay.</li>
+            <li><b>Mute</b>: Mutes the channel</li>
+            <li><b>Solo</b>: Solos the channel (mutes all channels that are not solo'd)</li>
+            <li><b>Link</b>: All channels with link enabled, will link their volumes together. So you can move multiple volume sliders at once. Relative volumes are maintained.</li>
+            <li><b>Volume</b>: Sets the volume of the sound. You can either drag the slider, or edit the number below it. A volume of 100 means that there is no amplification or attenuation, a volume of 0 means it is silent.</li>
+            <li><b>Name</b>: Name of the channel</li>
+            <li><b>Start/Stop Channel</b>: Starts or stops the audio for that channel</li>
+        </ul>
+
+        At the bottom there's a big start/stop button, which will start or stop all sounds at the same time.<br>
+        <br>
+        All the channel volume controls work independently (if 'Link' is not enabled). The volume is relative to the master volume, which is controlled by the right-most slider. So changing the master volume will
+        change the volume of all sounds. The master volume can be set for each soundscape individually. Under the global volume controls (in the sidebar under the 'Audio Playlists' tab) there's a 'Soundscape' slider 
+        that will control the volume of everything. It is independent of the channel or master volumes of the soundscapes.<br>
+        <br>
+        When loading a new soundscape, it might take a few seconds for all the sounds to be loaded. By looking at the 'Start/Stop Channel' button you can see if the sounds have been loaded, as it will no longer be disabled.
+        Pressing a 'Start/Stop Channel' button when the sound is still loading will not work. Pressing the big 'Start/Stop All' button while some sounds are not yet loaded will result in those sounds not playing.
+
+        <h1>Soundboard</h1>
+        The soundboard allows you to play single sounds. This is best used for short sound effects, such as thunder or melee hit sounds. You can access the soundboard by pressing the right-most button in the mixer, with the 
+        music note icon. This will expand the mixer, adding the soundboard to the right. Each soundscape has its own soundboard.<br>
+        <br>
+        You can have up to 25 sounds per soundscape. You can configure the sounds by pressing the textbox below the big buttons. This will open a new dialog.<br>
+        By pressing the big buttons, the configured sound will play.<br>
+        The volume for each sound is set in the configuration, while the volume slider at the bottom sets the volume for the whole soundboard.<br>
+        You can stop all currently playing sounds by pressing the 'Stop All' button.<br>
+        <br>
+        By dragging an existing sound onto another button, the sound and all its settings will be moved to the new button. If the new button already contained a sound,
+        the sounds will be swapped. If Ctrl is pressed during the start of the movement, the sound will be copied to the new button.<br>
+        You can delete sounds by dragging them onto the trash icon at the top-right.
+</form>

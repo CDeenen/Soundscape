@@ -1,5 +1,18 @@
 <form autocomplete="off" onsubmit="event.preventDefault()">
-
+    <script>
+        $(document).ready(async function() {
+            if (document.getElementById('soundscape_soundscapeConfigHelp') == null) {
+                let help = document.createElement("a");
+                help.id = 'soundscape_soundscapeConfigHelp';
+                help.innerHTML = 
+                `
+                    <i class="fas fa-question"></i>
+                    {{localize "Soundscape.Help"}}
+                `
+                document.getElementById('soundscape_soundscapeConfig').getElementsByClassName('window-title')[0].after(help);
+            }
+        }); 
+    </script>
 
     <style>
         .columnNumber {

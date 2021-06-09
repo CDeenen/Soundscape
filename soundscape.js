@@ -2,6 +2,7 @@ import {Mixer} from "./src/mixer.js";
 import {MixerApp} from "./src/mixerApp.js";
 import {registerSettings} from "./src/settings.js";
 import {startWebsocket} from "./src/websocket.js";
+import {loadDefaultSoundscapes} from "./src/defaultSoundScapes.js"
 
 export const moduleName = "soundscape";
 export let mixer;
@@ -151,7 +152,7 @@ Hooks.once('init', async()=>{
             await mixerApp.setMixer(mixer);
             mixerApp.render(true);
             mixer.setApp(mixerApp);
-            
+            loadDefaultSoundscapes(mixer);
         }
      }, 500);
     

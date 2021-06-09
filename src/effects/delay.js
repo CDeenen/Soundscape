@@ -49,7 +49,7 @@ export class Delay {
         //Connect or disconnect delay nodes
         if (enable) 
             this.channel.effects.eq.gain.connect(this.node).connect(this.gainNode).connect(this.channel.effects.pan.node);
-        else
+        else if (this.enable)
             this.channel.effects.eq.gain.disconnect(this.node)
 
         //Store new enable state in this.enable
