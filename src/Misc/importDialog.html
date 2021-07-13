@@ -1,0 +1,24 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+    <script>
+        if (document.getElementById('soundscape_importHelp') == null) {
+            let help = document.createElement("a");
+            help.id = 'soundscape_importHelp';
+            help.innerHTML = 
+            `
+                <i class="fas fa-question"></i>
+                {{localize "Soundscape.Help"}}
+            `
+            document.getElementById('Soundscape_Import').getElementsByClassName('window-title')[0].after(help);
+        }
+    </script>
+    <p>{{localize "Soundscape.ImportConfig.Content"}}</p>
+
+    <div class="form-group upload-file">
+        <label><i class="fas fa-upload fa-fw"></i> {{ localize "FILES.Upload" }}</label>
+        <input type="file" name="upload" id="uploadJson">
+    </div>
+
+    <button type="submit" name="submit">
+        <i></i>{{localize "Soundscape.Import"}}
+    </button>
+</form>

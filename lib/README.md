@@ -1,0 +1,2 @@
+The files in this folder were taken from the <a href="https://foundryvtt.com/packages/adventure-import-export/">Adventure Importer/Exporter</a> module by <a href="https://foundryvtt.com/community/dragkun">Dragkun</a>.<br>
+That module is covered under the MIT License.<br>

@@ -1,0 +1,29 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+    <script>
+        if (document.getElementById('soundscape_exportHelp') == null) {
+            let help = document.createElement("a");
+            help.id = 'soundscape_exportHelp';
+            help.innerHTML = 
+            `
+                <i class="fas fa-question"></i>
+                {{localize "Soundscape.Help"}}
+            `
+            document.getElementById('Soundscape_Export').getElementsByClassName('window-title')[0].after(help);
+        }
+    </script>
+
+    <p>{{localize "Soundscape.ExportConfig.Content"}}</p>
+
+    <div class="form-group"> 
+        <label>{{localize "Soundscape.FileName"}}: </label>
+        <input type="text" name="name" value="Soundscape" id="exportName" style="width:100%;" >
+    </div>
+    <div class="form-group"> 
+        <label>{{localize "Soundscape.ExportFiles"}}: </label>
+        <input type="checkbox" id='exportFiles' name="files">
+    </div>
+    <br>
+    <button name="export">
+        <i></i>{{ localize "Soundscape.Export"}}
+    </button>
+</form>

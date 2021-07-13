@@ -1,0 +1,30 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+    <div style="width:500px">
+        <h1>Export</h1>
+        You can use this screen to export files containing soundscape data.<br>
+        You can either export only metadata, or also export the audio files, which will generate .soundscapeData or .soundscape files, respectively.<br>
+        When the export is done processing, the file will be downloaded to your computer with the filename you've set in the export dialog.<br>
+        <br>
+        While sharing .soundscapeData files with anyone is fine, sharing .soundscape files might not. Since they contain actual audio and image files, copyright applies.<br>
+        <b>Only share .soundscape files containing audio that you are allowed to share!</b>
+
+        <h2>.soundscapeData files</h2>
+        For .soundscapeData files, only metadata is exported, meaning that you need to have the same playlists and audio files in your data folder, when you import them again.<br>
+        <br>
+        For example, if you export a soundscape that uses sounds from a specific playlist, when you import the soundscape you need to have the exact same playlist and sounds set up in Foundry. 
+        For files picked with the file picker, the relative location must be the same. <br>
+        So if you have a file at location 'Data/Assets/Thunder.mp3', when you import the soundscape, you must have a 
+        file named 'Thunder.mp3' in the folder Data/Assets.<br>
+        <br>
+        This function is great for backing up soundscapes.
+
+        <h2>.soundscape files</h2>
+        .soundscape files also include the audio files (and image files for the soundboard).<br>
+        <br>
+        When importing a .soundscape file, the files that are to be imported are checked with what is already present in your data folder and playlists. 
+        Files that already exist will not be imported, while files that do not exist yet will be.<br>
+        Imported files will be imported to 'Data/soundscape'.<br>
+        <br>
+        Exporting .soundscape files can take long, depending on the amount of files to import. A window will pop up to indicate the progress.
+    </div>    
+</form>

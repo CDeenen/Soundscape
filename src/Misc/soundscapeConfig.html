@@ -1,0 +1,361 @@
+<form autocomplete="off" onsubmit="event.preventDefault()">
+    <script>
+        if (document.getElementById('soundscape_soundscapeConfigHelp') == null) {
+            let help = document.createElement("a");
+            help.id = 'soundscape_soundscapeConfigHelp';
+            help.innerHTML = 
+            `
+                <i class="fas fa-question"></i>
+                {{localize "Soundscape.Help"}}
+            `
+            document.getElementById('soundscape_soundscapeConfig').getElementsByClassName('window-title')[0].after(help);
+        }
+
+        playing = undefined;
+
+        moduleData = JSON.parse("{{moduleData}}".replaceAll('&quot;','"'));
+        configureElements(moduleData, 'module');
+        playlistData = JSON.parse("{{playlistData}}".replaceAll('&quot;','"'));
+        configureElements(playlistData, 'playlist');
+
+        function onClick(){
+            const path = this.getAttribute('path');
+            const type = this.getAttribute('type');
+            let data = type == 'module' ? moduleData : playlistData;
+            for (let d of data) {
+                if (path.includes(d.path)) {
+                    setOpen(d.data,path);
+                    configureElements(data,type);
+                    return;
+                }
+            }
+        }
+
+        function onDragStart(event) {
+            const path = this.getAttribute('path');
+            const type = this.getAttribute('type');
+            const playlistId = this.getAttribute('playlistId');
+            const soundId = this.getAttribute('soundId');
+
+            let data = {};
+            if (soundId != null)
+                data = {
+                    type: 'playlist_single',
+                    playlist: playlistId,
+                    sound: soundId
+                }
+            else if (playlistId != null)
+                data = {
+                    type: 'playlist_multi',
+                    playlist: playlistId
+                }
+            else {
+                const split = path.split('/');
+                const split2 = split[split.length-1].split('.');
+                const name = split2[0].replace('%20',' ');
+                let type = 'folder';
+                if (split2.length>1) type = 'single';
+                data = {
+                    type: `filepicker_${type}`,
+                    source: path,
+                    name
+                }
+            }
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', JSON.stringify(data));
+        }
+
+        function setOpen(data,path,forceClose=false){
+            if (forceClose) 
+                data.open = false;
+            else if (data.path == path) {
+                data.open = !data.open;
+                if (data.open == false) forceClose = true;
+                else return;
+            }
+            for (let folder of data.folders) 
+                setOpen(folder,path, forceClose);
+        }
+
+        function playSound() {
+            const path = this.getAttribute('path');
+            if (path == null || path == undefined || path == '') return;
+            if (playing != undefined) {
+                playing.pause();
+                if (playing.src.includes(path)) {
+                    playing = undefined;
+                    return;
+                }
+            }
+            let audioElement = document.createElement('audio')
+            audioElement.src = path;
+            audioElement.currentTime = 0;
+            audioElement.play();
+            playing=audioElement;
+        }
+
+        function configureElements(data,type) {
+            
+            let element = document.getElementById(`${type}Data`);
+            let contents = `
+                <table style="width:100%">
+                    <tr>
+                        <td style="width:95%">{{localize "Soundscape.Name"}}</td>
+                        <td></td>
+                    </tr>
+                `
+            for (let d of data) 
+                contents += getFolderData(d.data,0,false,type);
+            contents += `</table>`;
+            element.innerHTML = contents;
+
+            const folderElements = document.getElementsByName('folderRow');
+            for (let element of folderElements) {
+                element.addEventListener('click',onClick,true);
+                element.addEventListener('dragstart',onDragStart,true);
+            }
+                
+            const playSoundElements = document.getElementsByName('playSound');
+            for (let element of playSoundElements) {
+                element.addEventListener('click',playSound,true);
+            }  
+            
+            const soundElements = document.getElementsByName('soundRow');
+            for (let element of soundElements) {
+                element.addEventListener('dragstart',onDragStart,true);
+            }  
+            document.getElementById('soundscape_soundscapeConfig').style.height = 'auto'
+        }
+
+        function getFolderData(data,depth,open,type) {
+            let contents = getFolderElement(data,depth,open,type);
+            for (let folder of data.folders) 
+                contents += getFolderData(folder,depth+1,data.open,type)
+            for (let file of data.files) 
+                contents += getSoundElement(file,depth+1,data.open,type)
+            return contents;
+        }
+
+        function getFolderElement(data,depth,open,type) {
+            const path = data.path;
+            const name = data.name.replace('%20', ' ');
+            let space = '';
+            for (let i=0; i<depth; i++) space += '&ensp;&ensp;';
+            const cls = depth > 0 ? 'childRow' : 'parentRow';
+            const boldStart = depth > 0 ? '' : '<b>';
+            const boldEnd = depth > 0 ? '' : '</b>';
+            const icon = data.open ? "fa-caret-down" : "fa-caret-right";
+            const display = (depth == 0 || open) ? "" : "none";
+            const playlistId = data.playlistId == undefined ? "" : `playlistId=${data.playlistId}`;
+            
+            return `
+                <tr class=${cls} name="folderRow" path=${path} style="display:${display}" type=${type} ${playlistId} draggable='true'>
+                    <td>${space} <i class="fas ${icon}"></i> ${boldStart}${name}${boldEnd}</td>
+                    <td></td>
+                </tr>
+            `
+        }
+        
+        function getSoundElement(file,depth,open,type) {
+            const path = file.path;
+            let space = '&ensp;';
+            for (let i=0; i<depth; i++) space += '&ensp;&ensp;';
+            const split = path.split('/');
+            const name = split[split.length-1].replace('%20', ' ');
+            const display = open ? "" : "none";
+            const playlistId = file.playlistId == undefined ? "" : `playlistId=${file.playlistId}`;
+            const soundId = file.soundId == undefined ? "" : `soundId=${file.soundId}`;
+
+            return `
+                <tr class="soundRow" name="soundRow" path=${path} style="display:${display}" type=${type} ${playlistId} ${soundId} draggable='true'>
+                    <td>${space} ${name}</td>
+                    <td><i class="fas fa-play" name="playSound" path=${path}></i></td>
+                </tr>
+            `
+        }
+
+        function openTab(event, tabName) {
+            event.preventDefault();
+            // Declare all variables
+            var i, tabcontent, tablinks;
+
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("ssConfigTabContent");
+            for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("ssConfigTablinks");
+            for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(tabName).style.display = "block";
+            event.currentTarget.className += " active";
+        }
+    </script>
+
+    <style>
+        .ssConfigTab {
+            display:flex;
+            overflow: hidden;
+            border: 1px solid #ccc;
+        }
+
+        .ssConfigTab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 5px 5px;
+            transition: 0.3s;
+        }
+
+        .ssConfigTab button:hover {
+            background-color: rgba(156, 155, 155, 0.425);
+        }
+
+        .ssConfigTab button.active {
+            background-color: rgba(145, 145, 145, 0.301);
+        }
+
+        .ssConfigTabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+
+        .parentRow {
+            cursor: pointer;
+        }
+
+        .childRow {
+            cursor: pointer;
+        }
+
+        .fa-play {
+            cursor: pointer;
+        }
+
+        .columnNumber {
+            width:5%;
+            text-align: left;
+        }
+        .columnLabel {
+            width: 30%;
+            text-align: left;
+        }
+        .columnButton {
+            width:15%;
+            margin: auto;
+            text-align: center;
+        }
+        .columnCheckbox {
+            width:10%;
+        }
+        .btn {
+            width:75%;
+            margin: auto;
+        }
+        .btnLabel {
+            min-width: 57%;
+            max-width: 57%;
+        }
+        .lowButtons {
+
+            height: 40px;
+            line-height: 1;
+        }
+    </style>
+
+    <div style="width:100%; min-width:500px;">
+        <div class="ssConfigTab">
+            <button class="ssConfigTablinks active" onclick="openTab(event, 'soundscapeConfig')">{{localize "Soundscape.SoundscapeConfig"}}</button>
+            <button class="ssConfigTablinks" onclick="openTab(event, 'soundImport')">{{localize "Soundscape.SoundImporter"}}</button>
+        </div>
+
+        <div id='soundscapeConfig' class="ssConfigTabContent active"  style="width:100%; min-width:500px;">
+            <table style="width:100%;">
+                <tr>
+                    <th style='text-align: left;'>{{localize "Soundscape.Nr"}}</th>
+                    <th style='text-align: left;'>{{localize "Soundscape.Name"}}</th>
+                    <th class='columnButton'>{{localize "Soundscape.Load"}}</th>
+                    <th class='columnButton'>{{localize "Soundscape.MoveDown"}}</th>
+                    <th class='columnButton'>{{localize "Soundscape.MoveUp"}}</th>
+                    <th class='columnButton'>{{localize "Soundscape.CopySB"}}</th>
+                    <th class='columnCheckbox'>{{localize "Soundscape.Select"}}</th>
+                </tr>
+                {{#each soundscapes as |s|}}
+                <tr>
+                    <td class='columnNumber'>{{s.number}}</td>
+                    <td class='columnLabel'>
+                        <input type="text" id="name-{{s.iteration}}" name="name" value={{s.name}}>
+                    </td>
+                    <td class='columnButton'>
+                        <button type="button" class='btn' id='load-{{s.iteration}}' name='load'>
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </td>
+                    <td class='columnButton'>
+                        <button type="button" class='btn' id='moveDown-{{s.iteration}}' name='moveDown'>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </td>
+                    <td class='columnButton'>
+                        <button type="button" class='btn' id='moveUp-{{s.iteration}}' name='moveUp'>
+                            <i class="fas fa-chevron-up"></i>
+                        </button>
+                    </td>
+                    <td class='columnButton'>
+                        <button type="button" class='btn' id='sbToSel-{{s.iteration}}' name='sbToSel'>
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </td>
+                    <td class='columnCheckbox'>
+                        <input type="checkbox" id='select-{{s.iteration}}'' name="select">
+                    </td>
+                </tr>
+                {{/each}}
+            </table>
+            <div style='width:100%; display:flex'>
+                <button type="button" class='lowButtons' id='selectAll' name='selectAll'>
+                    {{localize "Soundscape.SelectAll"}}
+                </button>
+                <button type="button" class='lowButtons' id='deselectAll' name='deselectAll'>
+                    {{localize "Soundscape.DeselectAll"}}
+                </button>
+                <button type="button" class='lowButtons' id='new' name='new'>
+                    {{localize "Soundscape.AddSoundscape"}}
+                </button>
+            </div>
+            <div style='width:100%; display:flex'>
+                <button type="button" class='lowButtons' id='copySelected' name='copySelected'>
+                    {{localize "Soundscape.DuplicateSelected"}}
+                </button>
+                <button type="button" class='lowButtons' id='deleteSelected' name='deleteSelected'>
+                    {{localize "Soundscape.DeleteSelected"}}
+                </button>
+                <button type="button" class='lowButtons' id='exportSelected' name='exportSelected'>
+                    {{localize "Soundscape.ExportSelected"}}
+                </button>
+                <button type="button" class='lowButtons' id='importSelected' name='importSelected'>
+                    {{localize "Soundscape.Import"}}
+                </button>
+            </div>
+        </div>
+
+
+        <div id='soundImport' class="ssConfigTabContent" style="display:none; width:100%; min-width:500px;">
+            <h3>{{localize "Soundscape.Playlists"}}</h3>
+            <div id='playlistData'></div>
+
+            <h3>{{localize "Soundscape.Modules"}}</h3>
+            <div id='moduleData'></div>
+        </div>
+     
+    </div>
+</form>
