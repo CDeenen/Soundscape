@@ -176,6 +176,12 @@ export class MixerApp extends FormApplication {
             } catch (e) {
                 return;
             }
+            if (data.type == 'Playlist') {
+                data = {
+                    type: "playlist_multi",
+                    playlist: data.id
+                }
+            }
             this.mixer.newData(targetId,data);
 
         })
@@ -210,6 +216,12 @@ export class MixerApp extends FormApplication {
                 if (this.controlDown) this.mixer.soundboard.copySounds(sourceId,targetId);
                 else this.mixer.soundboard.swapSounds(sourceId,targetId);
                 return;
+            }
+            if (data.type == 'Playlist') {
+                data = {
+                    type: "playlist_multi",
+                    playlist: data.id
+                }
             }
             this.mixer.soundboard.newData(targetId,data);
 
@@ -257,7 +269,10 @@ export class MixerApp extends FormApplication {
             this.mixer.setSoundscape(this.mixer.currentSoundscape);
         })
         soundscapeName.on("change",(event)=>{
-            this.mixer.setSoundscapeName(event.currentTarget.value);
+            const name = event.currentTarget.value;
+            let settings = game.settings.get(moduleName,'soundscapes');
+            settings[this.mixer.currentSoundscape].name = name;
+            game.settings.set(moduleName,'soundscapes',settings);
         });
 
         soundName.on("change",(event)=>{
