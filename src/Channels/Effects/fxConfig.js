@@ -38,7 +38,7 @@ export class FXConfig extends FormApplication {
         return mergeObject(super.defaultOptions, {
             id: "soundscape_fxConfig",
             title: "FX Configuration",
-            template: "./modules/Soundscape/src/Channels/Effects/fxConfig.html",
+            template: "./modules/soundscape/src/Channels/Effects/fxConfig.html",
             width: "1000px"
         });
     }

@@ -29,7 +29,7 @@ export class soundscapeConfig extends FormApplication {
         return mergeObject(super.defaultOptions, {
             id: "soundscape_soundscapeConfig",
             title: "Soundscape: " + game.i18n.localize("Soundscape.Config"),
-            template: "./modules/Soundscape/src/Misc/soundscapeConfig.html",
+            template: "./modules/soundscape/src/Misc/soundscapeConfig.html",
             width: "500px",
             height: "700px"
         });

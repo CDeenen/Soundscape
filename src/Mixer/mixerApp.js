@@ -71,7 +71,7 @@ export class MixerApp extends FormApplication {
                 const data = {
                     iteration,
                     name: soundboardSettings[iteration]?.name ? soundboardSettings[iteration].name : '',
-                    imageSrc: soundboardSettings[iteration]?.imageSrc ? soundboardSettings[iteration].imageSrc : 'modules/Soundscape/img/transparant.png'
+                    imageSrc: soundboardSettings[iteration]?.imageSrc ? soundboardSettings[iteration].imageSrc : 'modules/soundscape/img/transparant.png'
                 }
                 row.push(data);
                 iteration++;

@@ -21,7 +21,7 @@ export class SoundConfig extends FormApplication {
         return mergeObject(super.defaultOptions, {
             id: "soundscape_soundConfig",
             title: "Soundscape: "+game.i18n.localize("Soundscape.SoundConfig"),
-            template: "./modules/Soundscape/src/Channels/soundConfig.html"
+            template: "./modules/soundscape/src/Channels/soundConfig.html"
         });
     }
 

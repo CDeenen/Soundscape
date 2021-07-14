@@ -15,7 +15,7 @@ export class exportConfigForm extends FormApplication {
         return mergeObject(super.defaultOptions, {
             id: "Soundscape_Export",
             title: "Soundscape: " + game.i18n.localize("Soundscape.Export"),
-            template: "./modules/Soundscape/src/Misc/exportDialog.html",
+            template: "./modules/soundscape/src/Misc/exportDialog.html",
             width: 500,
             height: "auto"
         });
