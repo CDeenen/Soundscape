@@ -10,7 +10,7 @@ Multiple soundscapes, each with their own sounds and soundboard, can be set up a
 <br>
 
 <h2>Demonstration Video</h2>
-[![Youtube Video](https://github.com/CDeenen/Soundscape/blob/master/img/Soundscape.png)](https://www.youtube.com/watch?v=L8kqWJQ5Dpo "FoundryVTT: Soundscape Module")
+[![Youtube Video](https://github.com/CDeenen/Soundscape/blob/master/img/Youtube.png)](https://www.youtube.com/watch?v=L8kqWJQ5Dpo)
 
 <h2>Documentation</h2>
 For the documentation, please take a look at the <a href="https://github.com/CDeenen/Soundscape/wiki">wiki</a>, or press the help buttons that are present in each Soundscape screen.
