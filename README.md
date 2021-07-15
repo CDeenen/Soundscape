@@ -1,3 +1,5 @@
+<b>Soundscape currently doesn't work in Firefox. I will be investigating this, but in the meantime, you have to use either the Foundry application or Chrome</b>
+
 <h2>Introduction</h2>
 <b>This module only works in Foundry 0.8. It will not be made backwards compatible with Foundry 0.7, since it relies on a lot of the new audio features of 0.8</b><br>
 <b>Please note that this module is still in its infancy. There are still multiple bugs, and you should consider it being in beta.</b><br>

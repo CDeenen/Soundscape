@@ -12,7 +12,6 @@ assignees: ''
  - Browser: [e.g. chrome, safari, Foundry app]
  - Module version: [e.g. 1.2.5]
  - Foundry version: [e.g. 0.8.6]
- - Gaming system & version: [e.g. dnd5e 1.3.3]
  - Any other modules enabled: [yes/no]
 
 **Describe the bug**
