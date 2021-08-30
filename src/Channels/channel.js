@@ -115,6 +115,7 @@ export class Channel {
               "data": data
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
         }
     }
 
@@ -125,10 +126,6 @@ export class Channel {
         this.setVolume(data.volume);
         if (data.sourceArray == undefined) data.sourceArray = await this.getSounds(data.soundData);
         this.sourceArray = data.sourceArray;
-        if (this.sourceArray == undefined || this.sourceArray[0] == undefined) return;
-        this.currentlyPlaying = currentlyPlaying;
-        this.setSource(this.sourceArray[currentlyPlaying]);
-        this.setPlaybackRate(data.playbackRate);
         if (game.user.isGM) {
             data.soundArray = this.soundArray;
 
@@ -138,7 +135,13 @@ export class Channel {
               "data": data
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
         }
+        if (this.sourceArray == undefined || this.sourceArray[0] == undefined) return;
+        this.currentlyPlaying = currentlyPlaying;
+        this.setSource(this.sourceArray[currentlyPlaying]);
+        this.setPlaybackRate(data.playbackRate);
+        
     }
 
     async getSounds(soundData) {
@@ -177,9 +180,9 @@ export class Channel {
             for (let file of files) 
             soundArray.push(file)
         }
-    
+
         //Randomize array
-        if (soundData.randomize) return this.randomizeArray(soundArray)
+        if (this.settings.randomize) return this.randomizeArray(soundArray)
         else return soundArray;
         
     }
@@ -263,6 +266,7 @@ export class Channel {
               "playing": this.playing
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
         }
     }
 
@@ -271,11 +275,31 @@ export class Channel {
         this.currentlyPlaying--;
         if (this.currentlyPlaying < 0) this.currentlyPlaying = this.sourceArray.length - 1;
         this.setSource(this.sourceArray[this.currentlyPlaying]);
+        if (game.user.isGM) {
+            const payload = {
+              "msgType": "previous",
+              "channel": this.channelNr,
+              "currentlyPlaying": this.currentlyPlaying,
+              "playing": this.playing
+            };
+            game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
+        }
     }
 
     restart() {
         if (this.audioElement == undefined) return;
         this.audioElement.currentTime = 0;
+        if (game.user.isGM) {
+            const payload = {
+              "msgType": "restart",
+              "channel": this.channelNr,
+              "currentlyPlaying": this.currentlyPlaying,
+              "playing": this.playing
+            };
+            game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
+        }
     }
 
     setPlaybackRate(playbackRate=this.settings.playbackRate) {
@@ -295,12 +319,13 @@ export class Channel {
               playbackRate
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
         }
         this.audioElement.playbackRate = playbackRate.rate;
         this.audioElement.preservesPitch = playbackRate.preservePitch;
     }
 
-    setVolume(volume=this.settings.volume,save=true) {
+    setVolume(volume=this.settings.volume,save=true,solo=false) {
         if (game.user.isGM) {
             const payload = {
               "msgType": "setVolume",
@@ -309,6 +334,7 @@ export class Channel {
               save
             };
             game.socket.emit(`module.soundscape`, payload);
+            if (solo == false) Hooks.call(moduleName,payload);
         }
         if (this.settings.mute) volume = 0;
         else if (save) this.settings.volume = volume;
@@ -325,6 +351,7 @@ export class Channel {
               pan
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
         }
         this.effects.pan.set(pan);
     }
@@ -337,6 +364,7 @@ export class Channel {
               mute
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
         }
         let volume = mute ? 0 : this.settings.volume;
         this.effects.gain.set(volume);
@@ -366,20 +394,9 @@ export class Channel {
               solo
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
         }
         this.settings.solo = solo;
-
-        let channel = this.master ? 'master' : this.channelNr + 1;
-
-        const msg = {
-            module: 'Soundscape',
-            channel: channel,
-            mode: 'setSolo',
-            mute: this.settings.mute,
-            solo: solo,
-            link: this.settings.link
-        }
-        Hooks.call("Soundscape",msg);
     }
 
     getSolo() {
@@ -389,17 +406,14 @@ export class Channel {
     setLink(link) {
         this.settings.link = link;
 
-        let channel = this.master ? 'master' : this.channelNr + 1;
-
-        const msg = {
-            module: 'Soundscape',
-            channel: channel,
-            mode: 'setLink',
-            mute: this.settings.mute,
-            solo: this.settings.solo,
-            link: link
+        if (game.user.isGM) {
+            const payload = {
+              "msgType": "setLink",
+              "channelNr": this.channelNr,
+              link
+            };
+            Hooks.call(moduleName,payload);
         }
-        Hooks.call("Soundscape",msg);
     }
 
     getLink() {

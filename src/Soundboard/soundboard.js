@@ -25,6 +25,12 @@ export class Soundboard {
             
             this.channels[i].setSbData(channelSettings);
         }
+        const payload = {
+            "msgType": "setSoundboardVolume",
+            "volume": settings.soundboardGain
+          };
+          game.socket.emit(`module.soundscape`, payload);
+          Hooks.call(moduleName,payload);
     }
 
     configureSingle(channelNr,settings) {
@@ -40,6 +46,7 @@ export class Soundboard {
               channel: soundboardNr
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
         }
     }
 
@@ -49,6 +56,7 @@ export class Soundboard {
               "msgType": "stopAllSoundboard"
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
         }
         for (let i=0; i<this.soundboardSize; i++) {
             this.channels[i].stop();
@@ -64,6 +72,7 @@ export class Soundboard {
               "volume": volume
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
             let settings = game.settings.get(moduleName,'soundscapes');
             settings[this.mixer.currentSoundscape].soundboardGain = volume;
             game.settings.set(moduleName,'soundscapes',settings);

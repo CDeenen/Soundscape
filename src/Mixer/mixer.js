@@ -115,6 +115,7 @@ export class Mixer {
               sources
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
         }
         this.configureSolo();
         this.playing = true;
@@ -134,6 +135,7 @@ export class Mixer {
               channel
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
         }
         if (channel == undefined && fadeOut) this.master.effects.gain.node.gain.setTargetAtTime(0,this.audioCtx.currentTime,0.25);
         
@@ -168,8 +170,8 @@ export class Mixer {
                 break;
             }
         for (let channel of this.channels) {
-            if (soloOn == false || channel.getSolo()) channel.setVolume();
-            else (channel.setVolume(0,false))
+            if (soloOn == false || channel.getSolo()) channel.setVolume(undefined,undefined,true);
+            else (channel.setVolume(0,false,true))
         }     
     }
 

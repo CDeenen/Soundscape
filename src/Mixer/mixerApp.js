@@ -62,12 +62,13 @@ export class MixerApp extends FormApplication {
         const soundscapePlaying = this.mixer.playing ? true : false;
         //const soundboardSettings = game.settings.get(moduleName,'soundscapes');
         let soundboardSettings = game.settings.get(moduleName,'soundscapes')[this.mixer.currentSoundscape].soundboard;
-        
+
         const soundboard = [];
         let iteration = 0;
         for (let i=0; i<5; i++) {
             let row = [];
             for (let j=0; j<5; j++) {
+                
                 const data = {
                     iteration,
                     name: soundboardSettings[iteration]?.name ? soundboardSettings[iteration].name : '',
@@ -171,6 +172,7 @@ export class MixerApp extends FormApplication {
             const targetId = target.id.replace('box-','')
             
             let data = event.originalEvent.dataTransfer.getData('text/plain');
+            console.log('dropData',event.originalEvent)
             try{
                 data = JSON.parse(data);
             } catch (e) {

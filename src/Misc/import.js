@@ -51,8 +51,10 @@ export class importConfigForm extends FormApplication {
     async _updateObject(event, formData) {
         let newData;
         if (this.uploadEvent == undefined) return;
+        console.log('uploadEvent',this.uploadEvent)
         const fileList = this.uploadEvent.target.files;
-        if (fileList[0].path.split('.')[1] == 'soundscapeData') {
+        console.log('fileList',fileList)
+        if (fileList[0].name.split('.')[1] == 'soundscapeData') {
             try {
                 newData = await this.readJsonFile(fileList[0]); 
             } catch(err) {
@@ -60,7 +62,7 @@ export class importConfigForm extends FormApplication {
             }
             
         }   
-        else if (fileList[0].path.split('.')[1] == 'soundscape')
+        else if (fileList[0].name.split('.')[1] == 'soundscape')
             newData = await this.readSoundscapeFile(fileList[0]);
         else {
             ui.notifications.warn(game.i18n.localize("Soundscape.InvalidFormat"));
@@ -172,7 +174,7 @@ export class importConfigForm extends FormApplication {
                     console.warn(`Image '${channel.imageSrc}' exists. Not uploaded.`);
                     this.importCounter++;
                     this.notImportedCounter++;
-                    document.getElementById('notImportedNum').innerHTML = this.notImportedCounter;
+                    //document.getElementById('notImportedNum').innerHTML = this.notImportedCounter;
                 }
                 else {
                     const split = newImage.name.split('/');
@@ -192,7 +194,7 @@ export class importConfigForm extends FormApplication {
                     if (sound != undefined) {
                         console.warn(`File '${sound.name}' exists in playlist '${playlist.name}'. Not uploaded.`); 
                         this.notImportedCounter += newSounds.length;
-                        document.getElementById('notImportedNum').innerHTML = this.notImportedCounter;
+                        //document.getElementById('notImportedNum').innerHTML = this.notImportedCounter;
                         continue;
                     }
                 }
@@ -213,7 +215,7 @@ export class importConfigForm extends FormApplication {
                 if (playlist != undefined) {
                     console.warn(`Playlist '${playlist.name}' exists. Not uploaded.`);
                     this.notImportedCounter += newSounds.length;
-                    document.getElementById('notImportedNum').innerHTML = this.notImportedCounter;
+                    //document.getElementById('notImportedNum').innerHTML = this.notImportedCounter;
                     continue;
                 }
                 let playlistName = channel.playlistName;
@@ -232,7 +234,7 @@ export class importConfigForm extends FormApplication {
                 if (await fileExists(targetPath)) {
                     console.warn(`File '${targetPath}' exists. Not uploaded.`);
                     this.notImportedCounter += newSounds.length;
-                    document.getElementById('notImportedNum').innerHTML = this.notImportedCounter;
+                    //document.getElementById('notImportedNum').innerHTML = this.notImportedCounter;
                     continue;
                 }
                 const split = targetPath.split('/');
@@ -249,7 +251,7 @@ export class importConfigForm extends FormApplication {
                 if (await fileExists(targetPath,true)) {
                     console.warn(`File '${targetPath}' exists. Not uploaded.`);
                     this.notImportedCounter += newSounds.length;
-                    document.getElementById('notImportedNum').innerHTML = this.notImportedCounter;
+                    //document.getElementById('notImportedNum').innerHTML = this.notImportedCounter;
                     continue;
                 }
 
@@ -271,7 +273,7 @@ export class importConfigForm extends FormApplication {
         if (await fileExists(`${path}/${name}`)) {
             console.warn(`File '${name}' exists in '${path}'. Not uploaded.`);
             this.notImportedCounter++;
-            document.getElementById('notImportedNum').innerHTML = this.notImportedCounter;
+            //document.getElementById('notImportedNum').innerHTML = this.notImportedCounter;
             return 2;
         }
         const image = await file.async("uint8array");
@@ -290,7 +292,7 @@ export class importConfigForm extends FormApplication {
         if ( request.status === 413 ) {
             console.warn(`File '${name}' in '${path}' is too large. Not uploaded.`);
             this.errorCounter++;
-            document.getElementById('errorNum').innerHTML = this.errorCounter;
+            //document.getElementById('errorNum').innerHTML = this.errorCounter;
             return 0;
         }
 
@@ -299,18 +301,18 @@ export class importConfigForm extends FormApplication {
         if (response.error) {
             ui.notifications.error(response.error);
             this.errorCounter++;
-            document.getElementById('errorNum').innerHTML = this.errorCounter;
+            //document.getElementById('errorNum').innerHTML = this.errorCounter;
             return false;
         }
         else if ( !response.path ) {
             console.warn(`File '${name}' in '${path}' failed to upload.`);
             this.errorCounter++;
-            document.getElementById('errorNum').innerHTML = this.errorCounter;
+            //document.getElementById('errorNum').innerHTML = this.errorCounter;
             return 0;
         }
 
         this.importCounterCheck++;
-        document.getElementById('importedNum').innerHTML = this.importCounterCheck;
+        document.getElementById('importProgressNumber').innerHTML = this.importCounterCheck;
         return 1;
     }
 
