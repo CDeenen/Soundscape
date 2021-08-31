@@ -83,7 +83,6 @@ Hooks.on("renderSidebarTab", (app, html) => {
                 const sound = elem.parentElement.getAttribute('data-sound-id');
                 if (playlist == undefined || sound == undefined) continue;
                 elem.draggable = true;
-                console.log('onDragStart',elem.ondragstart)
                 
                 elem.ondragstart = (event) => {
                     const data = {

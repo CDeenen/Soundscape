@@ -39,7 +39,7 @@ export class Soundboard {
 
     playSound(soundboardNr) {
         this.channels[soundboardNr].next();
-        this.channels[soundboardNr].play();
+
         if (game.user.isGM) {
             const payload = {
               "msgType": "playSoundboard",
@@ -48,6 +48,16 @@ export class Soundboard {
             game.socket.emit(`module.soundscape`, payload);
             Hooks.call(moduleName,payload);
         }
+
+        const repeat = this.channels[soundboardNr].settings.repeat;
+        if (repeat.repeat == 'single' || repeat.repeat == 'all') {
+            if (this.channels[soundboardNr].playing) {
+                this.channels[soundboardNr].stop();
+                return;
+            }
+        }
+        this.channels[soundboardNr].play();
+        
     }
 
     stopAll() {

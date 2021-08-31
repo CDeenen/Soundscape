@@ -2,9 +2,14 @@
     <script>
         $(document).ready(async function() {
             setSoundSelect('{{channel.soundData.soundSelect}}');
+            setRepeatDelay('{{repeat.repeat}}');
 
             $("#soundSelect").on('change', function(){
                 setSoundSelect(this.value);
+            })
+
+            $("#repeat").on('change', function(){
+                setRepeatDelay(this.value);
             })
 
             if (document.getElementById('soundscape_soundConfigHelp') == null) {
@@ -18,6 +23,12 @@
                 document.getElementById('soundscape_soundConfig').getElementsByClassName('window-title')[0].after(help);
             }
         });
+
+        function setRepeatDelay(selection) {
+            console.log('sel',selection)
+            if (selection == 'none') $("#repeatDelayWrapper").css({'display':'none'});
+            else $("#repeatDelayWrapper").css({'display':''});
+        }
 
         function setSoundSelect(selection) {
             if (selection == 'playlist_single') {
@@ -72,7 +83,7 @@
             display: flex;
         }
         select { display: block; min-width: 60%; }
-        sbLabel { display: block; min-width: 40%; }
+        sbLabel { display: block; min-width: 40%; max-width:40%}
     </style>
     <div style="max-width:400px;min-width:400px">
 
@@ -140,20 +151,38 @@
         </div>
 
         <hr>
-        <div class="formField" id='randomizeWrapper'>
-            <sbLabel>{{localize "Soundscape.Shuffle"}}: </sbLabel>
-            <input type="checkbox" name="randomize" data-dtype="Boolean" {{randomize}}>
+
+        <divid='randomizeWrapper'>
+            <div class="formField">
+                <sbLabel>{{localize "Soundscape.Shuffle"}}: </sbLabel>
+                <input type="checkbox" name="randomize" data-dtype="Boolean" {{randomize}}>
+            </div>
+            <hr>
         </div>
+
+        
 
         <div class="formField">
             <sbLabel>{{localize "Soundscape.Repeat"}}:</sbLabel>
-            <select name="repeat" default="">
-                {{#select channel.settings.repeat}}
+            <select name="repeat" id="repeat" default="">
+                {{#select repeat.repeat}}
                 <option value="none">{{localize "Soundscape.NoRepeat"}}</option>
                 <option value="single">{{localize "Soundscape.RepeatSingle"}}</option>
                 <option value="all">{{localize "Soundscape.RepeatAll"}}</option>
                 {{/select}}
             </select>
+        </div>
+
+        <div id="repeatDelayWrapper" style="display:none">
+            <div class="formField">
+                <sbLabel>{{localize "Soundscape.MinDelay"}}:</sbLabel>
+                <input type="text" name="minDelay" value="{{repeat.minDelay}}">
+            </div>
+
+            <div class="formField">
+                <sbLabel>{{localize "Soundscape.MaxDelay"}}:</sbLabel>
+                <input type="text" name="maxDelay" value="{{repeat.maxDelay}}">
+            </div>
         </div>
 
         <hr>
@@ -171,6 +200,14 @@
                     <th style="width:30%"><input type="text" name="duration" value="" disabled></th>
                 </tr>
             </table>
+
+            <div class="formField">
+                <sbLabel>{{localize "Soundscape.SkipFirstTiming"}}: </sbLabel>
+                <input type="checkbox" name="skipFirstTiming" data-dtype="Boolean" {{skipFirstTiming}}>
+            </div>
+
+            <hr>
+
             {{localize "Soundscape.Fade"}}:
             <table style="width:100%;border-collapse:collapse">
                 <tr>
@@ -183,6 +220,11 @@
                 </tr>
             </table>
         </div>   
+
+        <div class="formField">
+            <sbLabel>{{localize "Soundscape.SkipFirstFade"}}: </sbLabel>
+            <input type="checkbox" name="skipFirstFade" data-dtype="Boolean" {{skipFirstFade}}>
+        </div>
 
         <button type="submit" name="submit">
             <i class="fas fa-save"></i> {{localize "Soundscape.SaveConfig"}}

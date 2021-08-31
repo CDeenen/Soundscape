@@ -48,6 +48,7 @@
     "Soundscape.Modules": "Modules",
     "Soundscape.Icon": "Icon",
     "Soundscape.Volume": "Volume",
+    "Soundscape.RandomizeVolume": "Randomize Volume",
     "Soundscape.PlaybackSpeed": "Playback Speed",
     "Soundscape.RandomizeSpeed": "Randomize Speed",
     "Soundscape.SaveConfig": "Save Configuration",
@@ -60,6 +61,8 @@
     "Soundscape.FadeIn": "Fade In",
     "Soundscape.FadeOut": "Fade Out",
     "Soundscape.Repeat": "Repeat",
+    "Soundscape.MinDelay": "Minimum Delay",
+    "Soundscape.MaxDelay": "Maximum Delay",
     "Soundscape.Preview": "Preview",
     "Soundscape.None": "None",
     "Soundscape.FilePicker": "Filepicker",
@@ -97,5 +100,7 @@
     "Soundscape.FilepickerFolder": "Filepicker: Folder",
     "Soundscape.NoRepeat": "Don't Repeat",
     "Soundscape.RepeatSingle": "Repeat Single",
-    "Soundscape.RepeatAll": "Repeat All"
+    "Soundscape.RepeatAll": "Repeat All",
+    "Soundscape.SkipFirstTiming": "Apply start timing after first loop",
+    "Soundscape.SkipFirstFade": "Apply fade in after first loop"
 }

@@ -68,11 +68,14 @@ export class MixerApp extends FormApplication {
         for (let i=0; i<5; i++) {
             let row = [];
             for (let j=0; j<5; j++) {
+                const repeat = soundboardSettings[iteration]?.repeat?.repeat;
                 
                 const data = {
                     iteration,
                     name: soundboardSettings[iteration]?.name ? soundboardSettings[iteration].name : '',
-                    imageSrc: soundboardSettings[iteration]?.imageSrc ? soundboardSettings[iteration].imageSrc : 'modules/soundscape/img/transparant.png'
+                    imageSrc: soundboardSettings[iteration]?.imageSrc ? soundboardSettings[iteration].imageSrc : 'modules/soundscape/img/transparant.png',
+                    borderColor: (repeat == 'single' || repeat == 'all') ? 'yellow' : 'black',
+                    boxShadow: (repeat == 'single' || repeat == 'all') ? "0 0 10px yellow" : ""
                 }
                 row.push(data);
                 iteration++;
@@ -172,7 +175,6 @@ export class MixerApp extends FormApplication {
             const targetId = target.id.replace('box-','')
             
             let data = event.originalEvent.dataTransfer.getData('text/plain');
-            console.log('dropData',event.originalEvent)
             try{
                 data = JSON.parse(data);
             } catch (e) {

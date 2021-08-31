@@ -323,8 +323,10 @@ export class Mixer {
                     timing: {
                         startTime: 0,
                         stopTime: 0,
+                        skipFirstTiming: false,
                         fadeIn: 0,
-                        fadeOut: 0
+                        fadeOut: 0,
+                        skipFirstFade: false
                     },
                     effects: {
                         equalizer: {
@@ -377,7 +379,12 @@ export class Mixer {
                 },
                 name: '',
                 volume: 1,
-                repeat: 'none',
+                randomizeVolume: 0,
+                repeat: {
+                    repeat: 'none',
+                    minDelay: 0,
+                    maxDelay: 0
+                },
                 randomize: false,
                 imageSrc: ''
             })

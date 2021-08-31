@@ -2,9 +2,14 @@
     <script>
         $(document).ready(async function() {
             setSoundSelect('{{settings.soundData.soundSelect}}');
+            setRepeatDelay('{{repeat.repeat}}');
 
             $("#soundSelect").on('change', function(){
                 setSoundSelect(this.value);
+            })
+
+            $("#repeat").on('change', function(){
+                setRepeatDelay(this.value);
             })
 
             if (document.getElementById('soundscape_soundboardConfigHelp') == null) {
@@ -18,6 +23,12 @@
                 document.getElementById('soundscape_soundboardConfig').getElementsByClassName('window-title')[0].after(help);
             }
         });
+
+        function setRepeatDelay(selection) {
+            console.log('sel',selection)
+            if (selection == 'none') $("#repeatDelayWrapper").css({'display':'none'});
+            else $("#repeatDelayWrapper").css({'display':''});
+        }
 
         function setSoundSelect(selection) {
             if (selection == 'playlist_single') {
@@ -154,12 +165,8 @@
         </div>
     </div>
 
-    <div class="formField" id='randomizeWrapper'>
-        <sbLabel>{{localize "Soundscape.Shuffle"}}: </sbLabel>
-        <input type="checkbox" name="randomize" data-dtype="Boolean" {{randomize}}>
-    </div>
-
     <hr>
+
     <div class="formField">
         <sbLabel>{{localize "Soundscape.Icon"}}:</sbLabel> 
         <div class="filePickerField">
@@ -172,11 +179,54 @@
 
     <hr>
 
+    <div id='randomizeWrapper'>
+        <div class="formField">
+            <sbLabel>{{localize "Soundscape.Shuffle"}}: </sbLabel>
+            <input type="checkbox" name="randomize" data-dtype="Boolean" {{randomize}}>
+        </div>
+    
+        <hr>
+    </div>
+    
+
+    <div class="formField">
+        <sbLabel>{{localize "Soundscape.Repeat"}}:</sbLabel>
+        <select name="repeat" id="repeat" default="">
+            {{#select repeat.repeat}}
+            <option value="none">{{localize "Soundscape.NoRepeat"}}</option>
+            <option value="single">{{localize "Soundscape.RepeatSingle"}}</option>
+            <option value="all">{{localize "Soundscape.RepeatAll"}}</option>
+            {{/select}}
+        </select>
+    </div>
+
+    <div id="repeatDelayWrapper" style="display:none">
+        <div class="formField">
+            <sbLabel>{{localize "Soundscape.MinDelay"}}:</sbLabel>
+            <input type="text" name="minDelay" value="{{repeat.minDelay}}">
+        </div>
+    
+        <div class="formField">
+            <sbLabel>{{localize "Soundscape.MaxDelay"}}:</sbLabel>
+            <input type="text" name="maxDelay" value="{{repeat.maxDelay}}">
+        </div>
+    </div>
+
+    <hr>
+
     <div class="formField">
         <sbLabel>{{localize "Soundscape.Volume"}}</sbLabel>
         <input type="range" min="0" max="125" value={{volume}} class="slider formGroupSlider" name="volume" id="volume">
         <input type="number" class="formGroupNumber" name="volumeNumber" id="volumeNumber" style="font-size:12px; text-align:center" min="0" max="125" value="{{volume}}">
     </div>
+
+    <div class="formField">
+        <sbLabel>{{localize "Soundscape.RandomizeVolume"}}</sbLabel>
+        <input type="range" min="0" max="125" value={{randomizeVolume}} class="slider formGroupSlider" name="randomizeVolume" id="randomizeVolume">
+        <input type="number" class="formGroupNumber" name="randomizeVolumeNumber" id="randomizeVolumeNumber" style="font-size:12px; text-align:center" min="0" max="125" value="{{randomizeVolume}}">
+    </div>
+
+    <hr>
 
     <div class="formField">
         <sbLabel>{{localize "Soundscape.PlaybackSpeed"}}</sbLabel>

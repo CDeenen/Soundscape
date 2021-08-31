@@ -148,11 +148,18 @@
             min-height: 75px;
             max-width: 75px;
             max-height: 75px;
-            border: 2px solid black ;
+            border-style: solid;
+            border-width: 2px;
             border-radius: 10px;
             margin:3px 3px 0px;
             align-items: center;
             padding: 0;
+    
+        }
+
+        .sbButton:hover {
+            border-radius: 10px;
+            filter: brightness(1.25);
         }
 
         .sbButtonOver {
@@ -231,7 +238,7 @@
                     <div class="boxed" name="channelBox" id="box-{{this.channelIteration}}">
                         <button type="button" class="configButton" name="config" id="config-{{this.channelIteration}}"><i class="fas fa-cog" id="config-{{this.channelIteration}}"></i></button>
                         <hr>
-                        <input type="range" name="panSlider" id="panSlider-{{this.channelIteration}}" orient="vertical" min="-25" max="25" steps="1" value="{{this.pan}}" list="panSteplist">
+                        <input type="range" name="panSlider" id="panSlider-{{this.channelIteration}}" min="-25" max="25" steps="1" value="{{this.pan}}" list="panSteplist">
                         <datalist id="panSteplist">
                             <option>0</option>
                         </datalist>
@@ -241,7 +248,7 @@
                         <button type="button" class="channelButton" name="link" id="link-{{this.channelIteration}}" style="background-color:{{this.linkColor}}"><div class="channelButtonLabel">{{localize "Soundscape.LinkBtn"}}</div></button>
                         <div class="sliderBox">
                             <div class="slider-wrapper">
-                                <input type="range" name="volumeSlider" id="volumeSlider-{{this.channelIteration}}" orient="vertical" min="0" max="125" value="{{this.volume}}">
+                                <input type="range" name="volumeSlider" id="volumeSlider-{{this.channelIteration}}" min="0" max="125" value="{{this.volume}}">
                                 <datalist id="steplist">
                                     <option>100</option>
                                 </datalist>
@@ -273,7 +280,7 @@
                     <button type="button" class="channelButton" style="visibility: hidden;"><i></i></button>
                     <div class="sliderBox">
                         <div class="slider-wrapper">
-                            <input type="range" name="volumeSlider" id="volumeSlider-master" orient="vertical" min="0" max="125" value="{{master.volume}}">
+                            <input type="range" name="volumeSlider" id="volumeSlider-master" min="0" max="125" value="{{master.volume}}">
                         </div>
                     </div>
                     <div>
@@ -307,7 +314,7 @@
                 <div class="form-group btnRow" style="width:100%">
                     {{#each row}}
                     <div>
-                        <input type="image" class="sbButton" name="sbButton" id="sbButton-{{this.iteration}}" src={{this.imageSrc}} draggable='true'>  
+                        <input type="image" class="sbButton" name="sbButton" id="sbButton-{{this.iteration}}" src={{this.imageSrc}} draggable='true' style="border-color:{{this.borderColor}}; box-shadow:{{this.boxShadow}}">  
                         <p class="sbButtonLabel" name="sbButtonLabel" id="sbButtonLabel-{{this.iteration}}">{{this.name}}</p>
                     </div>
                     {{/each}}
@@ -317,7 +324,7 @@
                 <hr>
                 <div class="form-group">
                     <label>{{localize "Soundscape.Volume"}}</label>
-                    <input type="range" name="sbVolume" id="sbVolume" orient="vertical" min="0" max="125" steps="1" value={{sbGain}}>
+                    <input type="range" name="sbVolume" id="sbVolume" min="0" max="125" steps="1" value={{sbGain}}>
                     <button type="button" name="stopSB" id="stopSB" style="max-width:25%; margin-left:5px"><i class="fas fa-stop"></i>{{localize "Soundscape.StopAll"}}</button>
                 </div>
         </div>

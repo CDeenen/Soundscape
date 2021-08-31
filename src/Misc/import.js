@@ -51,9 +51,9 @@ export class importConfigForm extends FormApplication {
     async _updateObject(event, formData) {
         let newData;
         if (this.uploadEvent == undefined) return;
-        console.log('uploadEvent',this.uploadEvent)
+
         const fileList = this.uploadEvent.target.files;
-        console.log('fileList',fileList)
+
         if (fileList[0].name.split('.')[1] == 'soundscapeData') {
             try {
                 newData = await this.readJsonFile(fileList[0]); 
