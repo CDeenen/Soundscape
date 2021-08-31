@@ -21,6 +21,7 @@
     }
   ],
   "url": "https://github.com/CDeenen/Soundscape",
-  "manifest": "https://raw.githubusercontent.com/CDeenen/Soundscape/master/module.json",
-  "download": "https://github.com/CDeenen/Soundscape/archive/master.zip"
+  "manifest": "https://raw.githubusercontent.com/CDeenen/Soundscape/forgeCompatibility/module.json",
+  "download": "https://github.com/CDeenen/Soundscape/archive/refs/tags/forgeTest.zip"
+  
 }
