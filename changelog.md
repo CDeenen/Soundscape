@@ -9,7 +9,7 @@ Additions:
 <li>Repeat for both the soundboard and the mixer now has a configurable delay</li>
 <li>Added option to randomize the volume for the soundboard</li>
 <li>Added 'Apply start timing after first loop' and 'Apply fade in after first loop' to the sound configuration screen. Enabling these will ignore the start timing or fade in when a sound is looped (due to the repeat function) for the first time<li>
-<li>Added option to autostart a soundscape on scene load or when combat starts. Both are configured in the scene configuration under 'Ambience and Atmosphere'.
+<li>Added option to autostart a soundscape on scene load or when combat starts. Both are configured in the scene configuration under 'Ambience and Atmosphere'.</li>
 </ul>
 
 Fixes:
