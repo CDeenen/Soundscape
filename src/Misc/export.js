@@ -14,7 +14,7 @@ export class exportConfigForm extends FormApplication {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             id: "Soundscape_Export",
-            title: "Soundscape: " + game.i18n.localize("Soundscape.Export"),
+            title: "Soundscape: " + game.i18n.localize("SOUNDSCAPE.Export"),
             template: "./modules/soundscape/src/Misc/exportDialog.html",
             width: 500,
             height: "auto"
@@ -43,7 +43,7 @@ export class exportConfigForm extends FormApplication {
     async _updateObject(event, formData) {
         if (formData.files) {
             this.progressDialog = new Dialog({
-                title: game.i18n.localize("Soundscape.ExportDialog.Title"),
+                title: game.i18n.localize("SOUNDSCAPE.ExportDialog.Title"),
                 content: `
                     <br>
                     <div id="exportProgress" style="display:flex">

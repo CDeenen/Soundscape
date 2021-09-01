@@ -2,7 +2,7 @@
   "name": "soundscape",
   "title": "Soundscape",
   "description": "Soundscape is a module that allows you to easily mix multiple audio tracks into a soundscape that can be customized on the fly.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "CDeenen",
   "esmodules": ["./soundscape.js"],
   "scripts": [
@@ -12,7 +12,7 @@
   ],
   "socket": true,
   "minimumCoreVersion": "0.8.6",
-  "compatibleCoreVersion": "0.8.8",
+  "compatibleCoreVersion": "0.8.9",
   "languages": [
     {
       "lang": "en",
@@ -23,4 +23,5 @@
   "url": "https://github.com/CDeenen/Soundscape",
   "manifest": "https://raw.githubusercontent.com/CDeenen/Soundscape/master/module.json",
   "download": "https://github.com/CDeenen/Soundscape/archive/master.zip"
+  
 }

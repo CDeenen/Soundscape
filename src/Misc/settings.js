@@ -1,6 +1,16 @@
 import {moduleName} from "../../soundscape.js";
 
-export const registerSettings = function() {
+export const registerSettings = async function() {
+
+    game.settings.register('soundscape', 'targetPlayer', {
+        name: "SOUNDSCAPE.TargetPlayer",
+        hint: "SOUNDSCAPE.TargetPlayer_Hint",
+        scope: "world",
+        config: true,
+        default: "Gamemaster",
+        type: String
+    });
+
     game.settings.register(moduleName, 'soundscapes', {
         name: "soundscapes",
         scope: "world",

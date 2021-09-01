@@ -24,7 +24,7 @@ export class MixerApp extends FormApplication {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             id: "soundscape_mixer",
-            title: "Soundscape: "+game.i18n.localize("Soundscape.Mixer"),
+            title: "Soundscape: "+game.i18n.localize("SOUNDSCAPE.Mixer"),
             template: "./modules/soundscape/src/Mixer/mixerApp.html",
             width: "auto"
         });
@@ -62,16 +62,20 @@ export class MixerApp extends FormApplication {
         const soundscapePlaying = this.mixer.playing ? true : false;
         //const soundboardSettings = game.settings.get(moduleName,'soundscapes');
         let soundboardSettings = game.settings.get(moduleName,'soundscapes')[this.mixer.currentSoundscape].soundboard;
-        
+
         const soundboard = [];
         let iteration = 0;
         for (let i=0; i<5; i++) {
             let row = [];
             for (let j=0; j<5; j++) {
+                const repeat = soundboardSettings[iteration]?.repeat?.repeat;
+                
                 const data = {
                     iteration,
                     name: soundboardSettings[iteration]?.name ? soundboardSettings[iteration].name : '',
-                    imageSrc: soundboardSettings[iteration]?.imageSrc ? soundboardSettings[iteration].imageSrc : 'modules/soundscape/img/transparant.png'
+                    imageSrc: soundboardSettings[iteration]?.imageSrc ? soundboardSettings[iteration].imageSrc : 'modules/soundscape/img/transparant.png',
+                    borderColor: (repeat == 'single' || repeat == 'all') ? 'yellow' : 'black',
+                    boxShadow: (repeat == 'single' || repeat == 'all') ? "0 0 10px yellow" : ""
                 }
                 row.push(data);
                 iteration++;

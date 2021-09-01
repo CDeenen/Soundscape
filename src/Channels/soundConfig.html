@@ -2,9 +2,14 @@
     <script>
         $(document).ready(async function() {
             setSoundSelect('{{channel.soundData.soundSelect}}');
+            setRepeatDelay('{{repeat.repeat}}');
 
             $("#soundSelect").on('change', function(){
                 setSoundSelect(this.value);
+            })
+
+            $("#repeat").on('change', function(){
+                setRepeatDelay(this.value);
             })
 
             if (document.getElementById('soundscape_soundConfigHelp') == null) {
@@ -13,11 +18,16 @@
                 help.innerHTML = 
                 `
                     <i class="fas fa-question"></i>
-                    {{localize "Soundscape.Help"}}
+                    {{localize "SOUNDSCAPE.Help"}}
                 `
                 document.getElementById('soundscape_soundConfig').getElementsByClassName('window-title')[0].after(help);
             }
         });
+
+        function setRepeatDelay(selection) {
+            if (selection == 'none') $("#repeatDelayWrapper").css({'display':'none'});
+            else $("#repeatDelayWrapper").css({'display':''});
+        }
 
         function setSoundSelect(selection) {
             if (selection == 'playlist_single') {
@@ -72,33 +82,33 @@
             display: flex;
         }
         select { display: block; min-width: 60%; }
-        sbLabel { display: block; min-width: 40%; }
+        sbLabel { display: block; min-width: 40%; max-width:40%}
     </style>
     <div style="max-width:400px;min-width:400px">
 
         <div style="text-align:center;">
-            <h2>{{localize "Soundscape.Sound"}} {{channelNumber}}</h2>
+            <h2>{{localize "SOUNDSCAPE.Sound"}} {{channelNumber}}</h2>
         </div>
 
         <div class="formField">
-            <sbLabel>{{localize "Soundscape.Name"}}: </sbLabel>
+            <sbLabel>{{localize "SOUNDSCAPE.Name"}}: </sbLabel>
             <div class="formValue">
                 <input type="text"  name="name" value="{{channel.settings.name}}">
             </div>
         </div>
 
         <div class="formField">
-            <sbLabel>{{localize "Soundscape.SoundSelection"}}: </sbLabel>
+            <sbLabel>{{localize "SOUNDSCAPE.SoundSelection"}}: </sbLabel>
             <select name="soundSelect" id="soundSelect" default="">
-                <option value="playlist_single" >{{localize "Soundscape.PlaylistSingle"}}</option>
-                <option value="playlist_multi">{{localize "Soundscape.PlaylistComplete"}}</option>
-                <option value="filepicker_single">{{localize "Soundscape.FilepickerSingle"}}</option>
-                <option value="filepicker_folder">{{localize "Soundscape.FilepickerFolder"}}</option>
+                <option value="playlist_single" >{{localize "SOUNDSCAPE.PlaylistSingle"}}</option>
+                <option value="playlist_multi">{{localize "SOUNDSCAPE.PlaylistComplete"}}</option>
+                <option value="filepicker_single">{{localize "SOUNDSCAPE.FilepickerSingle"}}</option>
+                <option value="filepicker_folder">{{localize "SOUNDSCAPE.FilepickerFolder"}}</option>
             </select>
         </div>
 
         <div class="formField" id='playlistWrapper'>
-            <sbLabel>{{localize "Soundscape.Playlist"}}: </sbLabel>
+            <sbLabel>{{localize "SOUNDSCAPE.Playlist"}}: </sbLabel>
             <select name="playlistId" default="">
                 {{#select selectedPlaylist}}
                     {{#each playlists}}
@@ -109,7 +119,7 @@
         </div>
 
         <div class="formField" id='playlistSoundWrapper'>
-            <sbLabel>{{localize "Soundscape.Sound"}}: </sbLabel>
+            <sbLabel>{{localize "SOUNDSCAPE.Sound"}}: </sbLabel>
             <select name="soundId" default="">
                 {{#select selectedSound}}
                     {{#each sounds}}
@@ -120,7 +130,7 @@
         </div>
 
         <div class="formField" id='filepickerSoundWrapper'>
-            <sbLabel>{{localize "Soundscape.Sound"}}: </sbLabel>
+            <sbLabel>{{localize "SOUNDSCAPE.Sound"}}: </sbLabel>
             <div class="filePickerField">
                 <button type="button" class="file-picker" data-type="audio" data-target="src" title="Browse Files" tabindex="-1">
                     <i class="fas fa-file-import fa-fw"></i>
@@ -130,7 +140,7 @@
         </div>
 
         <div class="formField" id='filepickerFolderWrapper'>
-            <sbLabel>{{localize "Soundscape.Folder"}}:</sbLabel> 
+            <sbLabel>{{localize "SOUNDSCAPE.Folder"}}:</sbLabel> 
             <div class="filePickerField">
                 <button type="button" class="file-picker" data-type="folder" data-target="folderSrc" title="Browse Files" tabindex="-1">
                     <i class="fas fa-file-import fa-fw"></i>
@@ -140,30 +150,48 @@
         </div>
 
         <hr>
-        <div class="formField" id='randomizeWrapper'>
-            <sbLabel>{{localize "Soundscape.Shuffle"}}: </sbLabel>
-            <input type="checkbox" name="randomize" data-dtype="Boolean" {{randomize}}>
+
+        <divid='randomizeWrapper'>
+            <div class="formField">
+                <sbLabel>{{localize "SOUNDSCAPE.Shuffle"}}: </sbLabel>
+                <input type="checkbox" name="randomize" data-dtype="Boolean" {{randomize}}>
+            </div>
+            <hr>
         </div>
 
+        
+
         <div class="formField">
-            <sbLabel>{{localize "Soundscape.Repeat"}}:</sbLabel>
-            <select name="repeat" default="">
-                {{#select channel.settings.repeat}}
-                <option value="none">{{localize "Soundscape.NoRepeat"}}</option>
-                <option value="single">{{localize "Soundscape.RepeatSingle"}}</option>
-                <option value="all">{{localize "Soundscape.RepeatAll"}}</option>
+            <sbLabel>{{localize "SOUNDSCAPE.Repeat"}}:</sbLabel>
+            <select name="repeat" id="repeat" default="">
+                {{#select repeat.repeat}}
+                <option value="none">{{localize "SOUNDSCAPE.NoRepeat"}}</option>
+                <option value="single">{{localize "SOUNDSCAPE.RepeatSingle"}}</option>
+                <option value="all">{{localize "SOUNDSCAPE.RepeatAll"}}</option>
                 {{/select}}
             </select>
         </div>
 
+        <div id="repeatDelayWrapper" style="display:none">
+            <div class="formField">
+                <sbLabel>{{localize "SOUNDSCAPE.MinDelay"}}:</sbLabel>
+                <input type="text" name="minDelay" value="{{repeat.minDelay}}">
+            </div>
+
+            <div class="formField">
+                <sbLabel>{{localize "SOUNDSCAPE.MaxDelay"}}:</sbLabel>
+                <input type="text" name="maxDelay" value="{{repeat.maxDelay}}">
+            </div>
+        </div>
+
         <hr>
         <div>
-            {{localize "Soundscape.Timing"}}:
+            {{localize "SOUNDSCAPE.Timing"}}:
             <table style="width:100%;border-collapse:collapse">
                 <tr>
-                    <th>{{localize "Soundscape.Start"}}</th>
-                    <th>{{localize "Soundscape.Stop"}}</th>
-                    <th>{{localize "Soundscape.Duration"}}</th>
+                    <th>{{localize "SOUNDSCAPE.Start"}}</th>
+                    <th>{{localize "SOUNDSCAPE.Stop"}}</th>
+                    <th>{{localize "SOUNDSCAPE.Duration"}}</th>
                 </tr>
                 <tr>
                     <th style="width:30%"><input type="text" name="start" value="{{start}}"></th>
@@ -171,11 +199,19 @@
                     <th style="width:30%"><input type="text" name="duration" value="" disabled></th>
                 </tr>
             </table>
-            {{localize "Soundscape.Fade"}}:
+
+            <div class="formField">
+                <sbLabel>{{localize "SOUNDSCAPE.SkipFirstTiming"}}: </sbLabel>
+                <input type="checkbox" name="skipFirstTiming" data-dtype="Boolean" {{skipFirstTiming}}>
+            </div>
+
+            <hr>
+
+            {{localize "SOUNDSCAPE.Fade"}}:
             <table style="width:100%;border-collapse:collapse">
                 <tr>
-                    <th>{{localize "Soundscape.FadeIn"}}</th>
-                    <th>{{localize "Soundscape.FadeOut"}}</th>
+                    <th>{{localize "SOUNDSCAPE.FadeIn"}}</th>
+                    <th>{{localize "SOUNDSCAPE.FadeOut"}}</th>
                 </tr>
                 <tr>
                     <th style="width:30%"><input type="text" name="fadeIn" value="{{fadeIn}}"></th>
@@ -184,8 +220,13 @@
             </table>
         </div>   
 
+        <div class="formField">
+            <sbLabel>{{localize "SOUNDSCAPE.SkipFirstFade"}}: </sbLabel>
+            <input type="checkbox" name="skipFirstFade" data-dtype="Boolean" {{skipFirstFade}}>
+        </div>
+
         <button type="submit" name="submit">
-            <i class="fas fa-save"></i> {{localize "Soundscape.SaveConfig"}}
+            <i class="fas fa-save"></i> {{localize "SOUNDSCAPE.SaveConfig"}}
         </button>
     </div>
     

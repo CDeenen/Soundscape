@@ -28,7 +28,7 @@ export class soundscapeConfig extends FormApplication {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             id: "soundscape_soundscapeConfig",
-            title: "Soundscape: " + game.i18n.localize("Soundscape.Config"),
+            title: "Soundscape: " + game.i18n.localize("SOUNDSCAPE.Config"),
             template: "./modules/soundscape/src/Misc/soundscapeConfig.html",
             width: "500px",
             height: "700px"
@@ -238,7 +238,7 @@ export class soundscapeConfig extends FormApplication {
                 if (html.find(`input[id=select-${i}]`)[0].checked)
                     exports.push(soundscapes[i]);
             if (exports.length == 0) {
-                ui.notifications.warn(game.i18n.localize("Soundscape.SelectSoundscapes"));
+                ui.notifications.warn(game.i18n.localize("SOUNDSCAPE.SelectSoundscapes"));
                 return;
             }
             let exportDialog = new exportConfigForm();

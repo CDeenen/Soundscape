@@ -6,7 +6,7 @@
             help.innerHTML = 
             `
                 <i class="fas fa-question"></i>
-                {{localize "Soundscape.Help"}}
+                {{localize "SOUNDSCAPE.Help"}}
             `
             document.getElementById('soundscape_soundscapeConfig').getElementsByClassName('window-title')[0].after(help);
         }
@@ -100,7 +100,7 @@
             let contents = `
                 <table style="width:100%">
                     <tr>
-                        <td style="width:95%">{{localize "Soundscape.Name"}}</td>
+                        <td style="width:95%">{{localize "SOUNDSCAPE.Name"}}</td>
                         <td></td>
                     </tr>
                 `
@@ -274,20 +274,20 @@
 
     <div style="width:100%; min-width:500px;">
         <div class="ssConfigTab">
-            <button class="ssConfigTablinks active" onclick="openTab(event, 'soundscapeConfig')">{{localize "Soundscape.SoundscapeConfig"}}</button>
-            <button class="ssConfigTablinks" onclick="openTab(event, 'soundImport')">{{localize "Soundscape.SoundImporter"}}</button>
+            <button class="ssConfigTablinks active" onclick="openTab(event, 'soundscapeConfig')">{{localize "SOUNDSCAPE.SoundscapeConfig"}}</button>
+            <button class="ssConfigTablinks" onclick="openTab(event, 'soundImport')">{{localize "SOUNDSCAPE.SoundImporter"}}</button>
         </div>
 
         <div id='soundscapeConfig' class="ssConfigTabContent active"  style="width:100%; min-width:500px;">
             <table style="width:100%;">
                 <tr>
-                    <th style='text-align: left;'>{{localize "Soundscape.Nr"}}</th>
-                    <th style='text-align: left;'>{{localize "Soundscape.Name"}}</th>
-                    <th class='columnButton'>{{localize "Soundscape.Load"}}</th>
-                    <th class='columnButton'>{{localize "Soundscape.MoveDown"}}</th>
-                    <th class='columnButton'>{{localize "Soundscape.MoveUp"}}</th>
-                    <th class='columnButton'>{{localize "Soundscape.CopySB"}}</th>
-                    <th class='columnCheckbox'>{{localize "Soundscape.Select"}}</th>
+                    <th style='text-align: left;'>{{localize "SOUNDSCAPE.Nr"}}</th>
+                    <th style='text-align: left;'>{{localize "SOUNDSCAPE.Name"}}</th>
+                    <th class='columnButton'>{{localize "SOUNDSCAPE.Load"}}</th>
+                    <th class='columnButton'>{{localize "SOUNDSCAPE.MoveDown"}}</th>
+                    <th class='columnButton'>{{localize "SOUNDSCAPE.MoveUp"}}</th>
+                    <th class='columnButton'>{{localize "SOUNDSCAPE.CopySB"}}</th>
+                    <th class='columnCheckbox'>{{localize "SOUNDSCAPE.Select"}}</th>
                 </tr>
                 {{#each soundscapes as |s|}}
                 <tr>
@@ -323,37 +323,37 @@
             </table>
             <div style='width:100%; display:flex'>
                 <button type="button" class='lowButtons' id='selectAll' name='selectAll'>
-                    {{localize "Soundscape.SelectAll"}}
+                    {{localize "SOUNDSCAPE.SelectAll"}}
                 </button>
                 <button type="button" class='lowButtons' id='deselectAll' name='deselectAll'>
-                    {{localize "Soundscape.DeselectAll"}}
+                    {{localize "SOUNDSCAPE.DeselectAll"}}
                 </button>
                 <button type="button" class='lowButtons' id='new' name='new'>
-                    {{localize "Soundscape.AddSoundscape"}}
+                    {{localize "SOUNDSCAPE.AddSoundscape"}}
                 </button>
             </div>
             <div style='width:100%; display:flex'>
                 <button type="button" class='lowButtons' id='copySelected' name='copySelected'>
-                    {{localize "Soundscape.DuplicateSelected"}}
+                    {{localize "SOUNDSCAPE.DuplicateSelected"}}
                 </button>
                 <button type="button" class='lowButtons' id='deleteSelected' name='deleteSelected'>
-                    {{localize "Soundscape.DeleteSelected"}}
+                    {{localize "SOUNDSCAPE.DeleteSelected"}}
                 </button>
                 <button type="button" class='lowButtons' id='exportSelected' name='exportSelected'>
-                    {{localize "Soundscape.ExportSelected"}}
+                    {{localize "SOUNDSCAPE.ExportSelected"}}
                 </button>
                 <button type="button" class='lowButtons' id='importSelected' name='importSelected'>
-                    {{localize "Soundscape.Import"}}
+                    {{localize "SOUNDSCAPE.Import"}}
                 </button>
             </div>
         </div>
 
 
         <div id='soundImport' class="ssConfigTabContent" style="display:none; width:100%; min-width:500px;">
-            <h3>{{localize "Soundscape.Playlists"}}</h3>
+            <h3>{{localize "SOUNDSCAPE.Playlists"}}</h3>
             <div id='playlistData'></div>
 
-            <h3>{{localize "Soundscape.Modules"}}</h3>
+            <h3>{{localize "SOUNDSCAPE.Modules"}}</h3>
             <div id='moduleData'></div>
         </div>
      

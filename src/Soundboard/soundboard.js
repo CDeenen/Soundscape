@@ -1,5 +1,4 @@
 import {moduleName} from "../../soundscape.js";
-import {Gain} from "../Channels/Effects/gain.js";
 import {Channel} from "../Channels/channel.js";
 
 export class Soundboard {
@@ -25,6 +24,12 @@ export class Soundboard {
             
             this.channels[i].setSbData(channelSettings);
         }
+        const payload = {
+            "msgType": "setSoundboardVolume",
+            "volume": settings.soundboardGain
+          };
+          game.socket.emit(`module.soundscape`, payload);
+          Hooks.call(moduleName,payload);
     }
 
     configureSingle(channelNr,settings) {
@@ -33,14 +38,25 @@ export class Soundboard {
 
     playSound(soundboardNr) {
         this.channels[soundboardNr].next();
-        this.channels[soundboardNr].play();
+
         if (game.user.isGM) {
             const payload = {
               "msgType": "playSoundboard",
               channel: soundboardNr
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
         }
+
+        const repeat = this.channels[soundboardNr].settings.repeat;
+        if (repeat.repeat == 'single' || repeat.repeat == 'all') {
+            if (this.channels[soundboardNr].playing) {
+                this.channels[soundboardNr].stop();
+                return;
+            }
+        }
+        this.channels[soundboardNr].play();
+        
     }
 
     stopAll() {
@@ -49,6 +65,7 @@ export class Soundboard {
               "msgType": "stopAllSoundboard"
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
         }
         for (let i=0; i<this.soundboardSize; i++) {
             this.channels[i].stop();
@@ -64,6 +81,7 @@ export class Soundboard {
               "volume": volume
             };
             game.socket.emit(`module.soundscape`, payload);
+            Hooks.call(moduleName,payload);
             let settings = game.settings.get(moduleName,'soundscapes');
             settings[this.mixer.currentSoundscape].soundboardGain = volume;
             game.settings.set(moduleName,'soundscapes',settings);

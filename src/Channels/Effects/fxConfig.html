@@ -7,7 +7,7 @@
                 help.innerHTML = 
                 `
                     <i class="fas fa-question"></i>
-                    {{localize "Soundscape.Help"}}
+                    {{localize "SOUNDSCAPE.Help"}}
                 `
                 document.getElementById('soundscape_fxConfig').getElementsByClassName('window-title')[0].after(help);
             }
@@ -62,7 +62,7 @@
     <div style="width:600px" id="fxConfig-{{channel}}">
 
         <div>
-            <h3>{{localize "Soundscape.Sound"}} {{channel}}: {{name}}</h3>
+            <h3>{{localize "SOUNDSCAPE.Sound"}} {{channel}}: {{name}}</h3>
         </div>
 
         <div style="width:100%;height:210px;position:relative">
@@ -71,7 +71,7 @@
             <canvas id="freqResponse" height="200px" width="595px" style="z-index:3;position:absolute;left:0px;top:0px;"></canvas>
         </div>
 
-        <h2>{{localize "Soundscape.Equalizer"}}</h2>
+        <h2>{{localize "SOUNDSCAPE.Equalizer"}}</h2>
         <div class="row" style="width:100%">
 
             <div class="fxColumn" style="width:50%">
@@ -79,7 +79,7 @@
                 <h3>{{this.name}}</h3>
                 <div class="fxItem">
                     <div class="fxItemLabel">
-                        {{localize "Soundscape.Enable"}}
+                        {{localize "SOUNDSCAPE.Enable"}}
                     </div>
                     <div class="fxItemInput">
                         <input id="Enable-{{this.id}}" type="checkbox" name="Enable" data-dtype="Boolean" {{this.checked}}>
@@ -88,7 +88,7 @@
                     
                 <div class="fxItem">
                     <div class="fxItemLabel">
-                        {{localize "Soundscape.FrequencyHz"}}
+                        {{localize "SOUNDSCAPE.FrequencyHz"}}
                     </div>
                     <div style="display:flex">
                         <input type="range" name="Freq" id="Freq-{{this.id}}" min="0" max="90" value="{{this.sliderValue}}">
@@ -97,7 +97,7 @@
                 </div>
                 <div class="fxItem">
                     <div class="fxItemLabel">
-                        {{localize "Soundscape.QFactor"}}
+                        {{localize "SOUNDSCAPE.QFactor"}}
                     </div>
                     <div style="display:flex">
                         <input type="range" name="Q" id="Q-{{this.id}}" min="0" max="150" value="{{this.qSlider}}">
@@ -106,7 +106,7 @@
                 </div>
                 <div class="fxItem" style={{this.showGain}}>
                     <div class="fxItemLabel">
-                        {{localize "Soundscape.Gain"}}
+                        {{localize "SOUNDSCAPE.Gain"}}
                     </div>
                     <div style="display:flex">
                         <input type="range" name="Gain" id="Gain-{{this.id}}" min="-30" max="30" value="{{this.gain}}">
@@ -122,7 +122,7 @@
                 <h3>{{this.name}}</h3>
                 <div class="fxItem">
                     <div class="fxItemLabel">
-                        {{localize "Soundscape.Enable"}}
+                        {{localize "SOUNDSCAPE.Enable"}}
                     </div>
                     <div class="fxItemInput">
                         <input id="Enable-{{this.id}}" type="checkbox" name="Enable" data-dtype="Boolean" {{this.checked}}>
@@ -131,7 +131,7 @@
                     
                 <div class="fxItem">
                     <div class="fxItemLabel">
-                        {{localize "Soundscape.FrequencyHz"}}
+                        {{localize "SOUNDSCAPE.FrequencyHz"}}
                     </div>
                     <div style="display:flex">
                         <input type="range" name="Freq" id="Freq-{{this.id}}" min="0" max="90" value="{{this.sliderValue}}">
@@ -140,7 +140,7 @@
                 </div>
                 <div class="fxItem">
                     <div class="fxItemLabel">
-                        {{localize "Soundscape.QFactor"}}
+                        {{localize "SOUNDSCAPE.QFactor"}}
                     </div>
                     <div style="display:flex">
                         <input type="range" name="Q" id="Q-{{this.id}}" min="0" max="150" value="{{this.qSlider}}">
@@ -149,7 +149,7 @@
                 </div>
                 <div class="fxItem" style={{this.showGain}}>
                     <div class="fxItemLabel">
-                        {{localize "Soundscape.Gain"}}
+                        {{localize "SOUNDSCAPE.Gain"}}
                     </div>
                     <div style="display:flex">
                         <input type="range" name="Gain" id="Gain-{{this.id}}" min="-15" max="15" value="{{this.gain}}">
@@ -166,14 +166,14 @@
 
         </div>
 
-        <h2>{{localize "Soundscape.OtherEffects"}}</h2>
+        <h2>{{localize "SOUNDSCAPE.OtherEffects"}}</h2>
         <div class="row" style="width:100%">
 
             <div class="fxColumn" style="width:50%">
-                <h3>{{localize "Soundscape.PlaybackRate"}}</h3>
+                <h3>{{localize "SOUNDSCAPE.PlaybackRate"}}</h3>
                 <div class="fxItem">
                     <div class="fxItemLabel">
-                        {{localize "Soundscape.Rate"}}
+                        {{localize "SOUNDSCAPE.Rate"}}
                     </div>
                     <div style="display:flex">
                         <input type="range" name="playbackRate" id="playbackRate" min="0" max="2000" value="{{playbackRate}}">
@@ -182,7 +182,7 @@
                 </div>
                 <div class="fxItem">
                     <div class="fxItemLabel">
-                        {{localize "Soundscape.PreservePitch"}}
+                        {{localize "SOUNDSCAPE.PreservePitch"}}
                     </div>
                     <div class="fxItemInput">
                         <input id="preservePitch" type="checkbox" name="preservePitch" data-dtype="Boolean" {{preservePitch}}>
@@ -193,10 +193,10 @@
                 
             </div>
             <div class="fxColumn" style="width:45%">
-                <h3>{{localize "Soundscape.Delay"}}</h3>
+                <h3>{{localize "SOUNDSCAPE.Delay"}}</h3>
                 <div class="fxItem">
                     <div class="fxItemLabel">
-                        {{localize "Soundscape.Enable"}}
+                        {{localize "SOUNDSCAPE.Enable"}}
                     </div>
                     <div class="fxItemInput">
                         <input id="delayEnable" type="checkbox" name="delayEnable" data-dtype="Boolean" {{delayChecked}}>
@@ -204,7 +204,7 @@
                 </div>
                 <div class="fxItem">
                     <div class="fxItemLabel">
-                        {{localize "Soundscape.Delay(s)"}}
+                        {{localize "SOUNDSCAPE.Delay(s)"}}
                     </div>
                     <div style="display:flex">
                         <input type="range" name="delay" id="delay" min="0" max="500" value="{{delay}}">
@@ -213,7 +213,7 @@
                 </div>
                 <div class="fxItem">
                     <div class="fxItemLabel">
-                        {{localize "Soundscape.DelayVolume"}}
+                        {{localize "SOUNDSCAPE.DelayVolume"}}
                     </div>
                     <div style="display:flex">
                         <input type="range" name="delayVolume" id="delayVolume" min="0" max="100" value="{{delayVolume}}">

@@ -16,7 +16,13 @@
             <li><b>Sound (playlist)</b>: (If 'Sound Selection' is set to 'Playlist: Single Sound') Selects the sound to play from the selected playlist</li>
             <li><b>Sound (filepicker)</b>: (If 'Sound Selection' is set to 'Filepicker: Single Sound') Shows the path to the selected sound. Press the button on the right to open the filepicker</li>
             <li><b>Folder</b>: (Visible if 'Sound Selection' is set to 'Filepicker: Folder') Shows the path to the selected folder. Press the button on the right to open the filepicker</li>
+            
+            <hr>
+            
             <li><b>Shuffle</b>: (Visible if 'Sound Selection' is NOT set to 'Playlist: Single Sound') Enabling this will shuffle the sounds in the playlist, folder, or wildcard list</li>
+            
+            <hr>
+            
             <li><b>Repeat</b>: Sets whether the sound or selection of sounds should repeat after it is finished playing
                 <ul>
                     <li><b>Don't Repeat</b>: Don't repeat the sounds</li>
@@ -24,11 +30,23 @@
                     <li><b>Repeat All</b>: Will play all sounds in the playlist, folder or wildcard list, and will repeat that</li>
                 </ul>
             </li>
+            <li><b>Minimum Delay</b>: (Visible if 'Repeat' is NOT set to 'Don't Repeat') Configures how long Soundscape should wait before repeating the sound</li>
+            <li><b>Maximum Delay</b>: (Visible if 'Repeat' is NOT set to 'Don't Repeat') Configures the maximum time Soundscape should wait before repeating the sound.
+            This is ignored if 'Maximum Delay' is smaller than 'Minimum Delay', in which case it will always delay the sound by the value set in 'Minimum Delay'. 
+            Otherwise, it will generate a random value between 'Minimum Delay' and 'Maximum Delay'</li>
+            
+            <hr>
+            
             <li><b>Start</b>: The time at which you want to start playback in HH:MM:SS:mm (where 'mm' is millisecons)</li>
             <li><b>Stop</b>: The time at which you want to stop playback in HH:MM:SS:mm (where 'mm' is millisecons)</li>
             <li><b>Duration</b>: The duration of the sound (not editable)</li>
+            <li><b>Apply start timing after first loop</b>: Checking this will ignore the 'Start' value when a sound is first played. The 'Start' value will be applied after the first loop</li>
+            
+            <hr>
+            
             <li><b>Fade In</b>: The fade in duraction in HH:MM:SS:mm (where 'mm' is millisecons)</li>
             <li><b>Fade Out</b>: The fade out duraction in HH:MM:SS:mm (where 'mm' is millisecons)</li>
+            <li><b>Apply fade in after first loop</b>: Checking this will ignore the 'Fade In' value when a sound is first played. The 'Fade In' value will be applied after the first loop</li>
         </ul>
         <h2>Wildcard Names</h2>
         When selecting single sounds using the filepicker, you can use wildcard names so it will randomly play a sound from a selection. To do this, navigate to the folder that contains the sounds, 

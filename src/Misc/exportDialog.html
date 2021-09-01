@@ -6,24 +6,24 @@
             help.innerHTML = 
             `
                 <i class="fas fa-question"></i>
-                {{localize "Soundscape.Help"}}
+                {{localize "SOUNDSCAPE.Help"}}
             `
             document.getElementById('Soundscape_Export').getElementsByClassName('window-title')[0].after(help);
         }
     </script>
 
-    <p>{{localize "Soundscape.ExportConfig.Content"}}</p>
+    <p>{{localize "SOUNDSCAPE.ExportConfig.Content"}}</p>
 
     <div class="form-group"> 
-        <label>{{localize "Soundscape.FileName"}}: </label>
+        <label>{{localize "SOUNDSCAPE.FileName"}}: </label>
         <input type="text" name="name" value="Soundscape" id="exportName" style="width:100%;" >
     </div>
     <div class="form-group"> 
-        <label>{{localize "Soundscape.ExportFiles"}}: </label>
+        <label>{{localize "SOUNDSCAPE.ExportFiles"}}: </label>
         <input type="checkbox" id='exportFiles' name="files">
     </div>
     <br>
     <button name="export">
-        <i></i>{{ localize "Soundscape.Export"}}
+        <i></i>{{ localize "SOUNDSCAPE.Export"}}
     </button>
 </form>

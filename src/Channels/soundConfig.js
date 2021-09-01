@@ -20,7 +20,7 @@ export class SoundConfig extends FormApplication {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             id: "soundscape_soundConfig",
-            title: "Soundscape: "+game.i18n.localize("Soundscape.SoundConfig"),
+            title: "Soundscape: "+game.i18n.localize("SOUNDSCAPE.SoundConfig"),
             template: "./modules/soundscape/src/Channels/soundConfig.html"
         });
     }
@@ -43,8 +43,8 @@ export class SoundConfig extends FormApplication {
         this.playlistName = soundData.playlistName;
         this.soundName = soundData.soundName;
 
-        let playlists = [{name:game.i18n.localize("Soundscape.None"),id:'none'}];
-        let sounds = [{name:game.i18n.localize("Soundscape.None"),id:'none'}];
+        let playlists = [{name:game.i18n.localize("SOUNDSCAPE.None"),id:'none'}];
+        let sounds = [{name:game.i18n.localize("SOUNDSCAPE.None"),id:'none'}];
 
         for (let p of game.playlists) {
             playlists.push({name:p.name,id:p.id});
@@ -58,6 +58,12 @@ export class SoundConfig extends FormApplication {
         if (soundData.soundName != undefined && soundData.soundName != "" && pl != undefined)   snd = pl.sounds.getName(soundData.soundName);
         const playlistId = pl != undefined ? pl.id : '';
         const soundId = snd != undefined ? snd.id : '';
+
+        let repeat = {
+            repeat: (channel.settings.repeat.repeat == undefined) ? 'none' : channel.settings.repeat.repeat,
+            minDelay: (channel.settings.repeat.minDelay == undefined) ? getTimeStamp(0) : getTimeStamp(channel.settings.repeat.minDelay),
+            maxDelay: (channel.settings.repeat.maxDelay == undefined) ? getTimeStamp(0) : getTimeStamp(channel.settings.repeat.maxDelay)
+        }
         
         return {
             channel,
@@ -69,9 +75,12 @@ export class SoundConfig extends FormApplication {
 
             start: getTimeStamp(channel.settings.timing.startTime),
             stop: getTimeStamp(channel.settings.timing.stopTime),
+            skipFirstTiming: (channel.settings.timing.skipFirstTiming == true) ? 'checked' : '',
             fadeIn: getTimeStamp(channel.settings.timing.fadeIn),
             fadeOut: getTimeStamp(channel.settings.timing.fadeOut),
-            randomize: channel.settings.randomize ? 'checked' : ''
+            skipFirstFade: (channel.settings.timing.skipFirstFade == true) ? 'checked' : '',
+            randomize: channel.settings.randomize ? 'checked' : '',
+            repeat
         } 
     }
   
@@ -105,14 +114,22 @@ export class SoundConfig extends FormApplication {
             if (playlist != undefined) playlistName = playlist.name;
         }
 
-        channelData.settings.repeat = formData.repeat;
+        const repeat = {
+            repeat: formData.repeat,
+            minDelay: getSeconds(formData.minDelay),
+            maxDelay: getSeconds(formData.maxDelay),
+        }
+
+        channelData.settings.repeat = repeat;
         channelData.settings.name = formData.name;
         channelData.settings.randomize = formData.randomize;
         channelData.settings.timing = {
             startTime: getSeconds(formData.start),
             stopTime: getSeconds(formData.stop),
+            skipFirstTiming: formData.skipFirstTiming,
             fadeIn: getSeconds(formData.fadeIn),
-            fadeOut: getSeconds(formData.fadeOut)
+            fadeOut: getSeconds(formData.fadeOut),
+            skipFirstFade: formData.skipFirstFade
         }
         channelData.soundData = {
             source,
@@ -153,7 +170,7 @@ export class SoundConfig extends FormApplication {
                 soundSelect.options.length=0;
                 let optionNone = document.createElement('option');
                 optionNone.value = "";
-                optionNone.innerHTML = game.i18n.localize("Soundscape.None");
+                optionNone.innerHTML = game.i18n.localize("SOUNDSCAPE.None");
                 soundSelect.appendChild(optionNone);
 
                 if (playlistId != "none") {

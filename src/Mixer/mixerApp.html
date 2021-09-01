@@ -33,7 +33,7 @@
                 help.innerHTML = 
                 `
                     <i class="fas fa-question"></i>
-                    {{localize "Soundscape.Help"}}
+                    {{localize "SOUNDSCAPE.Help"}}
                 `
                 document.getElementById('soundscape_mixer').getElementsByClassName('window-title')[0].after(help);
             }
@@ -148,11 +148,18 @@
             min-height: 75px;
             max-width: 75px;
             max-height: 75px;
-            border: 2px solid black ;
+            border-style: solid;
+            border-width: 2px;
             border-radius: 10px;
             margin:3px 3px 0px;
             align-items: center;
             padding: 0;
+    
+        }
+
+        .sbButton:hover {
+            border-radius: 10px;
+            filter: brightness(1.25);
         }
 
         .sbButtonOver {
@@ -231,17 +238,17 @@
                     <div class="boxed" name="channelBox" id="box-{{this.channelIteration}}">
                         <button type="button" class="configButton" name="config" id="config-{{this.channelIteration}}"><i class="fas fa-cog" id="config-{{this.channelIteration}}"></i></button>
                         <hr>
-                        <input type="range" name="panSlider" id="panSlider-{{this.channelIteration}}" orient="vertical" min="-25" max="25" steps="1" value="{{this.pan}}" list="panSteplist">
+                        <input type="range" name="panSlider" id="panSlider-{{this.channelIteration}}" min="-25" max="25" steps="1" value="{{this.pan}}" list="panSteplist">
                         <datalist id="panSteplist">
                             <option>0</option>
                         </datalist>
-                        <button type="button" class="FXButton" name="fx" id="fx-{{this.channelIteration}}"><div class="fxButtonLabel">{{localize "Soundscape.FxBtn"}}</div></button>
-                        <button type="button" class="channelButton" name="mute" id="mute-{{this.channelIteration}}" style="background-color:{{this.muteColor}}"><div class="channelButtonLabel">{{localize "Soundscape.MuteBtn"}}</div></button>
-                        <button type="button" class="channelButton" name="solo" id="solo-{{this.channelIteration}}" style="background-color:{{this.soloColor}}"><div class="channelButtonLabel">{{localize "Soundscape.SoloBtn"}}</div></button>
-                        <button type="button" class="channelButton" name="link" id="link-{{this.channelIteration}}" style="background-color:{{this.linkColor}}"><div class="channelButtonLabel">{{localize "Soundscape.LinkBtn"}}</div></button>
+                        <button type="button" class="FXButton" name="fx" id="fx-{{this.channelIteration}}"><div class="fxButtonLabel">{{localize "SOUNDSCAPE.FxBtn"}}</div></button>
+                        <button type="button" class="channelButton" name="mute" id="mute-{{this.channelIteration}}" style="background-color:{{this.muteColor}}"><div class="channelButtonLabel">{{localize "SOUNDSCAPE.MuteBtn"}}</div></button>
+                        <button type="button" class="channelButton" name="solo" id="solo-{{this.channelIteration}}" style="background-color:{{this.soloColor}}"><div class="channelButtonLabel">{{localize "SOUNDSCAPE.SoloBtn"}}</div></button>
+                        <button type="button" class="channelButton" name="link" id="link-{{this.channelIteration}}" style="background-color:{{this.linkColor}}"><div class="channelButtonLabel">{{localize "SOUNDSCAPE.LinkBtn"}}</div></button>
                         <div class="sliderBox">
                             <div class="slider-wrapper">
-                                <input type="range" name="volumeSlider" id="volumeSlider-{{this.channelIteration}}" orient="vertical" min="0" max="125" value="{{this.volume}}">
+                                <input type="range" name="volumeSlider" id="volumeSlider-{{this.channelIteration}}" min="0" max="125" value="{{this.volume}}">
                                 <datalist id="steplist">
                                     <option>100</option>
                                 </datalist>
@@ -268,12 +275,12 @@
                     <hr  style="visibility: hidden;">
                     <input type="range" style="visibility: hidden;">
                     <button type="button" class="FXButton" style="visibility: hidden;"><i></i>FX</button>
-                    <button type="button" class="channelButton" name="mute" id="mute-master" style="background-color:{{master.muteColor}}"><div class="channelButtonLabel">{{localize "Soundscape.MuteBtn"}}</div></button>
+                    <button type="button" class="channelButton" name="mute" id="mute-master" style="background-color:{{master.muteColor}}"><div class="channelButtonLabel">{{localize "SOUNDSCAPE.MuteBtn"}}</div></button>
                     <button type="button" class="channelButton" style="visibility: hidden;"><i></i></button>
                     <button type="button" class="channelButton" style="visibility: hidden;"><i></i></button>
                     <div class="sliderBox">
                         <div class="slider-wrapper">
-                            <input type="range" name="volumeSlider" id="volumeSlider-master" orient="vertical" min="0" max="125" value="{{master.volume}}">
+                            <input type="range" name="volumeSlider" id="volumeSlider-master" min="0" max="125" value="{{master.volume}}">
                         </div>
                     </div>
                     <div>
@@ -284,7 +291,7 @@
                     
                     <div class="nameBox">
                         <div class="nameDiv">
-                            {{localize "Soundscape.Master"}}
+                            {{localize "SOUNDSCAPE.Master"}}
                         </div>
                     </div>
                     <div class="boxNumber" style="font-size:10px;"></div>
@@ -297,7 +304,7 @@
         </div>
         <div class="column collapse" id="SoundScape_soundboardColumn" style="width:50%;position:relative;z-index:1;height:100%;display:none;margin-left:-50%">
             <div style="display:flex"> 
-                <h2 style="margin-top:10px; width:90%">{{localize "Soundscape.Soundboard"}}</h2>
+                <h2 style="margin-top:10px; width:90%">{{localize "SOUNDSCAPE.Soundboard"}}</h2>
                 <div class="sbDelete" name="sbDelBtn">
                     <i class="fas fa-trash" style="font-size: 20px;"></i> 
                 </div>
@@ -307,7 +314,7 @@
                 <div class="form-group btnRow" style="width:100%">
                     {{#each row}}
                     <div>
-                        <input type="image" class="sbButton" name="sbButton" id="sbButton-{{this.iteration}}" src={{this.imageSrc}} draggable='true'>  
+                        <input type="image" class="sbButton" name="sbButton" id="sbButton-{{this.iteration}}" src={{this.imageSrc}} draggable='true' style="border-color:{{this.borderColor}}; box-shadow:{{this.boxShadow}}">  
                         <p class="sbButtonLabel" name="sbButtonLabel" id="sbButtonLabel-{{this.iteration}}">{{this.name}}</p>
                     </div>
                     {{/each}}
@@ -316,9 +323,9 @@
                 {{/each}}
                 <hr>
                 <div class="form-group">
-                    <label>{{localize "Soundscape.Volume"}}</label>
-                    <input type="range" name="sbVolume" id="sbVolume" orient="vertical" min="0" max="125" steps="1" value={{sbGain}}>
-                    <button type="button" name="stopSB" id="stopSB" style="max-width:25%; margin-left:5px"><i class="fas fa-stop"></i>{{localize "Soundscape.StopAll"}}</button>
+                    <label>{{localize "SOUNDSCAPE.Volume"}}</label>
+                    <input type="range" name="sbVolume" id="sbVolume" min="0" max="125" steps="1" value={{sbGain}}>
+                    <button type="button" name="stopSB" id="stopSB" style="max-width:25%; margin-left:5px"><i class="fas fa-stop"></i>{{localize "SOUNDSCAPE.StopAll"}}</button>
                 </div>
         </div>
     </div>

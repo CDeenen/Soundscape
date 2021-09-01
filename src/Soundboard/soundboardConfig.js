@@ -1,5 +1,6 @@
 import {moduleName} from "../../soundscape.js";
 import {helpMenuSoundboardConfig} from "../Help/helpMenus.js";
+import {getTimeStamp, getSeconds} from "../Misc/helpers.js";
 
 export class soundboardConfig extends FormApplication {
     constructor(data, options) {
@@ -25,7 +26,7 @@ export class soundboardConfig extends FormApplication {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             id: "soundscape_soundboardConfig",
-            title: "Soundscape: " + game.i18n.localize("Soundscape.SoundboardConfig"),
+            title: "Soundscape: " + game.i18n.localize("SOUNDSCAPE.SoundboardConfig"),
             template: "./modules/soundscape/src/Soundboard/soundboardConfig.html",
             width: "500px"
         });
@@ -40,8 +41,8 @@ export class soundboardConfig extends FormApplication {
         this.playlistName = settings.soundData.playlistName;
         this.soundName = settings.soundData.soundName;
 
-        let playlists = [{name:game.i18n.localize("Soundscape.None"),id:'none'}];
-        let sounds = [{name:game.i18n.localize("Soundscape.None"),id:'none'}];
+        let playlists = [{name:game.i18n.localize("SOUNDSCAPE.None"),id:'none'}];
+        let sounds = [{name:game.i18n.localize("SOUNDSCAPE.None"),id:'none'}];
 
         for (let p of game.playlists) {
             playlists.push({name:p.name,id:p.id});
@@ -55,15 +56,24 @@ export class soundboardConfig extends FormApplication {
         if (this.soundName != undefined && this.soundName != "" && pl != undefined)   snd = pl.sounds.getName(this.soundName);
         const playlistId = pl != undefined ? pl.id : '';
         const soundId = snd != undefined ? snd.id : '';
+        
+        let repeat = {
+            repeat: (settings.repeat.repeat == undefined) ? 'none' : settings.repeat.repeat,
+            minDelay: (settings.repeat.minDelay == undefined) ? getTimeStamp(0) : getTimeStamp(settings.repeat.minDelay),
+            maxDelay: (settings.repeat.maxDelay == undefined) ? getTimeStamp(0) : getTimeStamp(settings.repeat.maxDelay)
+        }
+
         return {
             soundNr: parseInt(this.soundNr)+1,
             volume: settings.volume*100,
+            randomizeVolume: (settings.randomizeVolume == undefined) ? 0 : settings.randomizeVolume*100,
             playlists,
             sounds,
             selectedSound: soundId,
             selectedPlaylist: playlistId,
             settings,
-            randomize: settings.randomize ? 'checked' : ''
+            randomize: settings.randomize ? 'checked' : '',
+            repeat
         } 
     }
   
@@ -95,6 +105,12 @@ export class soundboardConfig extends FormApplication {
             if (playlist != undefined) playlistName = playlist.name;
         }
 
+        const repeat = {
+            repeat: formData.repeat,
+            minDelay: getSeconds(formData.minDelay),
+            maxDelay: getSeconds(formData.maxDelay),
+        }
+
         const setting = {
             channel: 100+parseInt(this.soundNr),
             soundData: {
@@ -110,7 +126,8 @@ export class soundboardConfig extends FormApplication {
             },
             name: formData.name,
             volume: formData.volume/100,
-            repeat: 'none',
+            randomizeVolume: formData.randomizeVolume/100,
+            repeat,
             randomize: formData.randomize,
             imageSrc: formData.img
         }
@@ -136,6 +153,8 @@ export class soundboardConfig extends FormApplication {
         const playlist = html.find("select[name=playlistId]");
         const volumeSlider = html.find("input[name=volume]");
         const volumeNumber = html.find("input[name=volumeNumber]");
+        const randomizeVolumeSlider = html.find("input[name=randomizeVolume]");
+        const randomizeVolumeNumber = html.find("input[name=randomizeVolumeNumber]");
         const playbackSpeedSlider = html.find("input[name=speed]");
         const playbackSpeedNumber = html.find("input[name=speedNumber]");
         const playbackSpeedRandomSlider = html.find("input[name=randSpeed]");
@@ -147,6 +166,14 @@ export class soundboardConfig extends FormApplication {
 
         volumeNumber.on("change", event => {
             volumeSlider[0].value = event.currentTarget.value;
+        }) 
+
+        randomizeVolumeSlider.on("input change", event => {
+            randomizeVolumeNumber[0].value = event.currentTarget.value;
+        }) 
+
+        randomizeVolumeNumber.on("change", event => {
+            randomizeVolumeSlider[0].value = event.currentTarget.value;
         }) 
 
         playbackSpeedSlider.on("input change", event => {
@@ -176,7 +203,7 @@ export class soundboardConfig extends FormApplication {
                 soundSelect.options.length=0;
                 let optionNone = document.createElement('option');
                 optionNone.value = "";
-                optionNone.innerHTML = game.i18n.localize("Soundscape.None");
+                optionNone.innerHTML = game.i18n.localize("SOUNDSCAPE.None");
                 soundSelect.appendChild(optionNone);
 
                 if (playlistId != "none") {
