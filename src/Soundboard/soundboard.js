@@ -125,7 +125,8 @@ export class Soundboard {
         if (channelSettings == null) channelSettings = this.newChannel(targetId);
         if (data.type == 'playlist_multi') {
             const plName = game.playlists.get(data.playlist).name;
-            if (channelSettings.name == undefined || channelSettings.name == "") channelSettings.name = plName;
+            //if (channelSettings.name == undefined || channelSettings.name == "") 
+            channelSettings.name = plName;
             channelSettings.soundData.playlistName = plName;
             channelSettings.soundData.soundSelect = data.type;
         }
@@ -134,7 +135,8 @@ export class Soundboard {
             if (pl == undefined) return;
             const plName = pl.name;
             const soundName = pl.sounds.get(data.sound).name;
-            if (channelSettings.name == undefined || channelSettings.name == "") channelSettings.name = soundName;
+            //if (channelSettings.name == undefined || channelSettings.name == "") 
+            channelSettings.name = soundName;
             channelSettings.soundData.playlistName = plName;
             channelSettings.soundData.soundName = soundName;
             channelSettings.soundData.soundSelect = data.type;

@@ -79,25 +79,6 @@ Hooks.on("renderSidebarTab", (app, html) => {
         btn.on("click",async event => {
             mixer.renderApp(true);
         });
-
-        let soundElements = document.getElementsByClassName('sound-name');
-        for (let elem of soundElements) {
-            const playlist = elem.parentElement.getAttribute('data-playlist-id');
-            const sound = elem.parentElement.getAttribute('data-sound-id');
-            if (playlist == undefined || sound == undefined) continue;
-            elem.draggable = true;
-            
-            elem.ondragstart = (event) => {
-                const data = {
-                        type: 'playlist_single',
-                        playlist,
-                        sound,
-                        draggedSound: sound
-                    }
-                event.dataTransfer.effectAllowed = 'move';
-                event.dataTransfer.setData('text/plain', JSON.stringify(data));
-            }; 
-        }
     }
 });
 

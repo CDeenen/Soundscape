@@ -163,7 +163,7 @@ export class Channel {
             if (playlist == undefined) return;
             const sound = playlist.sounds.getName(soundData.soundName);
             if (sound == undefined) return;
-            soundArray.push(sound.data.path)
+            soundArray.push(sound.path)
             soundData.randomize = false;
         }
         else if (soundData.soundSelect == 'playlist_multi') {
@@ -172,7 +172,7 @@ export class Channel {
             
             //Add all sounds in playlist to array
             for (let sound of playlist.sounds) 
-                soundArray.push(sound.data.path)  
+                soundArray.push(sound.path)  
         }
         else if (soundData.soundSelect == 'filepicker_single') {
             const source = soundData.source;

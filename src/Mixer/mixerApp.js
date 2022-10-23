@@ -174,16 +174,21 @@ export class MixerApp extends FormApplication {
             target.style.borderColor = 'black';
             const targetId = target.id.replace('box-','')
             
-            let data = event.originalEvent.dataTransfer.getData('text/plain');
-            try{
-                data = JSON.parse(data);
-            } catch (e) {
-                return;
-            }
+            let data = TextEditor.getDragEventData(event.originalEvent)
+            let sound = fromUuidSync(data.uuid)
             if (data.type == 'Playlist') {
+                
                 data = {
                     type: "playlist_multi",
-                    playlist: data.id
+                    playlist: sound.id
+                }
+            }
+            if (data.type == "PlaylistSound"){
+                data = {
+                    type: "playlist_single",
+                    playlist: sound.parent.id,
+                    sound: sound.id,
+                    draggedSound: sound.id
                 }
             }
             this.mixer.newData(targetId,data);
@@ -210,21 +215,26 @@ export class MixerApp extends FormApplication {
             if (target.id == this.dragging) return;
             target.style.borderColor = 'black';
             const targetId = target.id.replace('sbButton-','')
-
-            let data = event.originalEvent.dataTransfer.getData('text/plain');
-
-            try{
-                data = JSON.parse(data);
-            } catch (e) {
+            let data = TextEditor.getDragEventData(event.originalEvent)
+            if (!["PlaylistSound","Playlist"].includes(data.type)){
                 const sourceId = this.dragging.replace('sbButton-','')
                 if (this.controlDown) this.mixer.soundboard.copySounds(sourceId,targetId);
                 else this.mixer.soundboard.swapSounds(sourceId,targetId);
                 return;
             }
+            let sound = fromUuidSync(data.uuid)
             if (data.type == 'Playlist') {
                 data = {
                     type: "playlist_multi",
-                    playlist: data.id
+                    playlist: sound.id
+                }
+            }
+            if (data.type == "PlaylistSound"){
+                data = {
+                    type: "playlist_single",
+                    playlist: sound.parent.id,
+                    sound: sound.id,
+                    draggedSound: sound.id
                 }
             }
             this.mixer.soundboard.newData(targetId,data);
