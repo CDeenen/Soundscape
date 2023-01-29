@@ -91,8 +91,11 @@ export class soundscapeConfig extends FormApplication {
         for (let moduleName of this.moduleList) {    
             const moduleData = game.modules.get(moduleName);
             if (moduleData != undefined) {
-                const split = moduleData.path.replaceAll('/','\\').split('\\');
-                const path = `${split[split.length-2]}/${split[split.length-1]}`;
+                //const split = moduleData.path.replaceAll('/','\\').split('\\');
+                const split = moduleData.scripts.first().replaceAll('/','\\').split('\\');
+                //const path = `${split[split.length-2]}/${split[split.length-1]}`;
+                const path = `${split[0]}/${split[1]}`;
+                
                 if (await fileExists(path,true) == false) continue;
                 const data  = await getDataInFolder(path,"audio",true);
                 modules.push({
