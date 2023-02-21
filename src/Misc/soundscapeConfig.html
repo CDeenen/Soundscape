@@ -88,6 +88,7 @@
                 }
             }
             let audioElement = document.createElement('audio')
+            audioElement.crossorigin = "anonymous"
             audioElement.src = path;
             audioElement.currentTime = 0;
             audioElement.play();

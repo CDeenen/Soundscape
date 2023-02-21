@@ -490,6 +490,8 @@ export class Channel {
         if (this.playing) this.stop(false);
         this.soundData.source = source;
         this.audioElement = document.createElement('audio')
+        this.audioElement.crossorigin = "anonymous"
+
         this.audioElement.src = source;
         this.source = source;
 
