@@ -39,7 +39,7 @@ export function getSeconds(timestamp){
 export async function getDataInFolder(path, dataType, recursive = false) {
 
     //Get base folder
-    const ret = await FilePicker.browse("data", path);
+    const ret = await FilePicker.browse(getFilePickerSource(), path);
 
     //Split path and grab last element to get the folder name
     const split = path.split('/');
@@ -110,9 +110,9 @@ function isAudioFile(path) {
 
 export async function verifyPath(path) {
     try {
-        await FilePicker.browse('data',path);
+        await FilePicker.browse(getFilePickerSource(),path);
     } catch (error) {
-        await FilePicker.createDirectory('data',path);
+        await FilePicker.createDirectory(getFilePickerSource(),path);
     }
 }
 
@@ -120,7 +120,7 @@ export async function fileExists(path,folder = false) {
     let exists = true;
     let data;
     try {
-        data = await FilePicker.browse('data',path,{wildcard:true});
+        data = await FilePicker.browse(getFilePickerSource(),path,{wildcard:true});
     } catch (error) {
         exists = false;
     }
@@ -130,4 +130,16 @@ export async function fileExists(path,folder = false) {
         if(folder && data.dirs.length>0) return true;
         else return false;
     }
+}
+
+/**
+ * Detects which source to use (depending if server si Forge or local)
+ * TODO : support for S3 storage
+ */
+export function getFilePickerSource() {
+    var source = "data";
+    if (typeof ForgeVTT != "undefined" && ForgeVTT.usingTheForge) {
+      source = "forgevtt";
+    }
+    return source;
 }

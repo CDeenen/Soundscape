@@ -5,6 +5,7 @@ import {EQ} from "./Effects/eq.js";
 import {moduleName} from "../../soundscape.js";
 import {SoundConfig} from "./soundConfig.js";
 import {FXConfig} from "./Effects/fxConfig.js";
+import {getFilePickerSource} from "../Misc/helpers.js";
 
 'use strict';
 
@@ -176,7 +177,7 @@ export class Channel {
         }
         else if (soundData.soundSelect == 'filepicker_single') {
             const source = soundData.source;
-            const ret = await FilePicker.browse("data", source, {wildcard:true});
+            const ret = await FilePicker.browse(getFilePickerSource(), source, {wildcard:true});
             const files = ret.files;
         
             //Add all sounds in playlist to array
@@ -185,7 +186,7 @@ export class Channel {
         }
         else if (soundData.soundSelect == 'filepicker_folder') {
             const source = soundData.source;
-            const ret = await FilePicker.browse("data", source);
+            const ret = await FilePicker.browse(getFilePickerSource(), source);
             const files = ret.files;
     
             //Add all sounds in playlist to array
