@@ -169,6 +169,7 @@ export class MixerApp extends FormApplication {
             target.style.borderColor = 'black';
         })
         channelBox.on('drop', (event)=>{
+            console.log("channelBox")
             const target = event.currentTarget;
             if (target.id == this.dragging) return;
             target.style.borderColor = 'black';
@@ -183,11 +184,10 @@ export class MixerApp extends FormApplication {
             if (data.type == 'Playlist') {
                 data = {
                     type: "playlist_multi",
-                    playlist: data.id
+                    playlist: data.uuid.split(".").pop()
                 }
             }
             this.mixer.newData(targetId,data);
-
         })
 
         sbStopAll.on('click', event => {
@@ -374,18 +374,18 @@ export class MixerApp extends FormApplication {
         play.on("click",(event)=>{
             if (this.mixer.playing == false) {
                 this.mixer.start();
-                html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-stop"></i>`;
+                html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-stop channelPlayIcon"></i>`;
                 for (let i=0; i<8; i++) {
                     const channel = this.mixer.channels[i];
                     if (channel.soundNode != undefined && channel.soundNode.loaded)
-                        html.find(`button[id=playSound-${i}]`)[0].innerHTML = `<i class="fas fa-stop"></i>`;
+                        html.find(`button[id=playSound-${i}]`)[0].innerHTML = `<i class="fas fa-stop channelPlayIcon"></i>`;
                 }
             }
             else {
                 this.mixer.stop();
-                html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-play"></i>`;
+                html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-play channelPlayIcon"></i>`;
                 for (let i=0; i<8; i++) {
-                    html.find(`button[id=playSound-${i}]`)[0].innerHTML = `<i class="fas fa-play"></i>`;
+                    html.find(`button[id=playSound-${i}]`)[0].innerHTML = `<i class="fas fa-play channelPlayIcon"></i>`;
                 }
             }
         })
@@ -396,13 +396,13 @@ export class MixerApp extends FormApplication {
             const playing = channel.playing;
             if (playing == false) {
                 this.mixer.start(channelNr);
-                html.find(`button[id=playSound-${channelNr}]`)[0].innerHTML = `<i class="fas fa-stop"></i>`;
-                html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-stop"></i>`;
+                html.find(`button[id=playSound-${channelNr}]`)[0].innerHTML = `<i class="fas fa-stop channelPlayIcon"></i>`;
+                html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-stop channelPlayIcon"></i>`;
             }
             else {
                 await this.mixer.stop(channelNr);
-                html.find(`button[id=playSound-${channelNr}]`)[0].innerHTML = `<i class="fas fa-play"></i>`;
-                if (this.mixer.playing == false) html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-play"></i>`;
+                html.find(`button[id=playSound-${channelNr}]`)[0].innerHTML = `<i class="fas fa-play channelPlayIcon"></i>`;
+                if (this.mixer.playing == false) html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-play channelPlayIcon"></i>`;
             }
         })
 

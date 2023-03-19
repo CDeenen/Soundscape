@@ -1,5 +1,4 @@
 {
-  "name": "soundscape",
   "title": "Soundscape",
   "description": "Soundscape is a module that allows you to easily mix multiple audio tracks into a soundscape that can be customized on the fly.",
   "version": "2.0.1",
@@ -13,13 +12,18 @@
       "flags": {}
     }
   ],
-  "esmodules": ["./soundscape.js"],
+  "esmodules": [
+    "soundscape.js"
+  ],
   "scripts": [
-    "./lib/jszip/jszip-utils.min.js",
-    "./lib/jszip/jszip.min.js",
-    "./lib/FileSaver.min.js"
+    "lib/jszip/jszip-utils.min.js",
+    "lib/jszip/jszip.min.js",
+    "lib/FileSaver.min.js"
   ],
   "socket": true,
+  "styles": [
+    "soundscape.css"
+  ],
   "compatibility": {
     "minimum": "10",
     "verified": "10"
@@ -28,11 +32,12 @@
     {
       "lang": "en",
       "name": "English",
-      "path": "lang/en.json"
+      "path": "lang/en.json",
+      "flags": {}
     }
   ],
   "url": "https://github.com/SvenWerlen/Soundscape",
   "manifest": "https://raw.githubusercontent.com/SvenWerlen/Soundscape/main/module.json",
-  "download": "https://github.com/SvenWerlen/Soundscape/archive/v-2.0.1.zip"
-  
+  "download": "https://github.com/SvenWerlen/Soundscape/archive/v-2.0.1.zip",
+  "id": "soundscape"
 }

@@ -133,7 +133,7 @@ export async function fileExists(path,folder = false) {
 }
 
 /**
- * Detects which source to use (depending if server si Forge or local)
+ * Detects which source to use (depending if server is Forge or local)
  * TODO : support for S3 storage
  */
 export function getFilePickerSource() {

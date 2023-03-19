@@ -65,25 +65,6 @@
 
         
     </script>
-    <style>
-        .formField {
-            display: flex;
-            min-width: 100%;
-            margin-top: 5px;
-        }
-        .formlabel {
-            min-width: 50%;
-        }
-        .formValue {
-            width: 60%
-        }
-        .filePickerField {
-            width: 60%;
-            display: flex;
-        }
-        select { display: block; min-width: 60%; }
-        sbLabel { display: block; min-width: 40%; max-width:40%}
-    </style>
     <div style="max-width:400px;min-width:400px">
 
         <div style="text-align:center;">
@@ -225,9 +206,14 @@
             <input type="checkbox" name="skipFirstFade" data-dtype="Boolean" {{skipFirstFade}}>
         </div>
 
-        <button type="submit" name="submit">
-            <i class="fas fa-save"></i> {{localize "SOUNDSCAPE.SaveConfig"}}
-        </button>
+        <div class="formField">
+            <button type="submit" name="save">
+                <i class="fas fa-save"></i> {{localize "SOUNDSCAPE.SaveConfig"}}
+            </button>
+            <button type="submit" name="delete">
+                <i class="fas fa-trash"></i> {{localize "SOUNDSCAPE.DeleteConfiguration"}}
+            </button>
+        </div>
     </div>
     
    

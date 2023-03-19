@@ -170,7 +170,7 @@
             return `
                 <tr class="soundRow" name="soundRow" path=${path} style="display:${display}" type=${type} ${playlistId} ${soundId} draggable='true'>
                     <td>${space} ${name}</td>
-                    <td><i class="fas fa-play" name="playSound" path=${path}></i></td>
+                    <td><i class="fas fa-play channelPlayIcon" name="playSound" path=${path}></i></td>
                 </tr>
             `
         }
@@ -197,81 +197,6 @@
             event.currentTarget.className += " active";
         }
     </script>
-
-    <style>
-        .ssConfigTab {
-            display:flex;
-            overflow: hidden;
-            border: 1px solid #ccc;
-        }
-
-        .ssConfigTab button {
-            background-color: inherit;
-            float: left;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 5px 5px;
-            transition: 0.3s;
-        }
-
-        .ssConfigTab button:hover {
-            background-color: rgba(156, 155, 155, 0.425);
-        }
-
-        .ssConfigTab button.active {
-            background-color: rgba(145, 145, 145, 0.301);
-        }
-
-        .ssConfigTabcontent {
-            display: none;
-            padding: 6px 12px;
-            border: 1px solid #ccc;
-            border-top: none;
-        }
-
-        .parentRow {
-            cursor: pointer;
-        }
-
-        .childRow {
-            cursor: pointer;
-        }
-
-        .fa-play {
-            cursor: pointer;
-        }
-
-        .columnNumber {
-            width:5%;
-            text-align: left;
-        }
-        .columnLabel {
-            width: 30%;
-            text-align: left;
-        }
-        .columnButton {
-            width:15%;
-            margin: auto;
-            text-align: center;
-        }
-        .columnCheckbox {
-            width:10%;
-        }
-        .btn {
-            width:75%;
-            margin: auto;
-        }
-        .btnLabel {
-            min-width: 57%;
-            max-width: 57%;
-        }
-        .lowButtons {
-
-            height: 40px;
-            line-height: 1;
-        }
-    </style>
 
     <div style="width:100%; min-width:500px;">
         <div class="ssConfigTab">

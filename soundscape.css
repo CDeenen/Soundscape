@@ -1,0 +1,153 @@
+/** SoundConfig **/
+
+#soundscape_soundConfig .formField {
+  display: flex;
+  min-width: 100%;
+  margin-top: 5px;
+}
+
+#soundscape_soundConfig .formlabel {
+  min-width: 50%;
+}
+
+#soundscape_soundConfig .formValue {
+  width: 60%
+}
+
+#soundscape_soundConfig .filePickerField {
+  width: 60%;
+  display: flex;
+}
+
+#soundscape_soundConfig select { display: block; min-width: 60%; }
+#soundscape_soundConfig sbLabel { display: block; min-width: 40%; max-width:40%}
+
+#soundscape_soundConfig button.mtte-picker {
+  flex: 0 0 24px;
+  line-height: 24px;
+  margin: -1px 0 -1px 4px;
+  order: 99;
+}
+
+/** SoundscapeConfig **/
+
+#soundscape_soundscapeConfig .ssConfigTab {
+  display:flex;
+  overflow: hidden;
+  border: 1px solid #ccc;
+}
+
+#soundscape_soundscapeConfig .ssConfigTab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 5px 5px;
+  transition: 0.3s;
+}
+
+#soundscape_soundscapeConfig .ssConfigTab button:hover {
+  background-color: rgba(156, 155, 155, 0.425);
+}
+
+#soundscape_soundscapeConfig .ssConfigTab button.active {
+  background-color: rgba(145, 145, 145, 0.301);
+}
+
+#soundscape_soundscapeConfig .ssConfigTabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+#soundscape_soundscapeConfig .parentRow {
+  cursor: pointer;
+}
+
+#soundscape_soundscapeConfig .childRow {
+  cursor: pointer;
+}
+
+#soundscape_soundscapeConfig .fa-play {
+  cursor: pointer;
+}
+
+#soundscape_soundscapeConfig .columnNumber {
+  width:5%;
+  text-align: left;
+}
+
+#soundscape_soundscapeConfig .columnLabel {
+  width: 30%;
+  text-align: left;
+}
+
+#soundscape_soundscapeConfig .columnButton {
+  width:15%;
+  margin: auto;
+  text-align: center;
+}
+
+#soundscape_soundscapeConfig .columnCheckbox {
+  width:10%;
+}
+
+#soundscape_soundscapeConfig .btn {
+  width:75%;
+  margin: auto;
+}
+
+#soundscape_soundscapeConfig .btnLabel {
+  min-width: 57%;
+  max-width: 57%;
+}
+
+#soundscape_soundscapeConfig .lowButtons {
+  height: 40px;
+  line-height: 1;
+}
+
+/** SoundboardConfig **/
+
+#soundscape_soundboardConfig .formGroupNumber {
+  min-width: 15%;
+  max-width: 15%;
+}
+
+#soundscape_soundboardConfig .formGroupSlider {
+  min-width: 45%;
+  max-width: 45%;
+}
+
+#soundscape_soundboardConfig .formGroupLabel {
+  min-width: 40%;
+  max-width: 40%;
+}
+
+#soundscape_soundboardConfig .formGroup {
+  display:flex;
+}
+
+#soundscape_soundboardConfig .formField {
+  display: flex;
+  min-width: 100%;
+  margin-top: 5px;
+}
+
+#soundscape_soundboardConfig .formlabel {
+  min-width: 50%;
+}
+
+#soundscape_soundboardConfig .formValue {
+  width: 60%
+}
+
+#soundscape_soundboardConfig .filePickerField {
+  width: 60%;
+  display: flex;
+}
+
+#soundscape_soundboardConfig select { display: block; min-width: 60%; }
+#soundscape_soundboardConfig sbLabel { display: block; min-width: 40%; }
