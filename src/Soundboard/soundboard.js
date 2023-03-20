@@ -144,6 +144,31 @@ export class Soundboard {
             if (channelSettings.name == undefined || channelSettings.name == "") channelSettings.name = data.name;
             channelSettings.soundData.soundSelect = data.type;
         }
+        /** Support for Moulinette **/
+        else if (data.source == 'mtte' && data.type == 'Sound') {
+            // retrieve path
+            const soundName = data.sound.filename.split("/").pop().replace(/\.[^/.]+$/, "") // removes extension
+            const assetUrl = await game.moulinette.applications.MoulinetteAPI.getAssetURL("sounds", data.pack.idx, data.sound.filename)
+            if(assetUrl) {
+                channelSettings.soundData.source = assetUrl;
+                if (channelSettings.name == undefined || channelSettings.name == "") channelSettings.name = soundName;
+                channelSettings.soundData.soundSelect = 'filepicker_single';
+                if(!channelSettings.imageSrc) {
+                    channelSettings.imageSrc = "modules/moulinette-core/img/moulinette.png"
+                }
+            }
+        }
+        else if (data.source == 'mtte' && data.type == 'Tile') {
+            // retrieve path
+            const imageName = data.tile.filename.split("/").pop().replace(/\.[^/.]+$/, "") // removes extension
+            if (channelSettings.name == undefined || channelSettings.name == "") channelSettings.name = imageName;
+            const assetUrl = await game.moulinette.applications.MoulinetteAPI.getAssetURL("tiles", data.pack.idx, data.tile.filename)
+            if(assetUrl) {
+                channelSettings.imageSrc = assetUrl
+            }
+        }
+
+        
 
         settings[this.mixer.currentSoundscape].soundboard[targetId] = channelSettings;
 

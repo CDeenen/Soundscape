@@ -89,10 +89,10 @@ export class Mixer {
         /** Support for Moulinette **/
         else if (data.source == 'mtte' && data.type == 'Sound') {
             // retrieve path
-            const soundName = data.sound.filename.split("/").pop()
+            const soundName = data.sound.filename.split("/").pop().replace(/\.[^/.]+$/, "") // removes extension
             const assetUrl = await game.moulinette.applications.MoulinetteAPI.getAssetURL("sounds", data.pack.idx, data.sound.filename)
             if(assetUrl) {
-                channelSettings.soundData.source = assetUrl.path;
+                channelSettings.soundData.source = assetUrl;
                 if (channelSettings.settings.name == undefined || channelSettings.settings.name == "") channelSettings.settings.name = soundName;
                 channelSettings.soundData.soundSelect = 'filepicker_single';
             }
