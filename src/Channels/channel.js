@@ -97,7 +97,9 @@ export class Channel {
         this.fadeStarted = false
         this.source = null
         this.sourceArray = undefined
+        const effects = this.settings.effects
         this.settings = duplicate(Channel.DEF_SETTINGS)
+        this.settings.effects = effects
         this.soundData = duplicate(Channel.DEF_SOUNDDATA)
     }
 

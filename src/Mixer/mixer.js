@@ -88,12 +88,9 @@ export class Mixer {
         }
         /** Support for Moulinette **/
         else if (data.source == 'mtte' && data.type == 'Sound') {
-            if(!data.pack.isRemote) {
-                return ui.notifications.warn(game.i18n.localize("SOUNDSCAPE.moulinetteCloudOnly"));
-            }
             // retrieve path
             const soundName = data.sound.filename.split("/").pop()
-            const assetUrl = await game.moulinette.applications.MoulinetteAPI.getAssetURL("sounds", data.pack.packId, data.sound.filename)
+            const assetUrl = await game.moulinette.applications.MoulinetteAPI.getAssetURL("sounds", data.pack.idx, data.sound.filename)
             if(assetUrl) {
                 channelSettings.soundData.source = assetUrl.path;
                 if (channelSettings.settings.name == undefined || channelSettings.settings.name == "") channelSettings.settings.name = soundName;
