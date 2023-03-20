@@ -1,7 +1,7 @@
 {
   "title": "Soundscape",
   "description": "Soundscape is a module that allows you to easily mix multiple audio tracks into a soundscape that can be customized on the fly.",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "authors": [
     {
       "name": "CDeenen",
@@ -38,6 +38,6 @@
   ],
   "url": "https://github.com/SvenWerlen/Soundscape",
   "manifest": "https://raw.githubusercontent.com/SvenWerlen/Soundscape/main/module.json",
-  "download": "https://github.com/SvenWerlen/Soundscape/archive/v-2.0.1.zip",
+  "download": "https://github.com/SvenWerlen/Soundscape/archive/v-2.1.0.zip",
   "id": "soundscape"
 }
