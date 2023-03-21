@@ -15,7 +15,7 @@ export class Mixer {
     linkProportion = [];
     highestVolume = 0;
     highestVolumeIteration = 0;
-
+    
     constructor(data, options) {
        this.constr();
     }
@@ -52,6 +52,8 @@ export class Mixer {
                 game.socket.emit(`module.soundscape`, payload);
             }
         },500)
+
+        this.togglePlayer("*")
     }
 
     renderApp(render) {
@@ -413,5 +415,33 @@ export class Mixer {
             soundboardGain: 0.5
         }
         return settings;
+    }
+
+    /**
+     * Toggle player to which sounds are sent
+     * @returns true if all players are active
+     */
+    togglePlayer(playerId) {
+        if(playerId == "*" || playerId == "-") {
+            this.soundboard.players = {}
+            for (const p of game.users.players) {
+                if(p.active) {
+                    this.soundboard.players[p._id] = (playerId == "*")
+                }
+            }
+        }
+        else {
+            if(playerId in this.soundboard.players) {
+                this.soundboard.players[playerId] = !this.soundboard.players[playerId]
+            }
+        }
+        // check if one player is not enabled
+        for (const p of game.users.players) {
+            if(!p.active) continue
+            if(!(p._id in this.soundboard.players) || !this.soundboard.players[p._id]) {
+                return false
+            }
+        }
+        return true
     }
 }

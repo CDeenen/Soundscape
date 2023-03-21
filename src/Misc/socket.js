@@ -113,7 +113,7 @@ export async function socket(payload) {
         else if (payload.msgType == 'delaySetVolume') mixer.channels[payload.channelNr].effects.delay.setVolume(payload.volume);
     }
     else {
-        if (payload.msgType == 'playSoundboard') mixer.soundboard.playSound(payload.channel);
+        if (payload.msgType == 'playSoundboard') mixer.soundboard.playSound(payload.channel, payload.players);
         else if (payload.msgType == 'setSoundboardVolume') mixer.soundboard.setVolume(payload.volume);
     }
     

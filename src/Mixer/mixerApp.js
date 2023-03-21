@@ -89,6 +89,7 @@ export class MixerApp extends FormApplication {
         return {
             channels: channelData,
             master: masterData,
+            players: game.users.players,
             playing: soundscapePlaying,
             playingIcon: soundscapePlaying ? 'fas fa-stop' : 'fas fa-play',
             name: this.mixer.name,
@@ -428,6 +429,32 @@ export class MixerApp extends FormApplication {
             await dialog.setMixer(this.mixer,this);
             dialog.render(true);
         });
+
+        html.find(".players .sbButtonLabel").click(ev => {
+            ev.preventDefault();
+            const button = $(ev.currentTarget)
+            const playerId = $(ev.currentTarget).data('id')
+            let all
+            if(playerId == "*") {
+                const allCurEnabled = html.find(".players .sbButtonLabel.all").hasClass("selected")
+                all = this.mixer.togglePlayer(allCurEnabled ? "-" : "*") // * means "all", - means "none"
+                // enable/disable players
+                if(!allCurEnabled) {
+                    html.find(".players .sbButtonLabel").addClass("selected")
+                } else {
+                    html.find(".players .sbButtonLabel").removeClass("selected")
+                }
+            } else {
+                all = this.mixer.togglePlayer(playerId)
+                button.toggleClass("selected")
+            }
+            if(all) {
+                html.find(".players .sbButtonLabel.all").addClass("selected")
+            } else {
+                html.find(".players .sbButtonLabel.all").removeClass("selected")
+            }
+            console.log(this.mixer.soundboard.players)
+        })
     }
 }
 

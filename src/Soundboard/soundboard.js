@@ -5,6 +5,7 @@ export class Soundboard {
     soundboardSize = 25;
     channels = [];
     volume = 100;
+    players = {}
 
 
     constructor(mixer) {
@@ -36,27 +37,32 @@ export class Soundboard {
         this.channels[channelNr].setSbData(settings);
     }
 
-    playSound(soundboardNr) {
+    playSound(soundboardNr, players) {
         this.channels[soundboardNr].next();
 
         if (game.user.isGM) {
             const payload = {
               "msgType": "playSoundboard",
-              channel: soundboardNr
+              channel: soundboardNr,
+              players: this.players
             };
             game.socket.emit(`module.soundscape`, payload);
             Hooks.call(moduleName,payload);
         }
 
-        const repeat = this.channels[soundboardNr].settings.repeat;
-        if (repeat.repeat == 'single' || repeat.repeat == 'all') {
-            if (this.channels[soundboardNr].playing) {
-                this.channels[soundboardNr].stop();
-                return;
+        /**
+         * Only play sound to selected users
+         */
+        if(!players || (game.userId in players && players[game.userId])) {
+            const repeat = this.channels[soundboardNr].settings.repeat;
+            if (repeat.repeat == 'single' || repeat.repeat == 'all') {
+                if (this.channels[soundboardNr].playing) {
+                    this.channels[soundboardNr].stop();
+                    return;
+                }
             }
+            this.channels[soundboardNr].play();
         }
-        this.channels[soundboardNr].play();
-        
     }
 
     stopAll() {

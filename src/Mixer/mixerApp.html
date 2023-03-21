@@ -158,6 +158,17 @@
                     <input type="range" name="sbVolume" id="sbVolume" min="0" max="125" steps="1" value={{sbGain}}>
                     <button type="button" name="stopSB" id="stopSB" style="max-width:25%; margin-left:5px"><i class="fas fa-stop"></i>{{localize "SOUNDSCAPE.StopAll"}}</button>
                 </div>
+            
+            
+            <h2 style="margin-top:10px; width:90%">{{localize "SOUNDSCAPE.SendToPlayers"}}</h2>
+            <div class="form-group players" style="display:flex">
+                <div class="sbButtonLabel all selected" data-id="*">{{localize "SOUNDSCAPE.Everyone"}}</div>
+                {{#each players}}
+                    {{#if this.active}}
+                    <div class="sbButtonLabel selected" data-id="{{this._id}}">{{this.name}}</div>
+                    {{/if}}
+                {{/each}}
+            </div>
         </div>
     </div>
 </form>

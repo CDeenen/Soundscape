@@ -113,5 +113,7 @@
     "SOUNDSCAPE.moulinetteNotEnabled": "Moulinette Core module is required.",
     "SOUNDSCAPE.DeleteConfiguration": "Delete Configuration",
     "SOUNDSCAPE.ConfirmDeleteTitle": "Confirm deletion",
-    "SOUNDSCAPE.ConfirmDeleteContent": "Do you really want to delete/reset this channel?"
+    "SOUNDSCAPE.ConfirmDeleteContent": "Do you really want to delete/reset this channel?",
+    "SOUNDSCAPE.SendToPlayers": "Sends sounds to",
+    "SOUNDSCAPE.Everyone": "Everyone"
 }

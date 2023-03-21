@@ -309,6 +309,11 @@
   font-size: smaller;
 }
 
+#soundscape_mixer .sbButtonLabel.selected {
+  background-color: darkgreen;
+  color: white;
+}
+
 #soundscape_mixer .column {
   float: left;
 }
