@@ -58,6 +58,9 @@ export class soundscapeConfig extends FormApplication {
             let playlistPath;
             for (let sound of playlist.sounds) {
                 if (playlistPath == undefined) {
+                    if(!sound.path) {
+                        continue;
+                    }
                     const split = sound.path.replaceAll('/','\\').split('\\');
                     playlistPath = split[0];
                     for (let i = 1; i<split.length-1; i++) playlistPath += '/' + split[i];
