@@ -53,6 +53,7 @@ export class Soundboard {
         /**
          * Only play sound to selected users
          */
+        console.log("playSound", game.userId, players)
         if(!players || (game.userId in players && players[game.userId])) {
             const repeat = this.channels[soundboardNr].settings.repeat;
             if (repeat.repeat == 'single' || repeat.repeat == 'all') {
@@ -151,16 +152,18 @@ export class Soundboard {
             channelSettings.soundData.soundSelect = data.type;
         }
         /** Support for Moulinette **/
-        else if (data.source == 'mtte' && data.type == 'Sound') {
-            // retrieve path
-            const soundName = data.sound.filename.split("/").pop().replace(/\.[^/.]+$/, "") // removes extension
-            const assetUrl = await game.moulinette.applications.MoulinetteAPI.getAssetURL("sounds", data.pack.idx, data.sound.filename)
-            if(assetUrl) {
-                channelSettings.soundData.source = assetUrl;
-                if (channelSettings.name == undefined || channelSettings.name == "") channelSettings.name = soundName;
-                channelSettings.soundData.soundSelect = 'filepicker_single';
-                if(!channelSettings.imageSrc) {
-                    channelSettings.imageSrc = "modules/moulinette-core/img/moulinette.png"
+        else if (data.source == 'mtte') {
+            if(data.type == 'Sound') {
+                // retrieve path
+                const soundName = data.sound.filename.split("/").pop().replace(/\.[^/.]+$/, "") // removes extension
+                const assetUrl = await game.moulinette.applications.MoulinetteAPI.getAssetURL("sounds", data.pack.idx, data.sound.filename)
+                if(assetUrl) {
+                    channelSettings.soundData.source = assetUrl;
+                    if (channelSettings.name == undefined || channelSettings.name == "") channelSettings.name = soundName;
+                    channelSettings.soundData.soundSelect = 'filepicker_single';
+                    if(!channelSettings.imageSrc) {
+                        channelSettings.imageSrc = "modules/moulinette-core/img/moulinette.png"
+                    }
                 }
             }
         }

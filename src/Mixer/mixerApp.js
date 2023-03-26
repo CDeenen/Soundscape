@@ -455,6 +455,8 @@ export class MixerApp extends FormApplication {
             }
             console.log(this.mixer.soundboard.players)
         })
+
+        this.mixer.togglePlayer("*")
     }
 }
 

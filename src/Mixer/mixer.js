@@ -52,8 +52,6 @@ export class Mixer {
                 game.socket.emit(`module.soundscape`, payload);
             }
         },500)
-
-        this.togglePlayer("*")
     }
 
     renderApp(render) {
