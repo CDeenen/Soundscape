@@ -53,7 +53,7 @@ export class Soundboard {
         /**
          * Only play sound to selected users
          */
-        console.log("playSound", game.userId, players)
+        console.log(`playSound to players ${players ? players : "*"} (current user = ${game.userId})`)
         if(!players || (game.userId in players && players[game.userId])) {
             const repeat = this.channels[soundboardNr].settings.repeat;
             if (repeat.repeat == 'single' || repeat.repeat == 'all') {
@@ -166,18 +166,16 @@ export class Soundboard {
                     }
                 }
             }
-        }
-        else if (data.source == 'mtte' && data.type == 'Tile') {
-            // retrieve path
-            const imageName = data.tile.filename.split("/").pop().replace(/\.[^/.]+$/, "") // removes extension
-            if (channelSettings.name == undefined || channelSettings.name == "") channelSettings.name = imageName;
-            const assetUrl = await game.moulinette.applications.MoulinetteAPI.getAssetURL("tiles", data.pack.idx, data.tile.filename)
-            if(assetUrl) {
-                channelSettings.imageSrc = assetUrl
+            else if(['Tile','JournalEntry','Actor'].includes(data.type)) {
+                // retrieve path
+                const imageName = data.tile.filename.split("/").pop().replace(/\.[^/.]+$/, "") // removes extension
+                if (channelSettings.name == undefined || channelSettings.name == "") channelSettings.name = imageName;
+                const assetUrl = await game.moulinette.applications.MoulinetteAPI.getAssetURL("tiles", data.pack.idx, data.tile.filename)
+                if(assetUrl) {
+                    channelSettings.imageSrc = assetUrl
+                }
             }
         }
-
-        
 
         settings[this.mixer.currentSoundscape].soundboard[targetId] = channelSettings;
 

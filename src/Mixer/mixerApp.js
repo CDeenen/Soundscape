@@ -139,7 +139,7 @@ export class MixerApp extends FormApplication {
         const panner = html.find("input[name=panSlider]");
         const channelBox = html.find("div[name=channelBox]")
 
-        const sbButton = html.find("input[name=sbButton");
+        const sbButton = html.find("img.sbButton");
         const sbButtonLabel = html.find("p[name=sbButtonLabel]");
         const sbVolume = html.find("input[name=sbVolume]");
         const sbStopAll = html.find("button[name=stopSB");
@@ -220,6 +220,7 @@ export class MixerApp extends FormApplication {
                 const sourceId = this.dragging.replace('sbButton-','')
                 if (this.controlDown) this.mixer.soundboard.copySounds(sourceId,targetId);
                 else this.mixer.soundboard.swapSounds(sourceId,targetId);
+                this.dragging = null
                 return;
             }
             if (data.type == 'Playlist') {
@@ -229,7 +230,6 @@ export class MixerApp extends FormApplication {
                 }
             }
             this.mixer.soundboard.newData(targetId,data);
-
         })
         sbButton.on('dragover', (event)=>{
             const target = event.currentTarget;
@@ -453,7 +453,6 @@ export class MixerApp extends FormApplication {
             } else {
                 html.find(".players .sbButtonLabel.all").removeClass("selected")
             }
-            console.log(this.mixer.soundboard.players)
         })
 
         this.mixer.togglePlayer("*")

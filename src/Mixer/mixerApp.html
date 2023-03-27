@@ -145,7 +145,7 @@
                 <div class="form-group btnRow" style="width:100%">
                     {{#each row}}
                     <div>
-                        <input type="image" class="sbButton" name="sbButton" id="sbButton-{{this.iteration}}" src={{this.imageSrc}} draggable='true' style="border-color:{{this.borderColor}}; box-shadow:{{this.boxShadow}}">  
+                        <img class="sbButton" name="sbButton" id="sbButton-{{this.iteration}}" src={{this.imageSrc}} draggable='true' style="border-color:{{this.borderColor}}; box-shadow:{{this.boxShadow}}"/>  
                         <p class="sbButtonLabel" name="sbButtonLabel" id="sbButtonLabel-{{this.iteration}}">{{this.name}}</p>
                     </div>
                     {{/each}}
