@@ -89,6 +89,7 @@ export class MixerApp extends FormApplication {
         return {
             channels: channelData,
             master: masterData,
+            players: game.users.players,
             playing: soundscapePlaying,
             playingIcon: soundscapePlaying ? 'fas fa-stop' : 'fas fa-play',
             name: this.mixer.name,
@@ -138,7 +139,7 @@ export class MixerApp extends FormApplication {
         const panner = html.find("input[name=panSlider]");
         const channelBox = html.find("div[name=channelBox]")
 
-        const sbButton = html.find("input[name=sbButton");
+        const sbButton = html.find("img.sbButton");
         const sbButtonLabel = html.find("p[name=sbButtonLabel]");
         const sbVolume = html.find("input[name=sbVolume]");
         const sbStopAll = html.find("button[name=stopSB");
@@ -169,6 +170,7 @@ export class MixerApp extends FormApplication {
             target.style.borderColor = 'black';
         })
         channelBox.on('drop', (event)=>{
+            console.log("channelBox")
             const target = event.currentTarget;
             if (target.id == this.dragging) return;
             target.style.borderColor = 'black';
@@ -183,11 +185,10 @@ export class MixerApp extends FormApplication {
             if (data.type == 'Playlist') {
                 data = {
                     type: "playlist_multi",
-                    playlist: data.id
+                    playlist: data.uuid.split(".").pop()
                 }
             }
             this.mixer.newData(targetId,data);
-
         })
 
         sbStopAll.on('click', event => {
@@ -219,6 +220,7 @@ export class MixerApp extends FormApplication {
                 const sourceId = this.dragging.replace('sbButton-','')
                 if (this.controlDown) this.mixer.soundboard.copySounds(sourceId,targetId);
                 else this.mixer.soundboard.swapSounds(sourceId,targetId);
+                this.dragging = null
                 return;
             }
             if (data.type == 'Playlist') {
@@ -228,7 +230,6 @@ export class MixerApp extends FormApplication {
                 }
             }
             this.mixer.soundboard.newData(targetId,data);
-
         })
         sbButton.on('dragover', (event)=>{
             const target = event.currentTarget;
@@ -374,18 +375,18 @@ export class MixerApp extends FormApplication {
         play.on("click",(event)=>{
             if (this.mixer.playing == false) {
                 this.mixer.start();
-                html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-stop"></i>`;
+                html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-stop channelPlayIcon"></i>`;
                 for (let i=0; i<8; i++) {
                     const channel = this.mixer.channels[i];
                     if (channel.soundNode != undefined && channel.soundNode.loaded)
-                        html.find(`button[id=playSound-${i}]`)[0].innerHTML = `<i class="fas fa-stop"></i>`;
+                        html.find(`button[id=playSound-${i}]`)[0].innerHTML = `<i class="fas fa-stop channelPlayIcon"></i>`;
                 }
             }
             else {
                 this.mixer.stop();
-                html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-play"></i>`;
+                html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-play channelPlayIcon"></i>`;
                 for (let i=0; i<8; i++) {
-                    html.find(`button[id=playSound-${i}]`)[0].innerHTML = `<i class="fas fa-play"></i>`;
+                    html.find(`button[id=playSound-${i}]`)[0].innerHTML = `<i class="fas fa-play channelPlayIcon"></i>`;
                 }
             }
         })
@@ -396,13 +397,13 @@ export class MixerApp extends FormApplication {
             const playing = channel.playing;
             if (playing == false) {
                 this.mixer.start(channelNr);
-                html.find(`button[id=playSound-${channelNr}]`)[0].innerHTML = `<i class="fas fa-stop"></i>`;
-                html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-stop"></i>`;
+                html.find(`button[id=playSound-${channelNr}]`)[0].innerHTML = `<i class="fas fa-stop channelPlayIcon"></i>`;
+                html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-stop channelPlayIcon"></i>`;
             }
             else {
                 await this.mixer.stop(channelNr);
-                html.find(`button[id=playSound-${channelNr}]`)[0].innerHTML = `<i class="fas fa-play"></i>`;
-                if (this.mixer.playing == false) html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-play"></i>`;
+                html.find(`button[id=playSound-${channelNr}]`)[0].innerHTML = `<i class="fas fa-play channelPlayIcon"></i>`;
+                if (this.mixer.playing == false) html.find("button[name=play]")[0].innerHTML = `<i class="fas fa-play channelPlayIcon"></i>`;
             }
         })
 
@@ -428,6 +429,33 @@ export class MixerApp extends FormApplication {
             await dialog.setMixer(this.mixer,this);
             dialog.render(true);
         });
+
+        html.find(".players .sbButtonLabel").click(ev => {
+            ev.preventDefault();
+            const button = $(ev.currentTarget)
+            const playerId = $(ev.currentTarget).data('id')
+            let all
+            if(playerId == "*") {
+                const allCurEnabled = html.find(".players .sbButtonLabel.all").hasClass("selected")
+                all = this.mixer.togglePlayer(allCurEnabled ? "-" : "*") // * means "all", - means "none"
+                // enable/disable players
+                if(!allCurEnabled) {
+                    html.find(".players .sbButtonLabel").addClass("selected")
+                } else {
+                    html.find(".players .sbButtonLabel").removeClass("selected")
+                }
+            } else {
+                all = this.mixer.togglePlayer(playerId)
+                button.toggleClass("selected")
+            }
+            if(all) {
+                html.find(".players .sbButtonLabel.all").addClass("selected")
+            } else {
+                html.find(".players .sbButtonLabel.all").removeClass("selected")
+            }
+        })
+
+        this.mixer.togglePlayer("*")
     }
 }
 

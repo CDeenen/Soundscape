@@ -5,6 +5,7 @@ import {EQ} from "./Effects/eq.js";
 import {moduleName} from "../../soundscape.js";
 import {SoundConfig} from "./soundConfig.js";
 import {FXConfig} from "./Effects/fxConfig.js";
+import {getFilePickerSource} from "../Misc/helpers.js";
 
 'use strict';
 
@@ -53,7 +54,7 @@ export class Channel {
 
     firstLoop = true;
 
-    settings = {
+    static DEF_SETTINGS = {
         channel: 0,
         name: '',
         volume: 1,
@@ -76,11 +77,30 @@ export class Channel {
         },
         effects: {}
     }
-    soundData = {
+    static DEF_SOUNDDATA = {
         soundSelect: "playlist_single",
         playlistName: "",
         soundName: "",
         source: "",
+    }
+
+    settings = duplicate(Channel.DEF_SETTINGS)
+    soundData = duplicate(Channel.DEF_SOUNDDATA)
+
+    async clear() {
+        this.master = false
+        this.playing = false
+        this.paused = false
+        this.duration = 0
+        this.currentlyPlaying = 0
+        this.loaded = false
+        this.fadeStarted = false
+        this.source = null
+        this.sourceArray = undefined
+        const effects = this.settings.effects
+        this.settings = duplicate(Channel.DEF_SETTINGS)
+        this.settings.effects = effects
+        this.soundData = duplicate(Channel.DEF_SOUNDDATA)
     }
 
     async setData(data) {
@@ -163,7 +183,7 @@ export class Channel {
             if (playlist == undefined) return;
             const sound = playlist.sounds.getName(soundData.soundName);
             if (sound == undefined) return;
-            soundArray.push(sound.data.path)
+            soundArray.push(sound.path)
             soundData.randomize = false;
         }
         else if (soundData.soundSelect == 'playlist_multi') {
@@ -172,11 +192,11 @@ export class Channel {
             
             //Add all sounds in playlist to array
             for (let sound of playlist.sounds) 
-                soundArray.push(sound.data.path)  
+                soundArray.push(sound.path)  
         }
         else if (soundData.soundSelect == 'filepicker_single') {
             const source = soundData.source;
-            const ret = await FilePicker.browse("data", source, {wildcard:true});
+            const ret = await FilePicker.browse(getFilePickerSource(), source, {wildcard:true});
             const files = ret.files;
         
             //Add all sounds in playlist to array
@@ -185,7 +205,7 @@ export class Channel {
         }
         else if (soundData.soundSelect == 'filepicker_folder') {
             const source = soundData.source;
-            const ret = await FilePicker.browse("data", source);
+            const ret = await FilePicker.browse(getFilePickerSource(), source);
             const files = ret.files;
     
             //Add all sounds in playlist to array
@@ -249,7 +269,6 @@ export class Channel {
         if (this.context.state != 'running') return;
 
         let playPromise = this.audioElement.play();
-
         if (playPromise !== undefined) {
             playPromise.then(_ => {
                 
@@ -262,7 +281,7 @@ export class Channel {
           this.paused = false;
   
           if (this.mixer.mixerApp != undefined && this.mixer.mixerApp.rendered) {
-              document.getElementById(`playSound-${this.channelNr}`).innerHTML = `<i class="fas fa-stop"></i>`;
+              document.getElementById(`playSound-${this.channelNr}`).innerHTML = `<i class="fas fa-stop channelPlayIcon"></i>`;
           }
 
         
@@ -489,6 +508,8 @@ export class Channel {
         if (this.playing) this.stop(false);
         this.soundData.source = source;
         this.audioElement = document.createElement('audio')
+        this.audioElement.crossOrigin = "anonymous"
+
         this.audioElement.src = source;
         this.source = source;
 
