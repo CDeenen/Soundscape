@@ -1,5 +1,5 @@
 # Changelog
-### v1.0.4 - 23-04-2023
+### v1.1.0 - 23-04-2023
 A big thanks to SvenWerlen (known from Moulinette) for picking this up and fixing some issues and adding new features.
 
 Additions:
