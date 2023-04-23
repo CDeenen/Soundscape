@@ -1,10 +1,11 @@
-import {moduleName} from "../../soundscape.js";
+import {moduleName, activeUser} from "../../soundscape.js";
 import {Channel} from "../Channels/channel.js";
 
 export class Soundboard {
     soundboardSize = 25;
     channels = [];
     volume = 100;
+    players = {}
 
 
     constructor(mixer) {
@@ -36,31 +37,37 @@ export class Soundboard {
         this.channels[channelNr].setSbData(settings);
     }
 
-    playSound(soundboardNr) {
+    playSound(soundboardNr, players) {
         this.channels[soundboardNr].next();
 
-        if (game.user.isGM) {
+        if (activeUser) {
             const payload = {
               "msgType": "playSoundboard",
-              channel: soundboardNr
+              channel: soundboardNr,
+              players: this.players
             };
             game.socket.emit(`module.soundscape`, payload);
             Hooks.call(moduleName,payload);
         }
 
-        const repeat = this.channels[soundboardNr].settings.repeat;
-        if (repeat.repeat == 'single' || repeat.repeat == 'all') {
-            if (this.channels[soundboardNr].playing) {
-                this.channels[soundboardNr].stop();
-                return;
+        /**
+         * Only play sound to selected users
+         */
+        console.log(`playSound to players ${players ? players : "*"} (current user = ${game.userId})`)
+        if(!players || (game.userId in players && players[game.userId])) {
+            const repeat = this.channels[soundboardNr].settings.repeat;
+            if (repeat.repeat == 'single' || repeat.repeat == 'all') {
+                if (this.channels[soundboardNr].playing) {
+                    this.channels[soundboardNr].stop();
+                    return;
+                }
             }
+            this.channels[soundboardNr].play();
         }
-        this.channels[soundboardNr].play();
-        
     }
 
     stopAll() {
-        if (game.user.isGM) {
+        if (activeUser) {
             const payload = {
               "msgType": "stopAllSoundboard"
             };
@@ -75,7 +82,7 @@ export class Soundboard {
     setVolume(volume) {
         this.volume = volume;
         this.master.setVolume(volume);
-        if (game.user.isGM) {
+        if (activeUser) {
             const payload = {
               "msgType": "setSoundboardVolume",
               "volume": volume
@@ -143,6 +150,31 @@ export class Soundboard {
             channelSettings.soundData.source = data.source;
             if (channelSettings.name == undefined || channelSettings.name == "") channelSettings.name = data.name;
             channelSettings.soundData.soundSelect = data.type;
+        }
+        /** Support for Moulinette **/
+        else if (data.source == 'mtte') {
+            if(data.type == 'Sound') {
+                // retrieve path
+                const soundName = data.sound.filename.split("/").pop().replace(/\.[^/.]+$/, "") // removes extension
+                const assetUrl = await game.moulinette.applications.MoulinetteAPI.getAssetURL("sounds", data.pack.idx, data.sound.filename)
+                if(assetUrl) {
+                    channelSettings.soundData.source = assetUrl;
+                    if (channelSettings.name == undefined || channelSettings.name == "") channelSettings.name = soundName;
+                    channelSettings.soundData.soundSelect = 'filepicker_single';
+                    if(!channelSettings.imageSrc) {
+                        channelSettings.imageSrc = "modules/moulinette-core/img/moulinette.png"
+                    }
+                }
+            }
+            else if(['Tile','JournalEntry','Actor'].includes(data.type)) {
+                // retrieve path
+                const imageName = data.tile.filename.split("/").pop().replace(/\.[^/.]+$/, "") // removes extension
+                if (channelSettings.name == undefined || channelSettings.name == "") channelSettings.name = imageName;
+                const assetUrl = await game.moulinette.applications.MoulinetteAPI.getAssetURL("tiles", data.pack.idx, data.tile.filename)
+                if(assetUrl) {
+                    channelSettings.imageSrc = assetUrl
+                }
+            }
         }
 
         settings[this.mixer.currentSoundscape].soundboard[targetId] = channelSettings;

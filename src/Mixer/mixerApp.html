@@ -41,175 +41,6 @@
         });
     </script>
 
-    <style>
-        .slider-wrapper input {
-            width: 200px;
-            height: 1px;
-            margin: 0;
-            transform-origin: 100px 100px;
-            transform: rotate(-90deg);
-        }
-
-        .sliderBox {
-            margin-left:15px;
-            height: 220px;
-        }
-
-        .boxed {
-            border: 1px solid black ;
-            border-radius: 3px ; 
-            width:45px;
-            max-width:45px;
-            margin:0px;
-            padding:5px;
-            vertical-align: top;
-        }
-
-        button[type=button][class=configButton]
-        {
-            width: 100%;
-            height: 30px;
-            font-size: 16px;
-            padding-top: 0px;
-            margin-left: 0px;
-            margin-bottom: 3px;
-            text-align: center;
-        }
-
-        button[type=button][class=FXButton]
-        {
-            width: 100%;
-            height: 25px;
-        }
-
-        button[type=button][class=channelButton]
-        {
-            width: 25px;
-            height: 25px;
-            padding: 0;
-            position: relative;
-            left: 3px;
-        }
-
-        .fxButtonLabel {
-            font-size: 16px;
-            padding: 0;
-            text-align: center;
-            position: relative;
-            bottom: 4px;
-            left: 1px;
-        }
-
-        .channelButtonLabel {
-            font-size: 16px;
-            padding: 0;
-            text-align: center;
-            position: relative;
-            bottom: 3px;
-            left: 1px;
-        }
-
-        .channelPlayIcon {
-            padding: 0;
-            position: relative;
-            bottom: 2px;
-            left: 3px;
-        }
-
-        .boxNumber {
-            text-align: center;
-            width: 100%;
-            height: 30px;
-        }
-
-        .masterBox {
-            border: 1px solid black ;
-            border-radius: 3px ; 
-            width:45px;
-            max-width:45px;
-            margin:2px;
-            padding:5px;
-            display: inline-block;
-        }
-        .nameDiv {
-            width:100px;
-            margin:2px;
-            transform-origin: 50px 50px;
-            transform: rotate(-90deg);
-            height:30px;
-            overflow:hidden;
-        }
-        .nameBox {
-            height:100px;
-        }
-
-        .sbButton {
-            min-width: 75px;
-            min-height: 75px;
-            max-width: 75px;
-            max-height: 75px;
-            border-style: solid;
-            border-width: 2px;
-            border-radius: 10px;
-            margin:3px 3px 0px;
-            align-items: center;
-            padding: 0;
-    
-        }
-
-        .sbButton:hover {
-            border-radius: 10px;
-            filter: brightness(1.25);
-        }
-
-        .sbButtonOver {
-            border: 2px red;
-        }
-
-        .btnRow {
-            max-height: 100px;
-            min-height: 100px;
-        }
-
-        .sbButtonLabel {
-            min-width:70px;
-            max-width:70px;
-            min-height:15px;
-            max-height: 15px;
-            margin: 0px 5px 0px;
-            padding: 0;
-            text-align: center;
-            cursor: pointer;
-            border: 1px solid black ;
-            border-radius: 3px ; 
-            overflow: hidden;
-        }
-
-        .column {
-            float: left;
-        }
-
-        /* Clear floats after the columns */
-        .row:after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-
-        .sbDelete {
-            border: 1px solid black ;
-            border-radius: 3px ; 
-            width:30px;
-            height:30px;
-            margin-top:8px;
-            padding:5px;
-            vertical-align: top;
-        }
-
-
-
-    </style>
-
     <div class="row" id="SoundScape_mainRow" style="width:100%;">
         <div class="column" id="SoundScape_mainColumn" style="min-width:405px; height:100%; position:relative; z-index:2; background: url(../ui/parchment.jpg)">
 
@@ -225,10 +56,10 @@
                     <input type="text" name="soundscapeName" value="{{name}}" style="min-width:20% max-width:40%;height:28px;text-align:center;margin-top:2px">
                 </div>
                 <button type="button" name="soundscapeConfig" style="max-width:10%;height:30px">
-                    <i class="fas fa-cog" style="font-size: 25px;"></i>
+                    <i class="fas fa-cog" style="font-size: 18px;"></i>
                 </button>
                 <button type="button" name="soundboardEnable" id="soundboardEnable" style="max-width:10%;height:30px">
-                    <i class="fas fa-music" style="font-size: 25px;"></i>
+                    <i class="fas fa-music" style="font-size: 18px;"></i>
                 </button>
             </div>
             
@@ -300,7 +131,7 @@
         
             </div>
 
-            <button type="button" class="playMix" name="play" id="playMix"><i class="{{playingIcon}}"></i></button>   
+            <button type="button" class="playMix" name="play" id="playMix"><i class="{{playingIcon}} channelPlayIcon"></i></button>   
         </div>
         <div class="column collapse" id="SoundScape_soundboardColumn" style="width:50%;position:relative;z-index:1;height:100%;display:none;margin-left:-50%">
             <div style="display:flex"> 
@@ -314,7 +145,7 @@
                 <div class="form-group btnRow" style="width:100%">
                     {{#each row}}
                     <div>
-                        <input type="image" class="sbButton" name="sbButton" id="sbButton-{{this.iteration}}" src={{this.imageSrc}} draggable='true' style="border-color:{{this.borderColor}}; box-shadow:{{this.boxShadow}}">  
+                        <img class="sbButton" name="sbButton" id="sbButton-{{this.iteration}}" src={{this.imageSrc}} draggable='true' style="border-color:{{this.borderColor}}; box-shadow:{{this.boxShadow}}"/>  
                         <p class="sbButtonLabel" name="sbButtonLabel" id="sbButtonLabel-{{this.iteration}}">{{this.name}}</p>
                     </div>
                     {{/each}}
@@ -327,6 +158,17 @@
                     <input type="range" name="sbVolume" id="sbVolume" min="0" max="125" steps="1" value={{sbGain}}>
                     <button type="button" name="stopSB" id="stopSB" style="max-width:25%; margin-left:5px"><i class="fas fa-stop"></i>{{localize "SOUNDSCAPE.StopAll"}}</button>
                 </div>
+            
+            
+            <h2 style="margin-top:10px; width:90%">{{localize "SOUNDSCAPE.SendToPlayers"}}</h2>
+            <div class="form-group players" style="display:flex">
+                <div class="sbButtonLabel all selected" data-id="*">{{localize "SOUNDSCAPE.Everyone"}}</div>
+                {{#each players}}
+                    {{#if this.active}}
+                    <div class="sbButtonLabel selected" data-id="{{this._id}}">{{this.name}}</div>
+                    {{/if}}
+                {{/each}}
+            </div>
         </div>
     </div>
 </form>

@@ -2,9 +2,10 @@ import {Delay} from "./Effects/delay.js";
 import {Gain} from "./Effects/gain.js";
 import {Pan} from "./Effects/pan.js";
 import {EQ} from "./Effects/eq.js";
-import {moduleName} from "../../soundscape.js";
+import {moduleName, activeUser} from "../../soundscape.js";
 import {SoundConfig} from "./soundConfig.js";
 import {FXConfig} from "./Effects/fxConfig.js";
+import {getFilePickerSource} from "../Misc/helpers.js";
 
 'use strict';
 
@@ -53,7 +54,7 @@ export class Channel {
 
     firstLoop = true;
 
-    settings = {
+    static DEF_SETTINGS = {
         channel: 0,
         name: '',
         volume: 1,
@@ -76,11 +77,30 @@ export class Channel {
         },
         effects: {}
     }
-    soundData = {
+    static DEF_SOUNDDATA = {
         soundSelect: "playlist_single",
         playlistName: "",
         soundName: "",
         source: "",
+    }
+
+    settings = duplicate(Channel.DEF_SETTINGS)
+    soundData = duplicate(Channel.DEF_SOUNDDATA)
+
+    async clear() {
+        this.master = false
+        this.playing = false
+        this.paused = false
+        this.duration = 0
+        this.currentlyPlaying = 0
+        this.loaded = false
+        this.fadeStarted = false
+        this.source = null
+        this.sourceArray = undefined
+        const effects = this.settings.effects
+        this.settings = duplicate(Channel.DEF_SETTINGS)
+        this.settings.effects = effects
+        this.soundData = duplicate(Channel.DEF_SOUNDDATA)
     }
 
     async setData(data) {
@@ -108,7 +128,7 @@ export class Channel {
             this.effects.eq.initialize(data.settings.effects.equalizer);
         }
 
-        if (game.user.isGM) {
+        if (activeUser) {
             data.soundArray = this.soundArray;
 
             const payload = {
@@ -137,7 +157,7 @@ export class Channel {
         this.setVolume(data.volume);
         if (data.sourceArray == undefined) data.sourceArray = await this.getSounds(data.soundData);
         this.sourceArray = data.sourceArray;
-        if (game.user.isGM) {
+        if (activeUser) {
             data.soundArray = this.soundArray;
 
             const payload = {
@@ -163,7 +183,7 @@ export class Channel {
             if (playlist == undefined) return;
             const sound = playlist.sounds.getName(soundData.soundName);
             if (sound == undefined) return;
-            soundArray.push(sound.data.path)
+            soundArray.push(sound.path)
             soundData.randomize = false;
         }
         else if (soundData.soundSelect == 'playlist_multi') {
@@ -172,11 +192,11 @@ export class Channel {
             
             //Add all sounds in playlist to array
             for (let sound of playlist.sounds) 
-                soundArray.push(sound.data.path)  
+                soundArray.push(sound.path)  
         }
         else if (soundData.soundSelect == 'filepicker_single') {
             const source = soundData.source;
-            const ret = await FilePicker.browse("data", source, {wildcard:true});
+            const ret = await FilePicker.browse(getFilePickerSource(), source, {wildcard:true});
             const files = ret.files;
         
             //Add all sounds in playlist to array
@@ -185,7 +205,7 @@ export class Channel {
         }
         else if (soundData.soundSelect == 'filepicker_folder') {
             const source = soundData.source;
-            const ret = await FilePicker.browse("data", source);
+            const ret = await FilePicker.browse(getFilePickerSource(), source);
             const files = ret.files;
     
             //Add all sounds in playlist to array
@@ -217,7 +237,7 @@ export class Channel {
         }
         if (this.channelNr >= 100) {
             if (this.settings.playbackRate.rate == undefined) this.settings.playbackRate.rate = 1;
-            if (game.user.isGM) this.setPlaybackRate(this.settings.playbackRate);
+            if (activeUser) this.setPlaybackRate(this.settings.playbackRate);
 
             if (this.mixer.mixer.mixerApp != undefined && this.mixer.mixer.mixerApp.rendered) {
                 const color = (this.settings.repeat.repeat == 'single' || this.settings.repeat.repeat == 'all') ? 'green' : 'black';
@@ -249,7 +269,6 @@ export class Channel {
         if (this.context.state != 'running') return;
 
         let playPromise = this.audioElement.play();
-
         if (playPromise !== undefined) {
             playPromise.then(_ => {
                 
@@ -262,7 +281,7 @@ export class Channel {
           this.paused = false;
   
           if (this.mixer.mixerApp != undefined && this.mixer.mixerApp.rendered) {
-              document.getElementById(`playSound-${this.channelNr}`).innerHTML = `<i class="fas fa-stop"></i>`;
+              document.getElementById(`playSound-${this.channelNr}`).innerHTML = `<i class="fas fa-stop channelPlayIcon"></i>`;
           }
 
         
@@ -301,7 +320,7 @@ export class Channel {
         if (this.currentlyPlaying > this.sourceArray.length - 1) this.currentlyPlaying = 0;
         this.setSource(this.sourceArray[this.currentlyPlaying]);
         
-        if (game.user.isGM) {
+        if (activeUser) {
             const payload = {
               "msgType": "next",
               "channel": this.channelNr,
@@ -318,7 +337,7 @@ export class Channel {
         this.currentlyPlaying--;
         if (this.currentlyPlaying < 0) this.currentlyPlaying = this.sourceArray.length - 1;
         this.setSource(this.sourceArray[this.currentlyPlaying]);
-        if (game.user.isGM) {
+        if (activeUser) {
             const payload = {
               "msgType": "previous",
               "channel": this.channelNr,
@@ -333,7 +352,7 @@ export class Channel {
     restart() {
         if (this.audioElement == undefined) return;
         this.audioElement.currentTime = 0;
-        if (game.user.isGM) {
+        if (activeUser) {
             const payload = {
               "msgType": "restart",
               "channel": this.channelNr,
@@ -355,7 +374,7 @@ export class Channel {
         if (playbackRate.rate > 4) playbackRate.rate = 4;
 
         this.settings.playbackRate = playbackRate;
-        if (game.user.isGM) {
+        if (activeUser) {
             const payload = {
               "msgType": "setPlaybackRate",
               "channelNr": this.channelNr,
@@ -369,7 +388,7 @@ export class Channel {
     }
 
     setVolume(volume=this.settings.volume,save=true,solo=false) {
-        if (game.user.isGM) {
+        if (activeUser) {
             const payload = {
               "msgType": "setVolume",
               "channelNr": this.channelNr,
@@ -387,7 +406,7 @@ export class Channel {
 
     setPan(pan) {
         this.settings.pan = pan;
-        if (game.user.isGM) {
+        if (activeUser) {
             const payload = {
               "msgType": "setPan",
               "channelNr": this.channelNr,
@@ -400,7 +419,7 @@ export class Channel {
     }
 
     setMute(mute){
-        if (game.user.isGM) {
+        if (activeUser) {
             const payload = {
               "msgType": "setMute",
               "channelNr": this.channelNr,
@@ -430,7 +449,7 @@ export class Channel {
     }
 
     setSolo(solo) {
-        if (game.user.isGM) {
+        if (activeUser) {
             const payload = {
               "msgType": "setSolo",
               "channelNr": this.channelNr,
@@ -449,7 +468,7 @@ export class Channel {
     setLink(link) {
         this.settings.link = link;
 
-        if (game.user.isGM) {
+        if (activeUser) {
             const payload = {
               "msgType": "setLink",
               "channelNr": this.channelNr,
@@ -489,6 +508,8 @@ export class Channel {
         if (this.playing) this.stop(false);
         this.soundData.source = source;
         this.audioElement = document.createElement('audio')
+        this.audioElement.crossOrigin = "anonymous"
+
         this.audioElement.src = source;
         this.source = source;
 
@@ -565,15 +586,19 @@ export class Channel {
             if (timing.stopTime > 0 && this.currentTime >= timing.stopTime && parent.fadeStarted == false) {
                 if (repeat.repeat == 'none') parent.stop();
                 else if (repeat.repeat == 'single') {
-                    if (timing.fadeIn > 0 && parent.fadeStarted == false) parent.fade(0,parent.settings.volume,timing.fadeIn)
+                    if (timing.fadeIn > 0 && parent.fadeStarted == false) 
+                        parent.fade(0,parent.settings.volume,timing.fadeIn)
                     parent.audioElement.currentTime = timing.startTime;
                     
                 }
-                else if (repeat.repeat == 'all') parent.next();
+                else if (repeat.repeat == 'all') {
+                    parent.next();
+                }
             }
             
             if (timing.fadeOut > 0 && this.currentTime + timing.fadeOut >= timing.stopTime) {
-                if (parent.fadeStarted == false) parent.fade(parent.settings.volume,0,timing.fadeIn)
+                if (parent.fadeStarted == false) 
+                    parent.fade(parent.settings.volume,0,timing.fadeOut)
             }
         });
     }
@@ -589,7 +614,9 @@ export class Channel {
         let fade = setInterval(function(){
             volume += stepSize;
             counter++;
+            
             parent.audioElement.volume = volume;
+            
             
             if (counter == time*50-1) {
                 parent.audioElement.volume = end;

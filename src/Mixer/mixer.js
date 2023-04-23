@@ -1,4 +1,4 @@
-import { moduleName } from "../../soundscape.js";
+import { moduleName, activeUser } from "../../soundscape.js";
 import { Channel } from "../Channels/channel.js"
 import { Soundboard } from "../Soundboard/soundboard.js";
 import { MixerApp } from "./mixerApp.js";
@@ -15,13 +15,13 @@ export class Mixer {
     linkProportion = [];
     highestVolume = 0;
     highestVolumeIteration = 0;
-
+    
     constructor(data, options) {
        this.constr();
     }
 
     async constr() {
-        if (game.user.isGM) this.mixerApp = new MixerApp();
+        if (activeUser) this.mixerApp = new MixerApp();
         this.audioCtx = await new AudioContext();
 
         for (let i=0; i<this.mixerSize; i++) {
@@ -86,6 +86,17 @@ export class Mixer {
             if (channelSettings.settings.name == undefined || channelSettings.settings.name == "") channelSettings.settings.name = data.name;
             channelSettings.soundData.soundSelect = data.type;
         }
+        /** Support for Moulinette **/
+        else if (data.source == 'mtte' && data.type == 'Sound') {
+            // retrieve path
+            const soundName = data.sound.filename.split("/").pop().replace(/\.[^/.]+$/, "") // removes extension
+            const assetUrl = await game.moulinette.applications.MoulinetteAPI.getAssetURL("sounds", data.pack.idx, data.sound.filename)
+            if(assetUrl) {
+                channelSettings.soundData.source = assetUrl;
+                if (channelSettings.settings.name == undefined || channelSettings.settings.name == "") channelSettings.settings.name = soundName;
+                channelSettings.soundData.soundSelect = 'filepicker_single';
+            }
+        }
 
         settings[this.currentSoundscape].channels[targetId] = channelSettings;
 
@@ -108,7 +119,7 @@ export class Mixer {
         for (let i=0; i<8; i++) {
             sources.push(this.channels[i].source)
         }
-        if (game.user.isGM) {
+        if (activeUser) {
             const payload = {
               "msgType": "start",
               channel,
@@ -128,7 +139,7 @@ export class Mixer {
     }
 
     stop(channel = undefined, fadeOut = false, force = true) {
-        if (game.user.isGM) {
+        if (activeUser) {
             const payload = {
               "msgType": "stop",
               "force": force,
@@ -225,7 +236,7 @@ export class Mixer {
         }
     }
 
-    async setSoundscape(newSoundscape) {
+    async setSoundscape(newSoundscape, forceStart = false) {
         const playingTemp = this.playing;
         this.stop(undefined,true);
         this.currentSoundscape = newSoundscape;
@@ -247,15 +258,24 @@ export class Mixer {
 
         this.soundboard.configure(settings);
 
-        let parent = this;
-        if (playingTemp) 
-            setTimeout(function() {
-                parent.start();
-            }, 1000);
-
         if (this.mixerApp != undefined && this.mixerApp.rendered) {
-           await this.renderApp(true);
+            await this.renderApp(true);
         }
+
+        let parent = this;
+        if (playingTemp || forceStart) {
+            setTimeout(async function() {
+                await parent.start();
+                return parent;
+            }, 1000);
+        }  
+        else {
+            return parent;
+        }
+        
+        
+
+        
     }
 
     /**
@@ -402,5 +422,33 @@ export class Mixer {
             soundboardGain: 0.5
         }
         return settings;
+    }
+
+    /**
+     * Toggle player to which sounds are sent
+     * @returns true if all players are active
+     */
+    togglePlayer(playerId) {
+        const users = Array.from(game.users, function(entry) {if (entry._id != game.userId) return {name: entry.name, active: entry.active, _id: entry._id}});
+        if(playerId == "*" || playerId == "-") {
+            this.soundboard.players = {}
+            for (const p of users) {
+                if(p != undefined && p.active)
+                    this.soundboard.players[p._id] = (playerId == "*")
+            }
+        }
+        else {
+            if(playerId in this.soundboard.players) {
+                this.soundboard.players[playerId] = !this.soundboard.players[playerId]
+            }
+        }
+        
+        // check if one player is not enabled
+        for (const p of users) {
+            if(p == undefined || !p.active) continue
+            if(!(p._id in this.soundboard.players) || !this.soundboard.players[p._id]) 
+                return false
+        }
+        return true
     }
 }

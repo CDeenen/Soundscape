@@ -4,14 +4,17 @@ import { socket } from "./src/Misc/socket.js";
 import { importConfigForm } from "./src/Misc/import.js";
 
 export const moduleName = "soundscape";
-
+export let activeUser;
 export let mixer;
+
+//CONFIG.debug.hooks = true
 
 Hooks.once('init', function() { 
     registerSettings();
-
+    
     setTimeout(async function(){
-        if (game.user.isGM) {}
+        
+        if (activeUser) {}
            // await game.settings.set(moduleName,'sbEnabled',false)
         else {     
             const payload = {
@@ -23,14 +26,14 @@ Hooks.once('init', function() {
     },1000);
 });
 
+
 Hooks.once('ready',async ()=>{
     
-
     mixer = new Mixer();
     
     /*
     setTimeout(function() {
-        if (game.user.isGM) mixer.renderApp(true);
+        if (activeUser) mixer.renderApp(true);
     },1000)
     */
 
@@ -42,7 +45,7 @@ Hooks.once('ready',async ()=>{
 })
 
 Hooks.on("renderSidebarTab", (app, html) => {
-   
+    activeUser = game.settings.get(moduleName, 'targetPlayer') === game.user.name;
     if (app.options.id == 'playlists') {
          /**
          * Create labels and buttons in sidebar
@@ -64,7 +67,7 @@ Hooks.on("renderSidebarTab", (app, html) => {
         });
 
         
-        if (game.user.isGM == false) return;
+        if (activeUser == false) return;
 
         const btn = $(
             `
@@ -79,7 +82,7 @@ Hooks.on("renderSidebarTab", (app, html) => {
         btn.on("click",async event => {
             mixer.renderApp(true);
         });
-
+/*
         let soundElements = document.getElementsByClassName('sound-name');
         for (let elem of soundElements) {
             const playlist = elem.parentElement.getAttribute('data-playlist-id');
@@ -98,6 +101,8 @@ Hooks.on("renderSidebarTab", (app, html) => {
                 event.dataTransfer.setData('text/plain', JSON.stringify(data));
             }; 
         }
+        */
+        
     }
 });
 
@@ -107,7 +112,7 @@ Hooks.on('setSoundscape',(data) => {
     let settings = game.settings.get(moduleName,'soundscapes');
             
     if (data.msgType == 'start') {
-        mixer.start();
+        if (!mixer.playing) mixer.start();
         if (mixerApp != null) document.getElementById('playMix').innerHTML = `<i class="fas fa-stop"></i>`;
     }
     else if (data.msgType == 'stop') {
@@ -193,11 +198,11 @@ Hooks.on('renderSceneConfig', (app, html) => {
     let loadSoundscape = game.i18n.localize("SOUNDSCAPE.None");
     let combatSoundscape = game.i18n.localize("SOUNDSCAPE.None");
 
-    if(app.object.data.flags["soundscape"]){
-        if (app.object.data.flags['soundscape'].loadSoundscape)
+    if(app.object.flags["soundscape"]){
+        if (app.object.flags['soundscape'].loadSoundscape)
             loadSoundscape = app.object.getFlag('soundscape', 'loadSoundscape');
 
-        if (app.object.data.flags['soundscape'].combatSoundscape)
+        if (app.object.flags['soundscape'].combatSoundscape)
             combatSoundscape = app.object.getFlag('soundscape', 'combatSoundscape');
     }
 
@@ -239,14 +244,23 @@ Hooks.on("closeSceneConfig", (app, html) => {
     app.object.setFlag('soundscape', 'combatSoundscape',combatSoundscape);
 });
 
-Hooks.on('canvasReady',async (canvas)=>{
-    if (!game.user.isGM || !canvas.scene?.active) return;
+let currentCanvas;
 
+Hooks.on('canvasReady',async (canvas)=>{
+    if (!activeUser || !canvas.scene?.active) return;
+    
     let loadSoundscape;
-    if (game.combat != undefined && game.combat.round > 0 && canvas.scene.getFlag('soundscape', 'combatSoundscape') != undefined && canvas.scene.getFlag('soundscape', 'combatSoundscape') != null)
-        loadSoundscape = canvas.scene.getFlag('soundscape', 'combatSoundscape');
+    const combatInScene = game.combats.contents.find(c => c.scene.id == canvas.scene.id);
+    if (combatInScene?.active && combatInScene?.current.round > 0 && canvas.scene.getFlag('soundscape', 'combatSoundscape') != undefined && canvas.scene.getFlag('soundscape', 'combatSoundscape') != null)
+        loadSoundscape = canvas.scene.getFlag('soundscape', 'combatSoundscape'); 
     else
         loadSoundscape = canvas.scene.getFlag('soundscape', 'loadSoundscape');
+
+    if (mixer?.playing && mixer?.name == loadSoundscape) return;
+    if (currentCanvas?.scene?.getFlag('soundscape', 'loadSoundscape') == mixer?.name || currentCanvas?.scene?.getFlag('soundscape', 'combatSoundscape') == mixer?.name) {
+        await mixer?.stop();
+    }
+    currentCanvas = canvas;
 
     if (loadSoundscape != undefined && loadSoundscape != 'None') {
         const soundscapes = game.settings.get(moduleName,'soundscapes');
@@ -254,20 +268,24 @@ Hooks.on('canvasReady',async (canvas)=>{
             if (soundscapes[i].name == loadSoundscape) {
                 if (mixer == undefined) {
                     setTimeout(async function() {
-                        if (mixer.currentSoundscape != i) await mixer.setSoundscape(i);
-                        if (!mixer.playing) mixer.start();
+                        if (mixer.currentSoundscape != i) await mixer.setSoundscape(i, true);
+                        else if (!mixer.playing) mixer.start();
                     },1000)
                 }
                 else {
-                    if (mixer.currentSoundscape != i) await mixer.setSoundscape(i);
-                    if (!mixer.playing) mixer.start();
+                    if (mixer.currentSoundscape != i) await mixer.setSoundscape(i, true);
+                    else if (!mixer.playing) mixer.start();
                 }
             }
     }
 })
 
+Hooks.on('canvasTearDown', async (canvas) => {
+    //
+})
+
 Hooks.on('updateCombat',async ()=>{
-    if (!game.user.isGM) return;
+    if (!activeUser) return;
 
     const combatSoundscape = canvas.scene.getFlag('soundscape', 'combatSoundscape');
 
@@ -277,20 +295,20 @@ Hooks.on('updateCombat',async ()=>{
             if (soundscapes[i].name == combatSoundscape) {
                 if (mixer == undefined) {
                     setTimeout(async function() {
-                        if (mixer.currentSoundscape != i) await mixer.setSoundscape(i);
-                        if (!mixer.playing) mixer.start();
+                        if (mixer.currentSoundscape != i) await mixer.setSoundscape(i, true);
+                        else if (!mixer.playing) mixer.start();
                     },1000)
                 }
                 else {
-                    if (mixer.currentSoundscape != i) await mixer.setSoundscape(i);
-                    if (!mixer.playing) mixer.start();
+                    if (mixer.currentSoundscape != i) await mixer.setSoundscape(i, true);
+                    else if (!mixer.playing) mixer.start();
                 }
             }
     }
 })
 
 Hooks.on('deleteCombat',async ()=>{
-    if (!game.user.isGM) return;
+    if (!activeUser) return;
 
     const loadSoundscape = canvas.scene.getFlag('soundscape', 'loadSoundscape');
 
@@ -300,13 +318,13 @@ Hooks.on('deleteCombat',async ()=>{
             if (soundscapes[i].name == loadSoundscape) {
                 if (mixer == undefined) {
                     setTimeout(async function() {
-                        if (mixer.currentSoundscape != i) await mixer.setSoundscape(i);
-                        if (!mixer.playing) mixer.start();
+                        if (mixer.currentSoundscape != i) await mixer.setSoundscape(i, true);
+                        else if (!mixer.playing) mixer.start();
                     },1000)
                 }
                 else {
-                    if (mixer.currentSoundscape != i) await mixer.setSoundscape(i);
-                    if (!mixer.playing) mixer.start();
+                    if (mixer.currentSoundscape != i) await mixer.setSoundscape(i, true);
+                    else if (!mixer.playing) mixer.start();
                 }
             }
     }

@@ -1,9 +1,9 @@
-import { mixer } from "../../soundscape.js";
+import { mixer, activeUser } from "../../soundscape.js";
 
 export async function socket(payload) {
     //console.log('payload',payload);
     if (mixer == undefined) return;
-    if (game.user.isGM && (payload.msgType == 'getSettings' || payload.msgType == 'getChannelSettings')) {
+    if (activeUser && (payload.msgType == 'getSettings' || payload.msgType == 'getChannelSettings')) {
         let channels = [];
         for (let i=0; i<mixer.channels.length; i++) {
             const channel = mixer.channels[i];
@@ -113,7 +113,7 @@ export async function socket(payload) {
         else if (payload.msgType == 'delaySetVolume') mixer.channels[payload.channelNr].effects.delay.setVolume(payload.volume);
     }
     else {
-        if (payload.msgType == 'playSoundboard') mixer.soundboard.playSound(payload.channel);
+        if (payload.msgType == 'playSoundboard') mixer.soundboard.playSound(payload.channel, payload.players);
         else if (payload.msgType == 'setSoundboardVolume') mixer.soundboard.setVolume(payload.volume);
     }
     

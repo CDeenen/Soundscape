@@ -1,4 +1,25 @@
 # Changelog
+### v1.0.4 - 23-04-2023
+A big thanks to SvenWerlen (known from Moulinette) for picking this up and fixing some issues and adding new features.
+
+Additions:
+<ul>
+<li>Should now work on the Forge (thanks to @SvenWerlen)</li>
+<li>Moulinette integration (thanks to @SvenWerlen)</li>
+<li>Reset/delete channels (thanks to @SvenWerlen)</li>
+<li>Option to play sounds (from the soundboard) to specific players (thanks to @SvenWerlen)</li>
+<li>Assigning a soundscape to a scene or combat now stops the soundscape when another scene is activated</li>
+<li>A player can now be assigned to control soundscape instead of the gamemaster</li>
+</ul>
+
+Fixes:
+<ul>
+<li>Fixed compatibility issues with Foundry V10 (thanks to @SvenWerlen)</li>
+<li>Drag & drop now works on Firefox (thanks to @SvenWerlen)</li>
+<li>Combat soundscapes assigned to a scene now properly load when that scene has active combat</li>
+<li>Core Foundry drag & drop functionality should no longer be broken by Soundscape</li>
+</ul>
+
 ### v1.0.3 - 01-09-2021
 
 Additions:

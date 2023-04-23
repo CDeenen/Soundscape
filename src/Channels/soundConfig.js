@@ -21,7 +21,8 @@ export class SoundConfig extends FormApplication {
         return mergeObject(super.defaultOptions, {
             id: "soundscape_soundConfig",
             title: "Soundscape: "+game.i18n.localize("SOUNDSCAPE.SoundConfig"),
-            template: "./modules/soundscape/src/Channels/soundConfig.html"
+            template: "./modules/soundscape/src/Channels/soundConfig.html",
+            closeOnSubmit: false
         });
     }
 
@@ -92,56 +93,74 @@ export class SoundConfig extends FormApplication {
     async _updateObject(event, formData) {
         let settings = game.settings.get(moduleName,'soundscapes');
         let channelData = settings[this.currentSoundscape].channels[this.channelNumber];
-        let source = '';
-        let playlistName = '';
-        let soundName = '';
-        if (formData.soundSelect == 'filepicker_single') {
-            source = formData.src;
-        }
-        else if (formData.soundSelect == 'filepicker_folder') {
-            source = formData.folderSrc;
-        }
-        else if (formData.soundSelect == 'playlist_single') {
-            const playlist = game.playlists.get(formData.playlistId);
-            if (playlist != undefined) {
-                playlistName = playlist.name;
-                const sound = playlist.sounds.get(formData.soundId);
-                if (sound != undefined) soundName = sound.name;
+
+        this.channel.stop();
+        if (event.submitter.name == "delete") {
+            const confirm = await Dialog.confirm({
+                title: game.i18n.localize("SOUNDSCAPE.ConfirmDeleteTitle"),
+                content: game.i18n.localize("SOUNDSCAPE.ConfirmDeleteContent")});
+            
+            if (confirm) {
+                await this.channel.clear();
+                channelData.settings = this.channel.settings
+                channelData.soundData = this.channel.soundData
+                delete channelData.sourceArray
+            } else {
+                return false;
             }
         }
-        else if (formData.soundSelect == 'playlist_multi') {
-            const playlist = game.playlists.get(formData.playlistId);
-            if (playlist != undefined) playlistName = playlist.name;
-        }
+        else if (event.submitter.name == "save") {
+            let source = '';
+            let playlistName = '';
+            let soundName = '';
+            if (formData.soundSelect == 'filepicker_single') {
+                source = formData.src;
+            }
+            else if (formData.soundSelect == 'filepicker_folder') {
+                source = formData.folderSrc;
+            }
+            else if (formData.soundSelect == 'playlist_single') {
+                const playlist = game.playlists.get(formData.playlistId);
+                if (playlist != undefined) {
+                    playlistName = playlist.name;
+                    const sound = playlist.sounds.get(formData.soundId);
+                    if (sound != undefined) soundName = sound.name;
+                }
+            }
+            else if (formData.soundSelect == 'playlist_multi') {
+                const playlist = game.playlists.get(formData.playlistId);
+                if (playlist != undefined) playlistName = playlist.name;
+            }
 
-        const repeat = {
-            repeat: formData.repeat,
-            minDelay: getSeconds(formData.minDelay),
-            maxDelay: getSeconds(formData.maxDelay),
-        }
+            const repeat = {
+                repeat: formData.repeat,
+                minDelay: getSeconds(formData.minDelay),
+                maxDelay: getSeconds(formData.maxDelay),
+            }
 
-        channelData.settings.repeat = repeat;
-        channelData.settings.name = formData.name;
-        channelData.settings.randomize = formData.randomize;
-        channelData.settings.timing = {
-            startTime: getSeconds(formData.start),
-            stopTime: getSeconds(formData.stop),
-            skipFirstTiming: formData.skipFirstTiming,
-            fadeIn: getSeconds(formData.fadeIn),
-            fadeOut: getSeconds(formData.fadeOut),
-            skipFirstFade: formData.skipFirstFade
+            channelData.settings.repeat = repeat;
+            channelData.settings.name = formData.name;
+            channelData.settings.randomize = formData.randomize;
+            channelData.settings.timing = {
+                startTime: getSeconds(formData.start),
+                stopTime: getSeconds(formData.stop),
+                skipFirstTiming: formData.skipFirstTiming,
+                fadeIn: getSeconds(formData.fadeIn),
+                fadeOut: getSeconds(formData.fadeOut),
+                skipFirstFade: formData.skipFirstFade
+            }
+            channelData.soundData = {
+                source,
+                soundSelect: formData.soundSelect,
+                playlistName,
+                soundName,
+            }
+
+            this.channel.setData(channelData);
         }
-        channelData.soundData = {
-            source,
-            soundSelect: formData.soundSelect,
-            playlistName,
-            soundName,
-        }
-        
         await game.settings.set(moduleName,'soundscapes',settings);
-        this.channel.stop();
-        this.channel.setData(channelData);
         this.mixer.renderApp(true);
+        this.close()
     }
   
     activateListeners(html) {
@@ -157,6 +176,13 @@ export class SoundConfig extends FormApplication {
         const playlist = html.find("select[name=playlistId]");
         const sound = html.find("select[name=soundId]");
         const filePicker = html.find("input[name=src]");
+
+        html.find("button.mtte-picker").click(ev => {
+            if(!game.moulinette || !game.moulinette.applications.MoulinetteAPI) {
+                return ui.notifications.warn(game.i18n.localize("SOUNDSCAPE.moulinetteNotEnabled"));
+            }
+            //game.moulinette.applications.MoulinetteAPI.assetPicker()
+        });
 
         playlist.on('change',(event)=>{
             html.find("input[name=duration]")[0].value="";

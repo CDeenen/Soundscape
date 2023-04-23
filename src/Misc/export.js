@@ -1,4 +1,5 @@
 import {helpMenuExport} from "../Help/helpMenus.js";
+import {getFilePickerSource} from "./helpers.js";
 
 export class exportConfigForm extends FormApplication {
     progressDialog;
@@ -140,11 +141,11 @@ export class exportConfigForm extends FormApplication {
         let data = {files:[]};
         if (sound.soundSelect == 'filepicker_single') {
             if (sound.source == "") return false;
-            data = await FilePicker.browse("data", sound.source, {wildcard:true});
+            data = await FilePicker.browse(getFilePickerSource(), sound.source, {wildcard:true});
         }
         else if (sound.soundSelect == 'filepicker_folder') {
             if (sound.source == "") return false;
-            data = await FilePicker.browse("data", sound.source);
+            data = await FilePicker.browse(getFilePickerSource(), sound.source);
         }
         else if (sound.soundSelect == 'playlist_single') {
             if (sound.playlistName =="" || sound.soundName == "") return false;

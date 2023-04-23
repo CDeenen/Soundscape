@@ -98,6 +98,7 @@
     "SOUNDSCAPE.PlaylistComplete": "Playlist: Complete Playlist",
     "SOUNDSCAPE.FilepickerSingle": "Filepicker: Single Sound",
     "SOUNDSCAPE.FilepickerFolder": "Filepicker: Folder",
+    "SOUNDSCAPE.MoulinetteSounds": "Moulinette: Sounds",
     "SOUNDSCAPE.NoRepeat": "Don't Repeat",
     "SOUNDSCAPE.RepeatSingle": "Repeat Single",
     "SOUNDSCAPE.RepeatAll": "Repeat All",
@@ -108,5 +109,11 @@
     "SOUNDSCAPE.LoadSoundscape": "Soundscape",
     "SOUNDSCAPE.LoadSoundscape_Hint": "Select a soundscape to automatically start playing when this scene is loaded.",
     "SOUNDSCAPE.CombatSoundscape": "Combat Soundscape",
-    "SOUNDSCAPE.CombatSoundscape_Hint": "Select a soundscape to automatically starts playing once combat starts on this scene."
+    "SOUNDSCAPE.CombatSoundscape_Hint": "Select a soundscape to automatically starts playing once combat starts on this scene.",
+    "SOUNDSCAPE.moulinetteNotEnabled": "Moulinette Core module is required.",
+    "SOUNDSCAPE.DeleteConfiguration": "Delete Configuration",
+    "SOUNDSCAPE.ConfirmDeleteTitle": "Confirm deletion",
+    "SOUNDSCAPE.ConfirmDeleteContent": "Do you really want to delete/reset this channel?",
+    "SOUNDSCAPE.SendToPlayers": "Sends sounds to",
+    "SOUNDSCAPE.Everyone": "Everyone"
 }
