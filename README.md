@@ -1,12 +1,4 @@
-<h1>This module is currently not in active development!</h1>
-<b>It is not known when (or if) development will continue. If you're a developer and interested in (helping) maintaining Soundscape, get in touch:<br>
-Discord: Cris#6864<br>
-Email: cdeenen@outlook.com</b>
-
 <h2>Introduction</h2>
-<b>This module only works in Foundry 0.8. It will not be made backwards compatible with Foundry 0.7, since it relies on a lot of the new audio features of 0.8</b><br>
-<b>Please note that this module is still in its infancy. There are still multiple bugs, and you should consider it being in beta.</b><br>
-<br>
 Soundscape is a Foundry VTT module that gives users an easy way to mix down multiple audio tracks into a single highly configurable soundscape. The individual volumes of the sounds can be changed on the fly, 
 and multiple effects can be applied to the sounds in order to create the perfect soundscape. Besides that, there is a built-in soundboard that can be 
 used for short sound effects, such as weapon or spell attack sounds.<br>
