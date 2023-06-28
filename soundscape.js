@@ -30,6 +30,8 @@ Hooks.once('init', function() {
 Hooks.once('ready',async ()=>{
     
     mixer = new Mixer();
+
+    game.soundscape = mixer;
     
     /*
     setTimeout(function() {
@@ -46,7 +48,7 @@ Hooks.once('ready',async ()=>{
 
 Hooks.on("renderSidebarTab", (app, html) => {
     activeUser = game.settings.get(moduleName, 'targetPlayer') === game.user.name;
-    if (app.options.id == 'playlists') {
+    if (app.options.id == 'playlists' || app.id == 'playlists') {
          /**
          * Create labels and buttons in sidebar
          */
@@ -218,6 +220,7 @@ Hooks.on('renderSceneConfig', (app, html) => {
         <div class="form-group">
             <label>${game.i18n.localize("SOUNDSCAPE.LoadSoundscape")}</label>
                 <select name="loadSoundscape" id="loadSoundscape" value=${loadSoundscape}>
+                <option value='Continue'>${game.i18n.localize("SOUNDSCAPE.Unchanged")}</option>
                 <option value='None'>${game.i18n.localize("SOUNDSCAPE.None")}</option>
                 ${options}
                 </select>
@@ -226,6 +229,7 @@ Hooks.on('renderSceneConfig', (app, html) => {
         <div class="form-group">
             <label>${game.i18n.localize("SOUNDSCAPE.CombatSoundscape")}</label>
                 <select name="combatSoundscape" id="combatSoundscape" value=${combatSoundscape}>
+                <option value='Continue'>${game.i18n.localize("SOUNDSCAPE.Unchanged")}</option>
                 <option value='None'>${game.i18n.localize("SOUNDSCAPE.None")}</option>
                 ${combatOptions}
                 </select>
@@ -244,9 +248,52 @@ Hooks.on("closeSceneConfig", (app, html) => {
     app.object.setFlag('soundscape', 'combatSoundscape',combatSoundscape);
 });
 
-let currentCanvas;
-
 Hooks.on('canvasReady',async (canvas)=>{
+    if (!activeUser || !canvas.scene?.active) return;
+    
+    let loadSoundscape;
+    const combatInScene = game.combats.contents.find(c => c.scene.id == canvas.scene.id);
+
+    //If combat is currently active
+    if (combatInScene?.active && combatInScene?.current.round > 0) {
+        loadSoundscape = canvas.scene.getFlag('soundscape', 'combatSoundscape');
+        //Don't do anything if combat soundscape is set to Continue or is undefined or null
+        if (loadSoundscape == 'Continue' || loadSoundscape == undefined || loadSoundscape == null) return;
+
+    }
+    //Else load scene soundscape
+    else {
+        loadSoundscape = canvas.scene.getFlag('soundscape', 'loadSoundscape');
+        //Don't do anything if scene soundscape is set to Continue or is undefined or null
+        if (loadSoundscape == 'Continue' || loadSoundscape == undefined || loadSoundscape == null) return;
+    }
+    
+    //If mixer is playing and new soundscape is already running, do nothing
+    if (mixer?.playing && mixer?.name == loadSoundscape) return;
+
+    //Stop mixer if new soundscape is set to 'None'
+    if (mixer?.playing && loadSoundscape == 'None') {
+        await mixer?.stop();
+        return;
+    }
+
+    const soundscapes = game.settings.get(moduleName,'soundscapes');
+    for (let i=0; i<soundscapes.length; i++)
+        if (soundscapes[i].name == loadSoundscape) {
+            if (mixer == undefined) {
+                setTimeout(async function() {
+                    if (mixer.currentSoundscape != i) await mixer.setSoundscape(i, true);
+                    else if (!mixer.playing) mixer.start();
+                },1000)
+            }
+            else {
+                if (mixer.currentSoundscape != i) await mixer.setSoundscape(i, true);
+                else if (!mixer.playing) mixer.start();
+            }
+        }
+
+
+    /*
     if (!activeUser || !canvas.scene?.active) return;
     
     let loadSoundscape;
@@ -278,6 +325,7 @@ Hooks.on('canvasReady',async (canvas)=>{
                 }
             }
     }
+    */
 })
 
 Hooks.on('canvasTearDown', async (canvas) => {

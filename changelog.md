@@ -1,5 +1,18 @@
 # Changelog
-### v1.0.4 - 23-04-2023
+### v1.1.1 - 28-06-2023
+Fixes:
+<ul>
+    <li>Fixed soundscape load on scene load/combat start</li>
+</ul>
+
+Other:
+<ul>
+    <li>Made compatible with Foundry v11</li>
+    <li>Added 'Unchanged' option to scene load/combat soundscapes. This does not change the currently playing soundscape. The 'None' option will stop the current soundscape from playing</li>
+    <li>Exposed the whole mixer through game.soundscape to allow macros or other modules control over Soundscape</li>
+</ul>
+
+### v1.1.0 - 23-04-2023
 A big thanks to SvenWerlen (known from Moulinette) for picking this up and fixing some issues and adding new features.
 
 Additions:

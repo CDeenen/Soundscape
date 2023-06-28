@@ -237,6 +237,9 @@ export class Mixer {
     }
 
     async setSoundscape(newSoundscape, forceStart = false) {
+        if (isNaN(parseInt(newSoundscape))) {
+            newSoundscape = game.settings.get('soundscape','soundscapes').findIndex(s => s.name == newSoundscape);
+        }
         const playingTemp = this.playing;
         this.stop(undefined,true);
         this.currentSoundscape = newSoundscape;

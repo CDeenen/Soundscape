@@ -115,5 +115,6 @@
     "SOUNDSCAPE.ConfirmDeleteTitle": "Confirm deletion",
     "SOUNDSCAPE.ConfirmDeleteContent": "Do you really want to delete/reset this channel?",
     "SOUNDSCAPE.SendToPlayers": "Sends sounds to",
-    "SOUNDSCAPE.Everyone": "Everyone"
+    "SOUNDSCAPE.Everyone": "Everyone",
+    "SOUNDSCAPE.Unchanged": "Unchanged"
 }

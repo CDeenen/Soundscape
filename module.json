@@ -1,43 +1,60 @@
 {
-  "title": "Soundscape",
-  "description": "Soundscape is a module that allows you to easily mix multiple audio tracks into a soundscape that can be customized on the fly.",
-  "version": "1.1.0",
-  "authors": [
-    {
-      "name": "CDeenen",
-      "flags": {}
+    "title": "Soundscape",
+    "description": "Soundscape is a module that allows you to easily mix multiple audio tracks into a soundscape that can be customized on the fly.",
+    "version": "1.1.1",
+    "authors": [
+        {
+            "name": "CDeenen",
+            "email": "info@materialfoundry.nl",
+            "discord": "Cris#6864",
+            "patreon": "MaterialFoundry",
+            "reddit": "CDeenen123"
+        },
+        {
+            "name": "Sven Werlen",
+            "flags": {}
+        }
+    ],
+    "esmodules": [
+        "soundscape.js"
+    ],
+    "scripts": [
+        "lib/jszip/jszip-utils.min.js",
+        "lib/jszip/jszip.min.js",
+        "lib/FileSaver.min.js"
+    ],
+    "socket": true,
+    "styles": [
+        "soundscape.css"
+    ],
+    "compatibility": {
+        "minimum": "10",
+        "verified": "11"
     },
-    {
-      "name": "Sven Werlen",
-      "flags": {}
-    }
-  ],
-  "esmodules": [
-    "soundscape.js"
-  ],
-  "scripts": [
-    "lib/jszip/jszip-utils.min.js",
-    "lib/jszip/jszip.min.js",
-    "lib/FileSaver.min.js"
-  ],
-  "socket": true,
-  "styles": [
-    "soundscape.css"
-  ],
-  "compatibility": {
-    "minimum": "10",
-    "verified": "10"
-  },
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json",
-      "flags": {}
-    }
-  ],
-  "url": "https://github.com/CDeenen/Soundscape",
-  "manifest": "https://raw.githubusercontent.com/CDeenen/Soundscape/master/module.json",
-  "download": "https://github.com/CDeenen/Soundscape/archive/master.zip",
-  "id": "soundscape"
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "lang/en.json",
+            "flags": {}
+        }
+    ],
+    "media": [
+        {
+            "type": "icon",
+            "url": "modules/Soundscape/img/MaterialFoundry512x512.png"
+        },
+        {
+            "type": "setup",
+            "url": "modules/Soundscape/img/MaterialFoundry2560x1440.jpg"
+        },
+        {
+            "type": "cover",
+            "url": "modules/Soundscape/img/MaterialFoundry2560x1440.jpg"
+        }
+    ],
+    "url": "https://github.com/CDeenen/Soundscape",
+    "manifest": "https://github.com/CDeenen/Soundscape/releases/latest/download/module.json",
+    "download": "https://github.com/CDeenen/Soundscape/releases/download/v1.1.0/module.zip",
+    "id": "soundscape"
 }
